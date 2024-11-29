@@ -1,4 +1,4 @@
-part of '../../../import.dart';
+part of '../../../batch/import.dart';
 
 class ServicesPage extends StatelessWidget {
   const ServicesPage({super.key});

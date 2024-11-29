@@ -1,4 +1,4 @@
-part of '../../../import.dart';
+part of '../../../batch/import.dart';
 
 class BooksPage extends StatelessWidget {
   const BooksPage({super.key});

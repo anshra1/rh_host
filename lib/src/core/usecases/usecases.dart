@@ -1,3 +1,5 @@
+// ignore_for_file: one_member_abstracts
+
 import 'package:rh_host/src/core/typedef/typedef.dart';
 
 abstract class FutureUseCaseWithParams<Type, Params> {

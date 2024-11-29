@@ -1,11 +1,11 @@
 
-    import '../sources/sources.dart';
-    import '../../domain/repositories/repositories.dart';
+    import 'package:rh_host/src/features/home/data/sources/sources.dart';
+    import 'package:rh_host/src/features/home/domain/repositories/repositories.dart';
     
     class HomeRepositoryImp implements HomeRepository{
+        HomeRepositoryImp({required this.remoteDataSource});
 
         final HomeRemoteDataSource remoteDataSource;
-        HomeRepositoryImp({required this.remoteDataSource});
       
         // ... example ...
         //

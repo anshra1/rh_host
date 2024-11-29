@@ -1,4 +1,4 @@
-part of '../../../import.dart';
+part of '../../../batch/import.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

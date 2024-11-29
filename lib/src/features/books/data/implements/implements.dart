@@ -1,11 +1,11 @@
 
-    import '../sources/sources.dart';
-    import '../../domain/repositories/repositories.dart';
+    import 'package:rh_host/src/features/books/data/sources/sources.dart';
+    import 'package:rh_host/src/features/books/domain/repositories/repositories.dart';
     
     class BooksRepositoryImp implements BooksRepository{
+        BooksRepositoryImp({required this.remoteDataSource});
 
         final BooksRemoteDataSource remoteDataSource;
-        BooksRepositoryImp({required this.remoteDataSource});
       
         // ... example ...
         //

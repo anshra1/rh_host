@@ -1,16 +1,16 @@
 import 'package:rh_host/src/core/typedef/typedef.dart';
 import 'package:rh_host/src/core/usecases/usecases.dart';
-import '../repositories/passcode_repo.dart';
+import 'package:rh_host/src/features/passcode/domain/repositories/passcode_repo.dart';
 
-class VerifyPasscode extends FutureUseCaseWithoutParams<void> {
+class VerifyPasscode extends FutureUseCaseWithParams<bool, int> {
   VerifyPasscode({
-    required this.authRepo,
+    required this.passcodeRepo,
   });
 
-  final PasscodeRepo authRepo;
+  final PasscodeRepo passcodeRepo;
 
   @override
-  ResultFuture<void> call() {
-    return authRepo.verifyPasscode();
+  ResultFuture<bool> call(int params) {
+    return passcodeRepo.verifyPasscode(params);
   }
 }

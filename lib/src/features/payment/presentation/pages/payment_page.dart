@@ -1,4 +1,4 @@
-part of '../../../import.dart';
+part of '../../../batch/import.dart';
 
 class PaymentPage extends StatelessWidget {
   const PaymentPage({super.key});

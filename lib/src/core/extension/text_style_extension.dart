@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rh_host/src/core/constants/constants.dart';
+import 'package:rh_host/src/core/constants/colors.dart';
 
 extension TextStyleExtension on TextStyle {
   //Font Weight

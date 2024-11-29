@@ -15,14 +15,27 @@ class AppRouter {
       );
     },
     navigatorKey: _rootNavigatorKey,
-    initialLocation: PasscodePage.routeName,
+    initialLocation: RouteName.passcodePage,
     routes: [
       GoRoute(
-        path: PasscodePage.routeName,
-        name: PasscodePage.routeName,
+        path: RouteName.passcodePage,
+        name: RouteName.passcodePage,
         pageBuilder: (_, state) {
           return _buildTransition(
-            child: const PasscodePage(),
+            child: BlocProvider(
+              create: (context) => sl<PasscodeCubit>(),
+              child: const PasscodePage(),
+            ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        path: RouteName.resetPinPage,
+        name: RouteName.resetPinPage,
+        pageBuilder: (_, state) {
+          return _buildTransition(
+            child: const ResetPinPage(),
             state: state,
           );
         },

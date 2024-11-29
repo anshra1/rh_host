@@ -1,10 +1,10 @@
  
-    import '../repositories/repositories.dart';
+    import 'package:rh_host/src/features/payment/domain/repositories/repositories.dart';
 
     class GetPaymentUseCase {
-        final PaymentRepository repository;
       
         GetPaymentUseCase({required this.repository});
+        final PaymentRepository repository;
       
         // Future<User> execute(String userId) async {
         //   return userRepository.getUser(userId);

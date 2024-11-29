@@ -1,0 +1,4858 @@
+UnderStand passcode page code
+make error finding firebase sharedPrefac
+
+// do it
+Input Validation
+class InputValidator {
+  static String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+      return 'Invalid email format';
+    }
+    return null;
+  }
+
+  static String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    return null;
+  }
+}
+
+
+// now 
+ErrorHandler UnderStand
+natural info user - datasources repo info
+Global ErrorHandler
+cubit error try catch cubit
+give all to library ask to improve it
+firbase analytic
+firbase catalytic
+
+// future
+1. Analytics Implementation 
+class AppLogger {
+  final Logger _logger;
+
+  // Different log levels for different environments
+  void debug(String message, [dynamic error, StackTrace? stackTrace]) {
+    if (!kReleaseMode) {
+      _logger.d(message, error: error, stackTrace: stackTrace);
+    }
+  }
+
+  void info(String message) {
+    _logger.i(message);
+  }
+
+  void error(String message, [dynamic error, StackTrace? stackTrace]) {
+    _logger.e(message, error: error, stackTrace: stackTrace);
+  }
+}
+
+2. Environment Configuration
+enum Environment { dev, staging, prod }
+
+class EnvironmentConfig {
+  static const environment = String.fromEnvironment(
+    'ENVIRONMENT',
+    defaultValue: 'dev',
+  );
+
+  static final baseUrl = {
+    'dev': 'https://dev-api.example.com',
+    'staging': 'https://staging-api.example.com',
+    'prod': 'https://api.example.com',
+  }[environment];
+
+  static bool get isProduction => environment == 'prod';
+}
+
+3. API Error Handling
+class ApiResponse<T> {
+  final T? data;
+  final String? error;
+  final int? statusCode;
+
+  ApiResponse.success(this.data) : error = null, statusCode = 200;
+  ApiResponse.error(this.error, this.statusCode) : data = null;
+
+  bool get isSuccess => error == null;
+}
+
+class ApiClient {
+  final Dio _dio;
+
+  Future<ApiResponse<T>> request<T>({
+    required String endpoint,
+    required T Function(Map<String, dynamic> json) parser,
+  }) async {
+    try {
+      final response = await _dio.get(endpoint);
+      return ApiResponse.success(parser(response.data));
+    } on DioError catch (e) {
+      return ApiResponse.error(e.message, e.response?.statusCode);
+    }
+  }
+}
+
+4. Performance Tracking
+class PerformanceTracker {
+  final FirebasePerformance _performance;
+
+  Future<T> trackOperation<T>({
+    required String name,
+    required Future<T> Function() operation,
+  }) async {
+    final trace = _performance.newTrace(name);
+    await trace.start();
+    
+    try {
+      final result = await operation();
+      trace.putAttribute('success', 'true');
+      return result;
+    } catch (e) {
+      trace.putAttribute('success', 'false');
+      rethrow;
+    } finally {
+      await trace.stop();
+    }
+  }
+}
+
+5.  Resource Management
+class ResourceManager {
+  final _cache = <String, dynamic>{};
+  
+  Future<void> clearMemory() async {
+    _cache.clear();
+  }
+  
+  Future<void> clearDiskCache() async {
+    final dir = await getTemporaryDirectory();
+    await dir.delete(recursive: true);
+  }
+
+  void disposeResources() {
+    clearMemory();
+    clearDiskCache();
+  }
+}
+
+6. Feature Flags
+class FeatureFlags {
+  final SharedPreferences _prefs;
+  
+  bool isFeatureEnabled(String featureKey) {
+    return _prefs.getBool(featureKey) ?? false;
+  }
+
+  Future<void> updateFeatureFlags(Map<String, bool> flags) async {
+    for (final entry in flags.entries) {
+      await _prefs.setBool(entry.key, entry.value);
+    }
+  }
+}
+
+7. Data Caching Strategy
+class CacheManager<T> {
+  final Duration validDuration;
+  final Map<String, CacheEntry<T>> _cache = {};
+
+  CacheManager({this.validDuration = const Duration(hours: 1)});
+
+  Future<T> getOrFetch(
+    String key,
+    Future<T> Function() fetchData,
+  ) async {
+    if (_cache.containsKey(key)) {
+      final entry = _cache[key]!;
+      if (!entry.isExpired) {
+        return entry.data;
+      }
+    }
+
+    final data = await fetchData();
+    _cache[key] = CacheEntry(data, validDuration);
+    return data;
+  }
+}
+
+8. Request Rate Limiting
+class RateLimiter {
+  final Duration interval;
+  final Map<String, DateTime> _lastExecutionTime = {};
+
+  RateLimiter({this.interval = const Duration(seconds: 1)});
+
+  Future<T> executeWithLimit<T>({
+    required String key,
+    required Future<T> Function() operation,
+  }) async {
+    final lastTime = _lastExecutionTime[key];
+    final now = DateTime.now();
+
+    if (lastTime != null) {
+      final difference = now.difference(lastTime);
+      if (difference < interval) {
+        final waitTime = interval - difference;
+        await Future.delayed(waitTime);
+      }
+    }
+
+    _lastExecutionTime[key] = now;
+    return await operation();
+  }
+}
+
+9. 1. Network Connectivity Management
+dartCopyclass ConnectivityManager {
+  final Connectivity _connectivity;
+  final StreamController<bool> _connectionStatusController;
+
+  Stream<bool> get connectionStatus => _connectionStatusController.stream;
+
+  Future<bool> checkConnection() async {
+    final result = await _connectivity.checkConnectivity();
+    final isConnected = result != ConnectivityResult.none;
+    _connectionStatusController.add(isConnected);
+    return isConnected;
+  }
+
+  void monitorConnection() {
+    _connectivity.onConnectivityChanged.listen((result) {
+      _connectionStatusController.add(result != ConnectivityResult.none);
+    });
+  }
+}
+2. Secure Storage Handler
+dartCopyclass SecureStorageHandler {
+  final FlutterSecureStorage _storage;
+  
+  Future<void> saveSecureData(String key, String value) async {
+    await _storage.write(
+      key: key,
+      value: value,
+      aOptions: const AndroidOptions(encryptedSharedPreferences: true),
+      iOptions: const IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+    );
+  }
+
+  Future<String?> getSecureData(String key) async {
+    return await _storage.read(key: key);
+  }
+
+  Future<void> deleteSecureData(String key) async {
+    await _storage.delete(key: key);
+  }
+}
+3. App Lifecycle Manager
+dartCopyclass AppLifecycleManager with WidgetsBindingObserver {
+  final VoidCallback? onResume;
+  final VoidCallback? onPause;
+  final VoidCallback? onDetach;
+  final VoidCallback? onInactive;
+
+  AppLifecycleManager({
+    this.onResume,
+    this.onPause,
+    this.onDetach,
+    this.onInactive,
+  }) {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        onResume?.call();
+        break;
+      case AppLifecycleState.paused:
+        onPause?.call();
+        break;
+      case AppLifecycleState.detached:
+        onDetach?.call();
+        break;
+      case AppLifecycleState.inactive:
+        onInactive?.call();
+        break;
+    }
+  }
+
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+  }
+}
+4. Deep Link Handler
+dartCopyclass DeepLinkHandler {
+  final GlobalKey<NavigatorState> _navigatorKey;
+  
+  Future<void> handleDeepLink(Uri uri) async {
+    switch (uri.path) {
+      case '/product':
+        final productId = uri.queryParameters['id'];
+        if (productId != null) {
+          _navigatorKey.currentState?.pushNamed(
+            '/product-details',
+            arguments: productId,
+          );
+        }
+        break;
+      case '/notification':
+        final notificationId = uri.queryParameters['id'];
+        if (notificationId != null) {
+          _navigatorKey.currentState?.pushNamed(
+            '/notification-details',
+            arguments: notificationId,
+          );
+        }
+        break;
+    }
+  }
+
+  void initDeepLinks() {
+    // Handle links when app is started by link
+    getInitialLink().then((link) {
+      if (link != null) {
+        handleDeepLink(Uri.parse(link));
+      }
+    });
+
+    // Handle links when app is in foreground/background
+    linkStream.listen((String? link) {
+      if (link != null) {
+        handleDeepLink(Uri.parse(link));
+      }
+    });
+  }
+}
+5. Image Cache Manager
+dartCopyclass ImageCacheManager {
+  final CacheManager _cacheManager;
+
+  Future<File> getImage(String url) async {
+    try {
+      final fileInfo = await _cacheManager.getFileFromCache(url);
+      if (fileInfo != null && !fileInfo.expired) {
+        return fileInfo.file;
+      }
+      
+      return await _cacheManager.downloadFile(
+        url,
+        key: url,
+        maxAge: const Duration(days: 7),
+      );
+    } catch (e) {
+      throw CacheException('Failed to get/download image');
+    }
+  }
+
+  Future<void> clearCache() async {
+    await _cacheManager.emptyCache();
+  }
+
+  Future<void> removeFile(String url) async {
+    await _cacheManager.removeFile(url);
+  }
+}
+6. Version Management
+dartCopyclass VersionManager {
+  final PackageInfo _packageInfo;
+  
+  Future<bool> needsUpdate() async {
+    try {
+      final currentVersion = _packageInfo.version;
+      final minVersion = await _fetchMinRequiredVersion();
+      
+      return _compareVersions(currentVersion, minVersion) < 0;
+    } catch (e) {
+      // If we can't check version, assume no update needed
+      return false;
+    }
+  }
+
+  int _compareVersions(String v1, String v2) {
+    final v1Parts = v1.split('.').map(int.parse).toList();
+    final v2Parts = v2.split('.').map(int.parse).toList();
+    
+    for (var i = 0; i < 3; i++) {
+      if (v1Parts[i] > v2Parts[i]) return 1;
+      if (v1Parts[i] < v2Parts[i]) return -1;
+    }
+    return 0;
+  }
+}
+7. Permission Handler
+dartCopyclass PermissionHandler {
+  Future<bool> requestCameraPermission() async {
+    final status = await Permission.camera.request();
+    return status.isGranted;
+  }
+
+  Future<bool> requestLocationPermission() async {
+    final status = await Permission.location.request();
+    return status.isGranted;
+  }
+
+  Future<bool> requestNotificationPermission() async {
+    final status = await Permission.notification.request();
+    return status.isGranted;
+  }
+
+  Future<void> openSettings() async {
+    await openAppSettings();
+  }
+}
+8. Memory Management
+dartCopyclass MemoryManager {
+  final int _maxCacheSize;
+  final Map<String, WeakReference<dynamic>> _cache;
+  
+  void addToCache(String key, dynamic value) {
+    if (_cache.length >= _maxCacheSize) {
+      _cache.remove(_cache.keys.first);
+    }
+    _cache[key] = WeakReference(value);
+  }
+
+  T? getFromCache<T>(String key) {
+    final ref = _cache[key]?.target;
+    return ref is T ? ref : null;
+  }
+
+  void clearMemory() {
+    _cache.clear();
+    ImageCache().clear();
+    PaintingBinding.instance.imageCache.clear();
+  }
+}
+9. Background Task Manager
+dartCopyclass BackgroundTaskManager {
+  static const _workManagerTaskName = 'backgroundSync';
+
+  Future<void> initializeBackgroundTasks() async {
+    await Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: !kReleaseMode,
+    );
+  }
+
+  Future<void> schedulePeriodicSync() async {
+    await Workmanager().registerPeriodicTask(
+      _workManagerTaskName,
+      _workManagerTaskName,
+      frequency: const Duration(hours: 24),
+      constraints: Constraints(
+        networkType: NetworkType.connected,
+        requiresBatteryNotLow: true,
+      ),
+    );
+  }
+
+  Future<void> cancelBackgroundTasks() async {
+    await Workmanager().cancelAll();
+  }
+}
+10. Device Info Manager
+dartCopyclass DeviceInfoManager {
+  final DeviceInfoPlugin _deviceInfo;
+  final PackageInfo _packageInfo;
+
+  Future<Map<String, dynamic>> getDeviceInfo() async {
+    final deviceInfo = await _deviceInfo.deviceInfo;
+    final packageInfo = await PackageInfo.fromPlatform();
+
+    return {
+      'device': deviceInfo.data,
+      'app_version': packageInfo.version,
+      'build_number': packageInfo.buildNumber,
+      'package_name': packageInfo.packageName,
+    };
+  }
+}
+11. Localization Manager
+dartCopyclass LocalizationManager {
+  final SharedPreferences _prefs;
+  static const String _languageKey = 'selected_language';
+
+  Future<void> setLanguage(String languageCode) async {
+    await _prefs.setString(_languageKey, languageCode);
+  }
+
+  String getLanguage() {
+    return _prefs.getString(_languageKey) ?? 'en';
+  }
+
+  Locale getLocale() {
+    final languageCode = getLanguage();
+    return Locale(languageCode);
+  }
+}
+
+1. App Router Management
+dartCopyclass AppRouter {
+  static final navigatorKey = GlobalKey<NavigatorState>();
+  
+  static final GoRouter router = GoRouter(
+    navigatorKey: navigatorKey,
+    initialLocation: '/',
+    debugLogDiagnostics: !kReleaseMode,
+    routes: [
+      GoRoute(
+        path: '/',
+        name: 'home',
+        builder: (context, state) => const HomeScreen(),
+        routes: [
+          GoRoute(
+            path: 'profile/:id',
+            name: 'profile',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return ProfileScreen(userId: id);
+            },
+          ),
+        ],
+      ),
+    ],
+    errorBuilder: (context, state) => const ErrorScreen(),
+    redirect: (context, state) {
+      // Handle authentication redirects
+      final isLoggedIn = getIt<AuthService>().isLoggedIn;
+      final isGoingToLogin = state.matchedLocation == '/login';
+
+      if (!isLoggedIn && !isGoingToLogin) {
+        return '/login';
+      }
+      if (isLoggedIn && isGoingToLogin) {
+        return '/';
+      }
+      return null;
+    },
+  );
+}
+2. State Management Utils
+dartCopyabstract class BaseState {
+  const BaseState();
+}
+
+class InitialState extends BaseState {
+  const InitialState();
+}
+
+class LoadingState extends BaseState {
+  const LoadingState();
+}
+
+class ErrorState extends BaseState {
+  final String message;
+  final Object? error;
+  
+  const ErrorState(this.message, [this.error]);
+}
+
+class SuccessState<T> extends BaseState {
+  final T data;
+  
+  const SuccessState(this.data);
+}
+
+// Usage with BLoC
+abstract class BaseBloc<Event, State> extends Bloc<Event, State> {
+  final ErrorHandler errorHandler;
+
+  BaseBloc(super.initialState, this.errorHandler);
+
+  Future<void> handleBusinessLogic<T>({
+    required Future<T> Function() action,
+    required void Function(T data) onSuccess,
+    void Function(String message)? onError,
+  }) async {
+    try {
+      final result = await action();
+      onSuccess(result);
+    } catch (e) {
+      final message = errorHandler.getErrorMessage(e);
+      onError?.call(message);
+    }
+  }
+}
+3. Form Validation Manager
+dartCopyclass FormValidationManager {
+  static String? validateRequired(String? value, String fieldName) {
+    if (value == null || value.trim().isEmpty) {
+      return '$fieldName is required';
+    }
+    return null;
+  }
+
+  static String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  static String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    // Check for complexity
+    if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)').hasMatch(value)) {
+      return 'Password must contain uppercase, lowercase and numbers';
+    }
+    return null;
+  }
+
+  static String? validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Phone number is required';
+    }
+    final phoneRegex = RegExp(r'^\+?[\d\s-]{10,}$');
+    if (!phoneRegex.hasMatch(value)) {
+      return 'Please enter a valid phone number';
+    }
+    return null;
+  }
+}
+4. API Interceptors
+dartCopyclass ApiInterceptor extends Interceptor {
+  final AuthService _authService;
+  final Dio _dio;
+
+  ApiInterceptor(this._authService, this._dio);
+
+  @override
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    // Add auth token
+    final token = await _authService.getToken();
+    if (token != null) {
+      options.headers['Authorization'] = 'Bearer $token';
+    }
+    
+    // Add common headers
+    options.headers['Accept'] = 'application/json';
+    options.headers['Content-Type'] = 'application/json';
+    
+    handler.next(options);
+  }
+
+  @override
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
+    if (err.response?.statusCode == 401) {
+      // Token expired, try to refresh
+      try {
+        final newToken = await _authService.refreshToken();
+        if (newToken != null) {
+          // Retry the original request
+          final opts = err.requestOptions;
+          opts.headers['Authorization'] = 'Bearer $newToken';
+          final response = await _dio.fetch(opts);
+          handler.resolve(response);
+          return;
+        }
+      } catch (e) {
+        // Refresh failed, logout user
+        await _authService.logout();
+      }
+    }
+    handler.next(err);
+  }
+}
+5. Custom Widget Base Classes
+dartCopyabstract class BaseStatelessWidget extends StatelessWidget {
+  const BaseStatelessWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: buildContent(context),
+    );
+  }
+
+  Widget buildContent(BuildContext context);
+}
+
+abstract class BaseStatefulWidget extends StatefulWidget {
+  const BaseStatefulWidget({super.key});
+}
+
+abstract class BaseState<T extends BaseStatefulWidget> extends State<T>
+    with WidgetsBindingObserver {
+  bool _mounted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _mounted = true;
+    WidgetsBinding.instance.addObserver(this);
+    onInit();
+  }
+
+  @override
+  void dispose() {
+    _mounted = false;
+    WidgetsBinding.instance.removeObserver(this);
+    onDispose();
+    super.dispose();
+  }
+
+  void onInit() {}
+  void onDispose() {}
+
+  bool get mounted => _mounted;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: buildContent(context),
+    );
+  }
+
+  Widget buildContent(BuildContext context);
+}
+6. App Configuration Manager
+dartCopyclass AppConfig {
+  static final AppConfig _instance = AppConfig._internal();
+  factory AppConfig() => _instance;
+  AppConfig._internal();
+
+  late final String apiUrl;
+  late final String apiKey;
+  late final bool enableAnalytics;
+  late final int cacheTimeout;
+
+  Future<void> initialize() async {
+    final flavor = const String.fromEnvironment('FLAVOR', defaultValue: 'dev');
+    
+    switch (flavor) {
+      case 'prod':
+        apiUrl = 'https://api.example.com';
+        enableAnalytics = true;
+        cacheTimeout = 3600;
+        break;
+      case 'staging':
+        apiUrl = 'https://staging-api.example.com';
+        enableAnalytics = true;
+        cacheTimeout = 300;
+        break;
+      default:
+        apiUrl = 'https://dev-api.example.com';
+        enableAnalytics = false;
+        cacheTimeout = 0;
+    }
+
+    // Load secure configuration
+    final secureStorage = getIt<SecureStorage>();
+    apiKey = await secureStorage.read('API_KEY') ?? '';
+  }
+}
+7. App Theme Manager
+dartCopyclass AppThemeManager {
+  static final AppThemeManager _instance = AppThemeManager._internal();
+  factory AppThemeManager() => _instance;
+  AppThemeManager._internal();
+
+  final _themeController = StreamController<ThemeMode>.broadcast();
+  Stream<ThemeMode> get themeStream => _themeController.stream;
+
+  ThemeMode _currentTheme = ThemeMode.system;
+  ThemeMode get currentTheme => _currentTheme;
+
+  Future<void> initialize() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedTheme = prefs.getString('theme');
+    if (savedTheme != null) {
+      _currentTheme = ThemeMode.values.firstWhere(
+        (e) => e.toString() == savedTheme,
+        orElse: () => ThemeMode.system,
+      );
+      _themeController.add(_currentTheme);
+    }
+  }
+
+  Future<void> setTheme(ThemeMode theme) async {
+    _currentTheme = theme;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('theme', theme.toString());
+    _themeController.add(theme);
+  }
+
+  void dispose() {
+    _themeController.close();
+  }
+}
+8. Network Response Parser
+dartCopyclass ResponseParser {
+  static T parseResponse<T>(
+    Map<String, dynamic> json,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
+    try {
+      return fromJson(json);
+    } catch (e) {
+      throw ParseException(
+        'Failed to parse response: ${e.toString()}',
+        json.toString(),
+      );
+    }
+  }
+
+  static List<T> parseList<T>(
+    List<dynamic> jsonList,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
+    try {
+      return jsonList
+          .cast<Map<String, dynamic>>()
+          .map((json) => fromJson(json))
+          .toList();
+    } catch (e) {
+      throw ParseException(
+        'Failed to parse list response: ${e.toString()}',
+        jsonList.toString(),
+      );
+    }
+  }
+
+  static Map<String, dynamic> validateResponse(Response response) {
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw ParseException(
+        'Invalid response format',
+        data.toString(),
+      );
+    }
+    return data;
+  }
+}
+9. Platform-Specific Implementation Handler
+dartCopyabstract class PlatformService {
+  static final PlatformService instance = _getPlatformSpecific();
+
+  static PlatformService _getPlatformSpecific() {
+    if (Platform.isIOS) {
+      return IosPlatformService();
+    } else if (Platform.isAndroid) {
+      return AndroidPlatformService();
+    }
+    throw UnsupportedError('Unsupported platform');
+  }
+
+  Future<void> showNotification(String title, String body);
+  Future<void> share(String content);
+  Future<void> openSettings();
+}
+
+class IosPlatformService implements PlatformService {
+  @override
+  Future<void> showNotification(String title, String body) async {
+    // iOS specific implementation
+  }
+
+  @override
+  Future<void> share(String content) async {
+    // iOS specific implementation
+  }
+
+  @override
+  Future<void> openSettings() async {
+    // iOS specific implementation
+  }
+}
+
+class AndroidPlatformService implements PlatformService {
+  @override
+  Future<void> showNotification(String title, String body) async {
+    // Android specific implementation
+  }
+
+  @override
+  Future<void> share(String content) async {
+    // Android specific implementation
+  }
+
+  @override
+  Future<void> openSettings() async {
+    // Android specific implementation
+  }
+}
+10. Custom Exception Handler
+dartCopyclass ExceptionHandler {
+  static String getMessage(dynamic error) {
+    if (error is DioError) {
+      return _handleDioError(error);
+    } else if (error is SocketException) {
+      return 'No internet connection';
+    } else if (error is TimeoutException) {
+      return 'Connection timed out';
+    } else if (error is FormatException) {
+      return 'Invalid data format';
+    } else {
+      return 'An unexpected error occurred';
+    }
+  }
+
+  static String _handleDioError(DioError error) {
+    switch (error.type) {
+      case DioErrorType.connectTimeout:
+      case DioErrorType.sendTimeout:
+      case DioErrorType.receiveTimeout:
+        return 'Connection timed out';
+      case DioErrorType.response:
+        return _getMessageFromStatusCode(error.response?.statusCode);
+      case DioErrorType.cancel:
+        return 'Request cancelled';
+      case DioErrorType.other:
+        return 'No internet connection';
+      default:
+        return 'An unexpected error occurred';
+    }
+  }
+
+  static String _getMessageFromStatusCode(int? statusCode) {
+    switch (statusCode) {
+      case 400:
+        return 'Bad request';
+      case 401:
+        return 'Unauthorized';
+      case 403:
+        return 'Forbidden';
+      case 404:
+        return 'Not found';
+      case 500:
+        return 'Server error';
+      default:
+        return 'Something went wrong';
+    }
+  }
+}
+
+1. Token Manager & Auto Refresh
+dartCopyclass TokenManager {
+  final SecureStorage _storage;
+  final ApiClient _apiClient;
+  Timer? _refreshTimer;
+
+  TokenManager(this._storage, this._apiClient);
+
+  Future<String?> getAccessToken() async {
+    return await _storage.read('access_token');
+  }
+
+  Future<void> setTokens({
+    required String accessToken,
+    required String refreshToken,
+    required int expiresIn,
+  }) async {
+    await Future.wait([
+      _storage.write('access_token', accessToken),
+      _storage.write('refresh_token', refreshToken),
+      _storage.write('token_expiry', DateTime.now()
+          .add(Duration(seconds: expiresIn))
+          .toIso8601String()),
+    ]);
+
+    _scheduleTokenRefresh(expiresIn);
+  }
+
+  void _scheduleTokenRefresh(int expiresIn) {
+    _refreshTimer?.cancel();
+    // Refresh 1 minute before expiry
+    final refreshTime = Duration(seconds: expiresIn - 60);
+    _refreshTimer = Timer(refreshTime, _refreshToken);
+  }
+
+  Future<void> _refreshToken() async {
+    try {
+      final refreshToken = await _storage.read('refresh_token');
+      if (refreshToken == null) return;
+
+      final response = await _apiClient.refreshToken(refreshToken);
+      await setTokens(
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+        expiresIn: response.expiresIn,
+      );
+    } catch (e) {
+      // Handle refresh failure
+      await clearTokens();
+    }
+  }
+
+  Future<void> clearTokens() async {
+    _refreshTimer?.cancel();
+    await _storage.deleteAll();
+  }
+}
+2. App Update Manager
+dartCopyclass AppUpdateManager {
+  final PackageInfo _packageInfo;
+  final ApiClient _apiClient;
+
+  Future<UpdateStatus> checkForUpdates() async {
+    try {
+      final currentVersion = Version.parse(_packageInfo.version);
+      final latestVersion = await _fetchLatestVersion();
+      final minVersion = await _fetchMinRequiredVersion();
+
+      if (currentVersion < minVersion) {
+        return UpdateStatus.required;
+      }
+      if (currentVersion < latestVersion) {
+        return UpdateStatus.optional;
+      }
+      return UpdateStatus.upToDate;
+    } catch (e) {
+      // If we can't check version, assume up to date
+      return UpdateStatus.upToDate;
+    }
+  }
+
+  Future<void> showUpdateDialog(BuildContext context, UpdateStatus status) async {
+    if (status == UpdateStatus.upToDate) return;
+
+    final isRequired = status == UpdateStatus.required;
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: !isRequired,
+      builder: (context) => WillPopScope(
+        onWillPop: () async => !isRequired,
+        child: AlertDialog(
+          title: Text(isRequired ? 'Update Required' : 'Update Available'),
+          content: Text(isRequired 
+            ? 'Please update the app to continue using it.'
+            : 'A new version is available. Would you like to update?'),
+          actions: [
+            if (!isRequired)
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Later'),
+              ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Update Now'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result == true) {
+      await _openStore();
+    } else if (isRequired) {
+      exit(0);
+    }
+  }
+}
+3. Performance Monitor
+dartCopyclass PerformanceMonitor {
+  static final _instance = PerformanceMonitor._();
+  factory PerformanceMonitor() => _instance;
+  PerformanceMonitor._();
+
+  final _metrics = <String, List<Duration>>{};
+  Timer? _reportingTimer;
+
+  void startTracking() {
+    _reportingTimer = Timer.periodic(
+      const Duration(minutes: 5),
+      (_) => _reportMetrics(),
+    );
+  }
+
+  Future<T> trackOperation<T>({
+    required String name,
+    required Future<T> Function() operation,
+  }) async {
+    final stopwatch = Stopwatch()..start();
+    try {
+      return await operation();
+    } finally {
+      stopwatch.stop();
+      _recordMetric(name, stopwatch.elapsed);
+    }
+  }
+
+  void _recordMetric(String name, Duration duration) {
+    _metrics.putIfAbsent(name, () => []).add(duration);
+  }
+
+  void _reportMetrics() {
+    for (final entry in _metrics.entries) {
+      final durations = entry.value;
+      if (durations.isEmpty) continue;
+
+      final avg = durations.reduce((a, b) => a + b) ~/ durations.length;
+      final max = durations.reduce((a, b) => a > b ? a : b);
+      final min = durations.reduce((a, b) => a < b ? a : b);
+
+      debugPrint('''
+Performance Report for ${entry.key}:
+  Average: ${avg.inMilliseconds}ms
+  Max: ${max.inMilliseconds}ms
+  Min: ${min.inMilliseconds}ms
+  Samples: ${durations.length}
+''');
+    }
+    _metrics.clear();
+  }
+
+  void dispose() {
+    _reportingTimer?.cancel();
+    _metrics.clear();
+  }
+}
+4. Memory Leak Detector
+dartCopyclass MemoryLeakDetector {
+  static final _instance = MemoryLeakDetector._();
+  factory MemoryLeakDetector() => _instance;
+  MemoryLeakDetector._();
+
+  final _objectReferences = <String, WeakReference<Object>>{};
+  Timer? _checkTimer;
+
+  void startTracking() {
+    _checkTimer = Timer.periodic(
+      const Duration(minutes: 1),
+      (_) => _checkForLeaks(),
+    );
+  }
+
+  void trackObject(String id, Object object) {
+    _objectReferences[id] = WeakReference(object);
+  }
+
+  void _checkForLeaks() {
+    final leakedObjects = <String>[];
+
+    for (final entry in _objectReferences.entries) {
+      if (entry.value.target == null) {
+        leakedObjects.add(entry.key);
+      }
+    }
+
+    if (leakedObjects.isNotEmpty) {
+      debugPrint('Potential memory leaks detected: $leakedObjects');
+    }
+
+    // Clean up references to collected objects
+    for (final id in leakedObjects) {
+      _objectReferences.remove(id);
+    }
+  }
+
+  void dispose() {
+    _checkTimer?.cancel();
+    _objectReferences.clear();
+  }
+}
+5. Firebase Remote Config Manager
+dartCopyclass RemoteConfigManager {
+  final FirebaseRemoteConfig _remoteConfig;
+  final defaults = <String, dynamic>{
+    'app_maintenance': false,
+    'feature_flags': {
+      'new_ui_enabled': false,
+      'chat_enabled': true,
+    },
+    'api_timeout': 30,
+  };
+
+  Future<void> initialize() async {
+    await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(minutes: 1),
+      minimumFetchInterval: const Duration(hours: 1),
+    ));
+
+    await _remoteConfig.setDefaults(defaults);
+    await _remoteConfig.fetchAndActivate();
+  }
+
+  bool get isInMaintenance => _remoteConfig.getBool('app_maintenance');
+  
+  Map<String, dynamic> get featureFlags {
+    return jsonDecode(_remoteConfig.getString('feature_flags'));
+  }
+
+  int get apiTimeout => _remoteConfig.getInt('api_timeout');
+
+  Future<void> refresh() async {
+    try {
+      await _remoteConfig.fetch();
+      await _remoteConfig.activate();
+    } catch (e) {
+      debugPrint('Failed to refresh remote config: $e');
+    }
+  }
+}
+6. Analytics Event Manager
+dartCopyclass AnalyticsEventManager {
+  final FirebaseAnalytics _analytics;
+  final Queue<AnalyticsEvent> _eventQueue = Queue();
+  bool _isSending = false;
+
+  Future<void> logEvent({
+    required String name,
+    Map<String, dynamic>? parameters,
+    bool immediate = false,
+  }) async {
+    final event = AnalyticsEvent(
+      name: name,
+      parameters: parameters,
+      timestamp: DateTime.now(),
+    );
+
+    if (immediate) {
+      await _sendEvent(event);
+    } else {
+      _eventQueue.add(event);
+      _processPendingEvents();
+    }
+  }
+
+  Future<void> _processPendingEvents() async {
+    if (_isSending || _eventQueue.isEmpty) return;
+
+    _isSending = true;
+    while (_eventQueue.isNotEmpty) {
+      final event = _eventQueue.removeFirst();
+      await _sendEvent(event);
+    }
+    _isSending = false;
+  }
+
+  Future<void> _sendEvent(AnalyticsEvent event) async {
+    try {
+      await _analytics.logEvent(
+        name: event.name,
+        parameters: {
+          ...?event.parameters,
+          'timestamp': event.timestamp.toIso8601String(),
+        },
+      );
+    } catch (e) {
+      debugPrint('Failed to log analytics event: $e');
+    }
+  }
+}
+
+class AnalyticsEvent {
+  final String name;
+  final Map<String, dynamic>? parameters;
+  final DateTime timestamp;
+
+  AnalyticsEvent({
+    required this.name,
+    this.parameters,
+    required this.timestamp,
+  });
+}
+7. Test Helper Utilities
+dartCopyclass TestHelpers {
+  static Future<void> pumpUntilFound(
+    WidgetTester tester,
+    Finder finder, {
+    Duration timeout = const Duration(seconds: 10),
+  }) async {
+    bool timerDone = false;
+    final timer = Timer(timeout, () => timerDone = true);
+
+    while (!timerDone) {
+      await tester.pump(const Duration(milliseconds: 100));
+      
+      final found = tester.any(finder);
+      if (found) {
+        timer.cancel();
+        break;
+      }
+    }
+
+    expect(timerDone, isFalse, reason: 'Timed out looking for $finder');
+  }
+
+  static Future<void> pumpUntilSettled(
+    WidgetTester tester, {
+    Duration timeout = const Duration(seconds: 10),
+  }) async {
+    bool timerDone = false;
+    final timer = Timer(timeout, () => timerDone = true);
+
+    while (!timerDone) {
+      await tester.pump(const Duration(milliseconds: 100));
+      
+      final animations = tester.binding.transientCallbacks;
+      if (animations == null || animations.isEmpty) {
+        timer.cancel();
+        break;
+      }
+    }
+
+    expect(timerDone, isFalse, reason: 'Timed out waiting for animations');
+  }
+}
+8. API Response Cache
+dartCopyclass ApiCache {
+  final Cache _cache = Cache();
+  final Duration _defaultDuration;
+
+  ApiCache([this._defaultDuration = const Duration(minutes: 5)]);
+
+  Future<T> fetch<T>({
+    required String key,
+    required Future<T> Function() fetchData,
+    Duration? duration,
+  }) async {
+    final cachedData = await _cache.get<T>(key);
+    if (cachedData != null) {
+      return cachedData;
+    }
+
+    final data = await fetchData();
+    await _cache.set(
+      key,
+      data,
+      duration ?? _defaultDuration,
+    );
+    return data;
+  }
+
+  Future<void> invalidate(String key) async {
+    await _cache.invalidate(key);
+  }
+
+  Future<void> clear() async {
+    await _cache.clear();
+  }
+}
+
+class Cache {
+  final Map<String, _CacheEntry> _cache = {};
+
+  Future<T?> get<T>(String key) async {
+    final entry = _cache[key];
+    if (entry == null) return null;
+    if (entry.isExpired) {
+      _cache.remove(key);
+      return null;
+    }
+    return entry.value as T;
+  }
+
+  Future<void> set(
+    String key,
+    dynamic value,
+    Duration duration,
+  ) async {
+    _cache[key] = _CacheEntry(
+      value: value,
+      expiryTime: DateTime.now().add(duration),
+    );
+  }
+
+  Future<void> invalidate(String key) async {
+    _cache.remove(key);
+  }
+
+  Future<void> clear() async {
+    _cache.clear();
+  }
+}
+
+class _CacheEntry {
+  final dynamic value;
+  final DateTime expiryTime;
+
+  _CacheEntry({
+    required this.value,
+    required this.expiryTime,
+  });
+
+  bool get isExpired => DateTime.now().isAfter(expiryTime);
+}
+
+## 1. App Debug Tools
+```dart
+class DebugTools {
+  static final _instance = DebugTools._();
+  factory DebugTools() => _instance;
+  DebugTools._();
+
+  bool get isDebugMode => !kReleaseMode;
+
+  void showDebugOverlay(BuildContext context) {
+    if (!isDebugMode) return;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => DebugPanel(),
+    );
+  }
+}
+
+class DebugPanel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        ListTile(
+          title: Text('Clear Cache'),
+          onTap: () async {
+            await getIt<CacheManager>().clearAll();
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          title: Text('Network Logs'),
+          onTap: () => _showNetworkLogs(context),
+        ),
+        ListTile(
+          title: Text('User Session'),
+          onTap: () => _showUserSession(context),
+        ),
+        ListTile(
+          title: Text('App Settings'),
+          onTap: () => _showAppSettings(context),
+        ),
+        ListTile(
+          title: Text('Force Crash'),
+          onTap: () => throw TestException(),
+        ),
+      ],
+    );
+  }
+
+  void _showNetworkLogs(BuildContext context) {
+    // Show network logs implementation
+  }
+
+  void _showUserSession(BuildContext context) {
+    // Show user session details
+  }
+
+  void _showAppSettings(BuildContext context) {
+    // Show app settings
+  }
+}
+```
+
+## 2. Database Logger
+```dart
+class DatabaseLogger {
+  static final _instance = DatabaseLogger._();
+  factory DatabaseLogger() => _instance;
+  DatabaseLogger._();
+
+  final _logBuffer = <String>[];
+  static const _maxBufferSize = 1000;
+
+  void logQuery(String query, List<dynamic> parameters) {
+    if (!kDebugMode) return;
+
+    final timestamp = DateTime.now().toIso8601String();
+    final log = '$timestamp: $query - Parameters: $parameters';
+    
+    _logBuffer.add(log);
+    if (_logBuffer.length > _maxBufferSize) {
+      _logBuffer.removeAt(0);
+    }
+
+    debugPrint('DB Query: $log');
+  }
+
+  void logError(String operation, dynamic error) {
+    final timestamp = DateTime.now().toIso8601String();
+    final log = '$timestamp: Error in $operation - $error';
+    
+    _logBuffer.add(log);
+    if (_logBuffer.length > _maxBufferSize) {
+      _logBuffer.removeAt(0);
+    }
+
+    debugPrint('DB Error: $log');
+  }
+
+  List<String> getLogs() => List.unmodifiable(_logBuffer);
+  
+  void clearLogs() => _logBuffer.clear();
+}
+```
+
+## 3. Secure Data Manager
+```dart
+class SecureDataManager {
+  final FlutterSecureStorage _storage;
+  final _encrypter = _createEncrypter();
+  
+  static Encrypter _createEncrypter() {
+    final key = Key.fromSecureRandom(32);
+    final iv = IV.fromSecureRandom(16);
+    return Encrypter(AES(key));
+  }
+
+  Future<void> saveSecureData(String key, String value) async {
+    try {
+      final encrypted = _encrypter.encrypt(value).base64;
+      await _storage.write(key: key, value: encrypted);
+    } catch (e) {
+      throw SecureStorageException('Failed to save secure data: $e');
+    }
+  }
+
+  Future<String?> getSecureData(String key) async {
+    try {
+      final encrypted = await _storage.read(key: key);
+      if (encrypted == null) return null;
+      
+      return _encrypter.decrypt64(encrypted);
+    } catch (e) {
+      throw SecureStorageException('Failed to read secure data: $e');
+    }
+  }
+
+  Future<void> deleteSecureData(String key) async {
+    try {
+      await _storage.delete(key: key);
+    } catch (e) {
+      throw SecureStorageException('Failed to delete secure data: $e');
+    }
+  }
+
+  Future<void> clearAllSecureData() async {
+    try {
+      await _storage.deleteAll();
+    } catch (e) {
+      throw SecureStorageException('Failed to clear secure data: $e');
+    }
+  }
+}
+```
+
+## 4. App Monitor Service
+```dart
+class AppMonitorService {
+  final _metrics = <String, dynamic>{};
+  Timer? _reportingTimer;
+
+  void startMonitoring() {
+    _reportingTimer = Timer.periodic(
+      const Duration(minutes: 15),
+      (_) => _reportMetrics(),
+    );
+
+    _monitorMemory();
+    _monitorBattery();
+    _monitorFrameRate();
+  }
+
+  void _monitorMemory() {
+    Timer.periodic(const Duration(seconds: 30), (_) {
+      // Get memory usage
+      final memoryUsage = ProcessInfo.currentRss;
+      _metrics['memory_usage'] = memoryUsage;
+    });
+  }
+
+  void _monitorBattery() {
+    Battery().onBatteryStateChanged.listen((state) {
+      _metrics['battery_state'] = state.toString();
+    });
+  }
+
+  void _monitorFrameRate() {
+    var frames = 0;
+    var lastTime = DateTime.now();
+
+    SchedulerBinding.instance.addPersistentFrameCallback((_) {
+      frames++;
+      final now = DateTime.now();
+      final elapsed = now.difference(lastTime);
+      
+      if (elapsed.inSeconds >= 1) {
+        final fps = frames / elapsed.inSeconds;
+        _metrics['fps'] = fps;
+        frames = 0;
+        lastTime = now;
+      }
+    });
+  }
+
+  void _reportMetrics() {
+    // Report metrics to analytics
+    FirebaseAnalytics.instance.logEvent(
+      name: 'app_metrics',
+      parameters: _metrics,
+    );
+  }
+
+  void dispose() {
+    _reportingTimer?.cancel();
+  }
+}
+```
+
+## 5. API Response Validator
+```dart
+class ApiResponseValidator {
+  static T validateResponse<T>({
+    required Map<String, dynamic> json,
+    required T Function(Map<String, dynamic>) converter,
+    required List<String> requiredFields,
+  }) {
+    // Check for required fields
+    for (final field in requiredFields) {
+      if (!json.containsKey(field)) {
+        throw ApiValidationException(
+          'Missing required field: $field',
+          json.toString(),
+        );
+      }
+    }
+
+    try {
+      return converter(json);
+    } catch (e) {
+      throw ApiValidationException(
+        'Failed to parse response',
+        'Error: $e\nData: $json',
+      );
+    }
+  }
+
+  static List<T> validateList<T>({
+    required List<dynamic> jsonList,
+    required T Function(Map<String, dynamic>) converter,
+    required List<String> requiredFields,
+  }) {
+    return jsonList.map((item) {
+      if (item is! Map<String, dynamic>) {
+        throw ApiValidationException(
+          'Invalid list item format',
+          item.toString(),
+        );
+      }
+
+      return validateResponse(
+        json: item,
+        converter: converter,
+        requiredFields: requiredFields,
+      );
+    }).toList();
+  }
+}
+```
+
+## 6. App State Monitor
+```dart
+class AppStateMonitor with WidgetsBindingObserver {
+  final _stateController = StreamController<AppLifecycleState>.broadcast();
+  Stream<AppLifecycleState> get stateStream => _stateController.stream;
+
+  Timer? _inactivityTimer;
+  final Duration _inactivityTimeout;
+  final VoidCallback onInactivityTimeout;
+
+  AppStateMonitor({
+    Duration inactivityTimeout = const Duration(minutes: 5),
+    required this.onInactivityTimeout,
+  }) : _inactivityTimeout = inactivityTimeout {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _stateController.add(state);
+    _handleStateChange(state);
+  }
+
+  void _handleStateChange(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _resetInactivityTimer();
+        break;
+      case AppLifecycleState.paused:
+        _startInactivityTimer();
+        break;
+      case AppLifecycleState.inactive:
+        // Handle inactive state
+        break;
+      case AppLifecycleState.detached:
+        // Handle detached state
+        break;
+    }
+  }
+
+  void _resetInactivityTimer() {
+    _inactivityTimer?.cancel();
+  }
+
+  void _startInactivityTimer() {
+    _inactivityTimer?.cancel();
+    _inactivityTimer = Timer(_inactivityTimeout, onInactivityTimeout);
+  }
+
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _inactivityTimer?.cancel();
+    _stateController.close();
+  }
+}
+```
+
+## 7. Widget Performance Tracker
+```dart
+class PerformanceTrackerWidget extends StatelessWidget {
+  final Widget child;
+  final String widgetName;
+
+  const PerformanceTrackerWidget({
+    required this.child,
+    required this.widgetName,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (kReleaseMode) return child;
+
+    return _PerformanceTracker(
+      widgetName: widgetName,
+      child: child,
+    );
+  }
+}
+
+class _PerformanceTracker extends SingleChildRenderObjectWidget {
+  final String widgetName;
+
+  const _PerformanceTracker({
+    required Widget child,
+    required this.widgetName,
+  }) : super(child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _PerformanceRenderObject(widgetName);
+  }
+}
+
+class _PerformanceRenderObject extends RenderProxyBox {
+  final String widgetName;
+  Stopwatch? _buildStopwatch;
+
+  _PerformanceRenderObject(this.widgetName);
+
+  @override
+  void performLayout() {
+    _buildStopwatch = Stopwatch()..start();
+    super.performLayout();
+    _buildStopwatch?.stop();
+    
+    debugPrint('$widgetName layout time: ${_buildStopwatch?.elapsedMilliseconds}ms');
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    _buildStopwatch = Stopwatch()..start();
+    super.paint(context, offset);
+    _buildStopwatch?.stop();
+    
+    debugPrint('$widgetName paint time: ${_buildStopwatch?.elapsedMilliseconds}ms');
+  }
+}
+```
+
+## 8. API Rate Limiter
+```dart
+class RateLimiter {
+  final Map<String, Queue<DateTime>> _timestamps = {};
+  final int _maxRequests;
+  final Duration _interval;
+
+  RateLimiter({
+    int maxRequests = 60,
+    Duration interval = const Duration(minutes: 1),
+  })  : _maxRequests = maxRequests,
+        _interval = interval;
+
+  bool shouldAllowRequest(String endpoint) {
+    final now = DateTime.now();
+    final timestamps = _timestamps[endpoint] ??= Queue<DateTime>();
+
+    // Remove old timestamps
+    while (timestamps.isNotEmpty &&
+        now.difference(timestamps.first) > _interval) {
+      timestamps.removeFirst();
+    }
+
+    // Check if we're under the limit
+    if (timestamps.length < _maxRequests) {
+      timestamps.add(now);
+      return true;
+    }
+
+    return false;
+  }
+
+  Duration? getTimeUntilNext(String endpoint) {
+    if (!_timestamps.containsKey(endpoint)) return null;
+
+    final timestamps = _timestamps[endpoint]!;
+    if (timestamps.isEmpty) return null;
+
+    final oldestTimestamp = timestamps.first;
+    final timeUntilExpiry = _interval - DateTime.now().difference(oldestTimestamp);
+    return timeUntilExpiry.isNegative ? null : timeUntilExpiry;
+  }
+
+  void clear() {
+    _timestamps.clear();
+  }
+}
+```
+
+Key points for using these tools:
+1. Debug tools should only be available in debug mode
+2. Secure sensitive data properly
+3. Monitor app performance regularly
+4. Validate API responses thoroughly
+5. Track app state changes
+6. Monitor widget performance
+7. Implement rate limiting for API calls
+8. Log important operations
+
+Would you like me to explain any of these components in more detail?
+
+## 1. App Initializer
+```dart
+class AppInitializer {
+  static final _instance = AppInitializer._();
+  factory AppInitializer() => _instance;
+  AppInitializer._();
+
+  bool _isInitialized = false;
+  
+  Future<void> initialize() async {
+    if (_isInitialized) return;
+
+    try {
+      // Initialize crash reporting first
+      await _initializeCrashlytics();
+      
+      // Track initialization time
+      final stopwatch = Stopwatch()..start();
+
+      // Run initializations in parallel
+      await Future.wait([
+        _initializeFirebase(),
+        _initializeLocalStorage(),
+        _initializeAnalytics(),
+        _loadAppConfig(),
+        _initializeDatabase(),
+      ]);
+
+      stopwatch.stop();
+      debugPrint('App initialized in ${stopwatch.elapsedMilliseconds}ms');
+      
+      _isInitialized = true;
+    } catch (e, stack) {
+      debugPrint('Failed to initialize app: $e\n$stack');
+      rethrow;
+    }
+  }
+
+  Future<void> _initializeCrashlytics() async {
+    await Firebase.initializeApp();
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  }
+
+  Future<void> _initializeFirebase() async {
+    await Future.wait([
+      FirebaseMessaging.instance.requestPermission(),
+      FirebaseRemoteConfig.instance.fetchAndActivate(),
+    ]);
+  }
+
+  Future<void> _initializeLocalStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    getIt.registerSingleton<SharedPreferences>(prefs);
+  }
+
+  Future<void> _initializeAnalytics() async {
+    final analytics = FirebaseAnalytics.instance;
+    await analytics.setAnalyticsCollectionEnabled(true);
+    getIt.registerSingleton<FirebaseAnalytics>(analytics);
+  }
+
+  Future<void> _loadAppConfig() async {
+    final config = await AppConfig().load();
+    getIt.registerSingleton<AppConfig>(config);
+  }
+
+  Future<void> _initializeDatabase() async {
+    final db = await DatabaseHelper().initialize();
+    getIt.registerSingleton<DatabaseHelper>(db);
+  }
+}
+```
+
+## 2. User Session Manager
+```dart
+class UserSessionManager {
+  final _authStateController = StreamController<AuthState>.broadcast();
+  Stream<AuthState> get authStateStream => _authStateController.stream;
+
+  Timer? _sessionTimer;
+  final Duration _sessionTimeout;
+
+  UserSessionManager({
+    Duration sessionTimeout = const Duration(minutes: 30),
+  }) : _sessionTimeout = sessionTimeout {
+    _initializeSessionMonitoring();
+  }
+
+  void _initializeSessionMonitoring() {
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user != null) {
+        _startSessionTimer();
+        _authStateController.add(AuthState.authenticated);
+      } else {
+        _sessionTimer?.cancel();
+        _authStateController.add(AuthState.unauthenticated);
+      }
+    });
+  }
+
+  void _startSessionTimer() {
+    _sessionTimer?.cancel();
+    _sessionTimer = Timer(_sessionTimeout, () {
+      // Session expired
+      _handleSessionExpired();
+    });
+  }
+
+  void resetSessionTimer() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      _startSessionTimer();
+    }
+  }
+
+  Future<void> _handleSessionExpired() async {
+    await FirebaseAuth.instance.signOut();
+    _authStateController.add(AuthState.sessionExpired);
+  }
+
+  void dispose() {
+    _sessionTimer?.cancel();
+    _authStateController.close();
+  }
+}
+```
+
+## 3. User Activity Tracker
+```dart
+class UserActivityTracker {
+  final _analytics = FirebaseAnalytics.instance;
+  final _userActions = <UserAction>[];
+  final int _maxStoredActions = 100;
+
+  Future<void> trackScreenView(String screenName) async {
+    await _analytics.logScreenView(
+      screenName: screenName,
+      screenClass: screenName,
+    );
+    _addAction(UserAction(
+      type: ActionType.screenView,
+      data: {'screen': screenName},
+    ));
+  }
+
+  Future<void> trackButtonClick(String buttonId, {Map<String, dynamic>? data}) async {
+    await _analytics.logEvent(
+      name: 'button_click',
+      parameters: {
+        'button_id': buttonId,
+        if (data != null) ...data,
+      },
+    );
+    _addAction(UserAction(
+      type: ActionType.buttonClick,
+      data: {'button_id': buttonId, if (data != null) ...data},
+    ));
+  }
+
+  Future<void> trackFeatureUsage(String featureId, {Map<String, dynamic>? data}) async {
+    await _analytics.logEvent(
+      name: 'feature_usage',
+      parameters: {
+        'feature_id': featureId,
+        if (data != null) ...data,
+      },
+    );
+    _addAction(UserAction(
+      type: ActionType.featureUsage,
+      data: {'feature_id': featureId, if (data != null) ...data},
+    ));
+  }
+
+  void _addAction(UserAction action) {
+    _userActions.add(action);
+    if (_userActions.length > _maxStoredActions) {
+      _userActions.removeAt(0);
+    }
+  }
+
+  List<UserAction> getRecentActions() {
+    return List.unmodifiable(_userActions);
+  }
+}
+
+class UserAction {
+  final ActionType type;
+  final Map<String, dynamic> data;
+  final DateTime timestamp;
+
+  UserAction({
+    required this.type,
+    required this.data,
+  }) : timestamp = DateTime.now();
+}
+
+enum ActionType {
+  screenView,
+  buttonClick,
+  featureUsage,
+}
+```
+
+## 4. Network Connectivity Monitor
+```dart
+class NetworkMonitor {
+  final _connectivityStream = StreamController<ConnectivityStatus>.broadcast();
+  final Connectivity _connectivity = Connectivity();
+  Timer? _pollTimer;
+
+  Stream<ConnectivityStatus> get status => _connectivityStream.stream;
+
+  void startMonitoring() {
+    _checkConnectivity();
+    
+    // Listen to platform connectivity changes
+    _connectivity.onConnectivityChanged.listen((result) {
+      _updateConnectivityStatus(result);
+    });
+
+    // Additional polling for more reliable detection
+    _pollTimer = Timer.periodic(
+      const Duration(seconds: 30),
+      (_) => _checkConnectivity(),
+    );
+  }
+
+  Future<void> _checkConnectivity() async {
+    try {
+      final result = await _connectivity.checkConnectivity();
+      _updateConnectivityStatus(result);
+    } catch (e) {
+      _connectivityStream.add(ConnectivityStatus.offline);
+    }
+  }
+
+  void _updateConnectivityStatus(ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        _connectivityStream.add(ConnectivityStatus.wifi);
+        break;
+      case ConnectivityResult.mobile:
+        _connectivityStream.add(ConnectivityStatus.mobile);
+        break;
+      case ConnectivityResult.none:
+        _connectivityStream.add(ConnectivityStatus.offline);
+        break;
+      default:
+        _connectivityStream.add(ConnectivityStatus.offline);
+    }
+  }
+
+  Future<bool> isOnline() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  void dispose() {
+    _pollTimer?.cancel();
+    _connectivityStream.close();
+  }
+}
+
+enum ConnectivityStatus {
+  wifi,
+  mobile,
+  offline,
+}
+```
+
+## 5. Firebase Push Notification Handler
+```dart
+class PushNotificationHandler {
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final _notificationSubject = BehaviorSubject<RemoteMessage>();
+
+  Stream<RemoteMessage> get notificationStream => _notificationSubject.stream;
+
+  Future<void> initialize() async {
+    // Request permission
+    final settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      // Get FCM token
+      final token = await _messaging.getToken();
+      await _saveFcmToken(token);
+
+      // Listen to token refresh
+      _messaging.onTokenRefresh.listen(_saveFcmToken);
+
+      // Handle incoming messages
+      FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+      FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
+      FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
+
+      // Check for initial message
+      final initialMessage = await _messaging.getInitialMessage();
+      if (initialMessage != null) {
+        _handleInitialMessage(initialMessage);
+      }
+    }
+  }
+
+  Future<void> _saveFcmToken(String? token) async {
+    if (token != null) {
+      // Save token to backend
+      await getIt<ApiClient>().updateFcmToken(token);
+    }
+  }
+
+  Future<void> _handleForegroundMessage(RemoteMessage message) async {
+    _notificationSubject.add(message);
+    await _showLocalNotification(message);
+  }
+
+  Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
+    _notificationSubject.add(message);
+    await _handleNotificationNavigation(message.data);
+  }
+
+  Future<void> _handleInitialMessage(RemoteMessage message) async {
+    await _handleNotificationNavigation(message.data);
+  }
+
+  Future<void> _showLocalNotification(RemoteMessage message) async {
+    final notification = message.notification;
+    if (notification == null) return;
+
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    
+    await flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'default_channel',
+          'Default Channel',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: IOSNotificationDetails(),
+      ),
+      payload: json.encode(message.data),
+    );
+  }
+
+  Future<void> _handleNotificationNavigation(Map<String, dynamic> data) async {
+    // Handle different types of notifications
+    final type = data['type'];
+    switch (type) {
+      case 'chat':
+        // Navigate to chat
+        break;
+      case 'order':
+        // Navigate to order details
+        break;
+      default:
+        // Handle default case
+    }
+  }
+}
+
+Future<void> _handleBackgroundMessage(RemoteMessage message) async {
+  // This function must be top-level or static
+  // Handle background message
+}
+```
+
+## 6. App Metrics Collector
+```dart
+class AppMetricsCollector {
+  final _metrics = <String, dynamic>{};
+  final _analytics = FirebaseAnalytics.instance;
+  Timer? _reportingTimer;
+
+  void startCollecting() {
+    _collectDeviceMetrics();
+    _collectPerformanceMetrics();
+    _startPeriodicCollection();
+  }
+
+  void _startPeriodicCollection() {
+    _reportingTimer = Timer.periodic(
+      const Duration(minutes: 15),
+      (_) => _reportMetrics(),
+    );
+  }
+
+  void _collectDeviceMetrics() async {
+    final deviceInfo = await DeviceInfoPlugin().deviceInfo;
+    _metrics['device_info'] = deviceInfo.data;
+
+    final packageInfo = await PackageInfo.fromPlatform();
+    _metrics['app_version'] = packageInfo.version;
+    _metrics['build_number'] = packageInfo.buildNumber;
+  }
+
+  void _collectPerformanceMetrics() {
+    Timeline.startSync('AppMetrics');
+    
+    try {
+      final memoryInfo = ProcessInfo.currentRss;
+      _metrics['memory_usage'] = memoryInfo;
+
+      final heapSize = ProcessInfo.maxRss;
+      _metrics['heap_size'] = heapSize;
+    } finally {
+      Timeline.finishSync();
+    }
+  }
+
+  Future<void> _reportMetrics() async {
+    try {
+      _collectPerformanceMetrics();
+      
+      await _analytics.logEvent(
+        name: 'app_metrics',
+        parameters: _metrics,
+      );
+    } catch (e) {
+      debugPrint('Failed to report metrics: $e');
+    }
+  }
+
+  void dispose() {
+    _reportingTimer?.cancel();
+  }
+}
+```
+
+Important considerations:
+1. Initialize services in the correct order
+2. Handle background/foreground states properly
+3. Monitor memory and battery usage
+4. Track user interactions appropriately
+5. Handle notifications properly
+6. Collect relevant metrics
+7. Clean up resources properly
+8. Handle errors gracefully
+
+Would you like me to explain any of these components in more detail?
+
+## 1. Data Synchronization Manager
+```dart
+class DataSyncManager {
+  final Database _localDb;
+  final ApiClient _apiClient;
+  final _syncController = StreamController<SyncStatus>.broadcast();
+  
+  Stream<SyncStatus> get syncStatus => _syncController.stream;
+  
+  Future<void> sync() async {
+    try {
+      _syncController.add(SyncStatus.syncing);
+      
+      // Get last sync timestamp
+      final lastSync = await _getLastSyncTime();
+      
+      // Get changes since last sync
+      final localChanges = await _getLocalChanges(lastSync);
+      final remoteChanges = await _getRemoteChanges(lastSync);
+      
+      // Resolve conflicts
+      final resolvedChanges = await _resolveConflicts(
+        localChanges, 
+        remoteChanges,
+      );
+      
+      // Apply changes
+      await _applyChanges(resolvedChanges);
+      
+      // Update sync timestamp
+      await _updateLastSyncTime();
+      
+      _syncController.add(SyncStatus.completed);
+    } catch (e) {
+      _syncController.add(SyncStatus.failed);
+      rethrow;
+    }
+  }
+
+  Future<List<DataChange>> _resolveConflicts(
+    List<DataChange> localChanges,
+    List<DataChange> remoteChanges,
+  ) async {
+    final resolvedChanges = <DataChange>[];
+    
+    for (final local in localChanges) {
+      final remote = remoteChanges.firstWhereOrNull(
+        (r) => r.id == local.id,
+      );
+      
+      if (remote == null) {
+        resolvedChanges.add(local);
+        continue;
+      }
+      
+      // Resolve based on timestamp and priority
+      if (local.timestamp.isAfter(remote.timestamp)) {
+        resolvedChanges.add(local);
+      } else {
+        resolvedChanges.add(remote);
+      }
+    }
+    
+    return resolvedChanges;
+  }
+}
+```
+
+## 2. Background Task Scheduler
+```dart
+class BackgroundTaskScheduler {
+  static const _workManagerTaskName = 'backgroundSync';
+  
+  Future<void> initialize() async {
+    await Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: !kReleaseMode,
+    );
+  }
+
+  Future<void> schedulePeriodicSync() async {
+    await Workmanager().registerPeriodicTask(
+      _workManagerTaskName,
+      _workManagerTaskName,
+      frequency: const Duration(hours: 12),
+      constraints: Constraints(
+        networkType: NetworkType.connected,
+        requiresBatteryNotLow: true,
+        requiresCharging: false,
+        requiresDeviceIdle: false,
+      ),
+      existingWorkPolicy: ExistingWorkPolicy.keep,
+      backoffPolicy: BackoffPolicy.exponential,
+      backoffPolicyDelay: const Duration(minutes: 30),
+    );
+  }
+
+  Future<void> scheduleOneTimeTask(
+    String taskName,
+    Map<String, dynamic>? inputData,
+  ) async {
+    await Workmanager().registerOneOffTask(
+      taskName,
+      taskName,
+      inputData: inputData,
+      initialDelay: const Duration(seconds: 10),
+      constraints: Constraints(
+        networkType: NetworkType.connected,
+      ),
+    );
+  }
+}
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((taskName, inputData) async {
+    try {
+      switch (taskName) {
+        case _workManagerTaskName:
+          await performBackgroundSync();
+          break;
+        default:
+          await handleCustomTask(taskName, inputData);
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+}
+```
+
+## 3. App Security Manager
+```dart
+class SecurityManager {
+  final FlutterSecureStorage _secureStorage;
+  final _jailbreakDetector = JailbreakDetector();
+  
+  Future<void> performSecurityChecks() async {
+    if (await _jailbreakDetector.isJailBroken()) {
+      throw SecurityException('Device is jailbroken/rooted');
+    }
+    
+    if (await _jailbreakDetector.isRealDevice() == false) {
+      throw SecurityException('App running in emulator');
+    }
+    
+    if (await _hasDebuggerAttached()) {
+      throw SecurityException('Debugger detected');
+    }
+  }
+
+  Future<void> storeSecureData(String key, String value) async {
+    final encryptedValue = await _encrypt(value);
+    await _secureStorage.write(
+      key: key,
+      value: encryptedValue,
+      aOptions: const AndroidOptions(
+        encryptedSharedPreferences: true,
+      ),
+      iOptions: const IOSOptions(
+        accessibility: KeychainAccessibility.first_unlock,
+      ),
+    );
+  }
+
+  Future<String?> getSecureData(String key) async {
+    final encryptedValue = await _secureStorage.read(key: key);
+    if (encryptedValue == null) return null;
+    return await _decrypt(encryptedValue);
+  }
+
+  Future<String> _encrypt(String value) async {
+    // Implement encryption
+    return value;
+  }
+
+  Future<String> _decrypt(String value) async {
+    // Implement decryption
+    return value;
+  }
+}
+```
+
+## 4. Deep Link Handler
+```dart
+class DeepLinkHandler {
+  final GlobalKey<NavigatorState> _navigatorKey;
+  final StreamController<Uri> _deepLinkSubject = StreamController.broadcast();
+  
+  Stream<Uri> get deepLinks => _deepLinkSubject.stream;
+
+  DeepLinkHandler(this._navigatorKey) {
+    _initializeDeepLinks();
+  }
+
+  Future<void> _initializeDeepLinks() async {
+    // Handle links while app is in background
+    final initialLink = await getInitialLink();
+    if (initialLink != null) {
+      _handleDeepLink(Uri.parse(initialLink));
+    }
+
+    // Handle links while app is running
+    linkStream.listen((String? link) {
+      if (link != null) {
+        _handleDeepLink(Uri.parse(link));
+      }
+    });
+  }
+
+  void _handleDeepLink(Uri uri) {
+    _deepLinkSubject.add(uri);
+    
+    switch (uri.path) {
+      case '/product':
+        _navigateToProduct(uri.queryParameters['id']);
+        break;
+      case '/order':
+        _navigateToOrder(uri.queryParameters['id']);
+        break;
+      case '/notification':
+        _navigateToNotification(uri.queryParameters['id']);
+        break;
+    }
+  }
+
+  void _navigateToProduct(String? productId) {
+    if (productId == null) return;
+    _navigatorKey.currentState?.pushNamed(
+      '/product-details',
+      arguments: productId,
+    );
+  }
+
+  void _navigateToOrder(String? orderId) {
+    if (orderId == null) return;
+    _navigatorKey.currentState?.pushNamed(
+      '/order-details',
+      arguments: orderId,
+    );
+  }
+
+  void _navigateToNotification(String? notificationId) {
+    if (notificationId == null) return;
+    _navigatorKey.currentState?.pushNamed(
+      '/notification-details',
+      arguments: notificationId,
+    );
+  }
+
+  void dispose() {
+    _deepLinkSubject.close();
+  }
+}
+```
+
+## 5. App Performance Monitor
+```dart
+class PerformanceMonitor {
+  final FirebasePerformance _performance = FirebasePerformance.instance;
+  final Map<String, Trace> _activeTraces = {};
+  final Map<String, List<Duration>> _metricData = {};
+
+  Future<T> trackOperation<T>({
+    required String name,
+    required Future<T> Function() operation,
+    Map<String, String>? metrics,
+  }) async {
+    final trace = await _performance.newTrace(name);
+    _activeTraces[name] = trace;
+    
+    try {
+      await trace.start();
+      final stopwatch = Stopwatch()..start();
+      
+      final result = await operation();
+      
+      stopwatch.stop();
+      _recordMetric(name, stopwatch.elapsed);
+      
+      if (metrics != null) {
+        for (final entry in metrics.entries) {
+          trace.putAttribute(entry.key, entry.value);
+        }
+      }
+      
+      return result;
+    } finally {
+      await trace.stop();
+      _activeTraces.remove(name);
+    }
+  }
+
+  void _recordMetric(String name, Duration duration) {
+    _metricData.putIfAbsent(name, () => []).add(duration);
+    
+    // Keep only last 100 measurements
+    if (_metricData[name]!.length > 100) {
+      _metricData[name]!.removeAt(0);
+    }
+  }
+
+  Map<String, PerformanceMetrics> getMetrics() {
+    final metrics = <String, PerformanceMetrics>{};
+    
+    for (final entry in _metricData.entries) {
+      final durations = entry.value;
+      if (durations.isEmpty) continue;
+      
+      metrics[entry.key] = PerformanceMetrics(
+        average: _calculateAverage(durations),
+        min: durations.reduce((a, b) => a < b ? a : b),
+        max: durations.reduce((a, b) => a > b ? a : b),
+        count: durations.length,
+      );
+    }
+    
+    return metrics;
+  }
+
+  Duration _calculateAverage(List<Duration> durations) {
+    final total = durations.fold<Duration>(
+      Duration.zero,
+      (a, b) => a + b,
+    );
+    return Duration(
+      microseconds: total.inMicroseconds ~/ durations.length,
+    );
+  }
+}
+
+class PerformanceMetrics {
+  final Duration average;
+  final Duration min;
+  final Duration max;
+  final int count;
+
+  PerformanceMetrics({
+    required this.average,
+    required this.min,
+    required this.max,
+    required this.count,
+  });
+}
+```
+
+Important considerations:
+1. Handle data sync conflicts properly
+2. Secure sensitive data
+3. Monitor app performance
+4. Handle deep links appropriately
+5. Schedule background tasks efficiently
+6. Track performance metrics
+7. Implement proper security checks
+8. Clean up resources
+
+Would you like me to explain any of these components in more detail?
+
+## 1. App Configuration Manager with Flavor Support
+```dart
+class AppConfig {
+  static final AppConfig _instance = AppConfig._internal();
+  static AppConfig get instance => _instance;
+  
+  late final Environment environment;
+  late final Map<String, dynamic> _config;
+
+  AppConfig._internal();
+
+  Future<void> initialize() async {
+    const flavor = String.fromEnvironment(
+      'FLAVOR',
+      defaultValue: 'development',
+    );
+
+    environment = Environment.values.firstWhere(
+      (e) => e.toString().split('.').last == flavor,
+      orElse: () => Environment.development,
+    );
+
+    _config = await _loadConfig(environment);
+  }
+
+  Future<Map<String, dynamic>> _loadConfig(Environment env) async {
+    final configFile = await rootBundle.loadString(
+      'assets/config/${env.toString().split('.').last}.json',
+    );
+    return json.decode(configFile);
+  }
+
+  String get apiUrl => _config['api_url'];
+  String get sentryDsn => _config['sentry_dsn'];
+  bool get enableAnalytics => _config['enable_analytics'];
+  int get cacheTimeout => _config['cache_timeout'];
+  Map<String, dynamic> get featureFlags => _config['feature_flags'];
+
+  bool isFeatureEnabled(String featureKey) {
+    return featureFlags[featureKey] ?? false;
+  }
+}
+
+enum Environment {
+  development,
+  staging,
+  production,
+}
+```
+
+## 2. Advanced Database Manager
+```dart
+class DatabaseManager {
+  final Database _db;
+  final _migrationManager = DatabaseMigrationManager();
+  final _queryLogger = DatabaseQueryLogger();
+
+  static const int currentVersion = 3;
+
+  Future<void> initialize() async {
+    final path = await getDatabasesPath();
+    final dbPath = join(path, 'app.db');
+
+    _db = await openDatabase(
+      dbPath,
+      version: currentVersion,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+      onDowngrade: onDatabaseDowngradeDelete,
+    );
+  }
+
+  Future<void> _onCreate(Database db, int version) async {
+    await _migrationManager.applyMigrations(
+      db,
+      0,
+      version,
+    );
+  }
+
+  Future<void> _onUpgrade(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    await _migrationManager.applyMigrations(
+      db,
+      oldVersion,
+      newVersion,
+    );
+  }
+
+  Future<T> transaction<T>(Future<T> Function(Transaction txn) action) async {
+    return await _db.transaction((txn) async {
+      try {
+        final result = await action(txn);
+        return result;
+      } catch (e) {
+        await _queryLogger.logError(
+          'Transaction failed: ${e.toString()}',
+        );
+        rethrow;
+      }
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> rawQuery(
+    String sql, [
+    List<dynamic>? arguments,
+  ]) async {
+    await _queryLogger.logQuery(sql, arguments);
+    try {
+      return await _db.rawQuery(sql, arguments);
+    } catch (e) {
+      await _queryLogger.logError(
+        'Query failed: ${e.toString()}',
+      );
+      rethrow;
+    }
+  }
+}
+
+class DatabaseMigrationManager {
+  final _migrations = <int, List<String>>{
+    1: [
+      '''
+      CREATE TABLE users (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        created_at INTEGER NOT NULL
+      )
+      ''',
+    ],
+    2: [
+      '''
+      ALTER TABLE users ADD COLUMN avatar_url TEXT;
+      ''',
+    ],
+    3: [
+      '''
+      CREATE TABLE settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at INTEGER NOT NULL
+      )
+      ''',
+    ],
+  };
+
+  Future<void> applyMigrations(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    for (var i = oldVersion + 1; i <= newVersion; i++) {
+      final migrations = _migrations[i];
+      if (migrations == null) continue;
+
+      for (final migration in migrations) {
+        await db.execute(migration);
+      }
+    }
+  }
+}
+
+class DatabaseQueryLogger {
+  static const maxLogSize = 1000;
+  final _logs = <LogEntry>[];
+
+  Future<void> logQuery(
+    String query,
+    List<dynamic>? arguments,
+  ) async {
+    _addLog(LogEntry(
+      type: LogType.query,
+      message: query,
+      arguments: arguments,
+      timestamp: DateTime.now(),
+    ));
+  }
+
+  Future<void> logError(String error) async {
+    _addLog(LogEntry(
+      type: LogType.error,
+      message: error,
+      timestamp: DateTime.now(),
+    ));
+  }
+
+  void _addLog(LogEntry entry) {
+    _logs.add(entry);
+    if (_logs.length > maxLogSize) {
+      _logs.removeAt(0);
+    }
+  }
+
+  List<LogEntry> getLogs() => List.unmodifiable(_logs);
+}
+
+class LogEntry {
+  final LogType type;
+  final String message;
+  final List<dynamic>? arguments;
+  final DateTime timestamp;
+
+  LogEntry({
+    required this.type,
+    required this.message,
+    this.arguments,
+    required this.timestamp,
+  });
+}
+
+enum LogType {
+  query,
+  error,
+}
+```
+
+## 3. State Persistence Manager
+```dart
+class StatePersistenceManager {
+  final SharedPreferences _prefs;
+  final FlutterSecureStorage _secureStorage;
+  final _encryptionService = EncryptionService();
+
+  Future<void> saveState<T>({
+    required String key,
+    required T value,
+    bool secure = false,
+  }) async {
+    final jsonString = json.encode(value);
+    
+    if (secure) {
+      final encrypted = await _encryptionService.encrypt(jsonString);
+      await _secureStorage.write(key: key, value: encrypted);
+    } else {
+      await _prefs.setString(key, jsonString);
+    }
+  }
+
+  Future<T?> loadState<T>({
+    required String key,
+    required T Function(Map<String, dynamic> json) fromJson,
+    bool secure = false,
+  }) async {
+    try {
+      String? jsonString;
+      
+      if (secure) {
+        final encrypted = await _secureStorage.read(key: key);
+        if (encrypted != null) {
+          jsonString = await _encryptionService.decrypt(encrypted);
+        }
+      } else {
+        jsonString = _prefs.getString(key);
+      }
+
+      if (jsonString == null) return null;
+      
+      final json = jsonDecode(jsonString);
+      return fromJson(json);
+    } catch (e) {
+      debugPrint('Failed to load state for key $key: $e');
+      return null;
+    }
+  }
+
+  Future<void> clearState(String key, {bool secure = false}) async {
+    if (secure) {
+      await _secureStorage.delete(key: key);
+    } else {
+      await _prefs.remove(key);
+    }
+  }
+
+  Future<void> clearAllState() async {
+    await Future.wait([
+      _prefs.clear(),
+      _secureStorage.deleteAll(),
+    ]);
+  }
+}
+
+class EncryptionService {
+  static const _algorithm = 'AES-CBC';
+  static const _iterations = 1000;
+  static const _keyLength = 32;
+
+  Future<String> encrypt(String value) async {
+    // Implement encryption
+    return value;
+  }
+
+  Future<String> decrypt(String encrypted) async {
+    // Implement decryption
+    return encrypted;
+  }
+}
+```
+
+## 4. Cache Manager with Prioritization
+```dart
+class CacheManager {
+  final Map<String, CacheEntry> _cache = {};
+  final int _maxSize;
+  final Duration _defaultDuration;
+
+  CacheManager({
+    int maxSize = 100,
+    Duration? defaultDuration,
+  })  : _maxSize = maxSize,
+        _defaultDuration = defaultDuration ?? Duration(minutes: 30);
+
+  Future<T?> get<T>(String key) async {
+    final entry = _cache[key];
+    if (entry == null) return null;
+
+    if (entry.isExpired) {
+      _cache.remove(key);
+      return null;
+    }
+
+    entry.lastAccessed = DateTime.now();
+    return entry.value as T;
+  }
+
+  Future<void> set<T>(
+    String key,
+    T value, {
+    Duration? duration,
+    CachePriority priority = CachePriority.normal,
+  }) async {
+    if (_cache.length >= _maxSize) {
+      _evictEntries();
+    }
+
+    _cache[key] = CacheEntry(
+      value: value,
+      expiryTime: DateTime.now().add(duration ?? _defaultDuration),
+      priority: priority,
+    );
+  }
+
+  void _evictEntries() {
+    // First, remove expired entries
+    _cache.removeWhere((_, entry) => entry.isExpired);
+    
+    if (_cache.length < _maxSize) return;
+
+    // Sort entries by priority and last accessed time
+    final entries = _cache.entries.toList()
+      ..sort((a, b) {
+        // First compare priorities
+        final priorityCompare = a.value.priority.index.compareTo(
+          b.value.priority.index,
+        );
+        if (priorityCompare != 0) return priorityCompare;
+
+        // Then compare last accessed time
+        return a.value.lastAccessed.compareTo(b.value.lastAccessed);
+      });
+
+    // Remove 20% of the oldest, lowest priority entries
+    final removeCount = (_cache.length * 0.2).floor();
+    for (var i = 0; i < removeCount; i++) {
+      _cache.remove(entries[i].key);
+    }
+  }
+
+  Future<void> remove(String key) async {
+    _cache.remove(key);
+  }
+
+  Future<void> clear() async {
+    _cache.clear();
+  }
+}
+
+class CacheEntry {
+  final dynamic value;
+  final DateTime expiryTime;
+  final CachePriority priority;
+  DateTime lastAccessed;
+
+  CacheEntry({
+    required this.value,
+    required this.expiryTime,
+    required this.priority,
+  }) : lastAccessed = DateTime.now();
+
+  bool get isExpired => DateTime.now().isAfter(expiryTime);
+}
+
+enum CachePriority {
+  low,
+  normal,
+  high,
+  critical,
+}
+```
+
+Important considerations:
+1. Handle different environments properly
+2. Manage database migrations
+3. Log database operations
+4. Secure sensitive data
+5. Handle state persistence
+6. Manage cache effectively
+7. Monitor performance
+8. Handle errors properly
+
+Would you like me to explain any of these components in more detail?
+## 1. Advanced API Client with Queue Management
+```dart
+class ApiClient {
+  final Dio _dio;
+  final TokenManager _tokenManager;
+  final RequestQueue _requestQueue;
+  final ConnectivityManager _connectivityManager;
+
+  ApiClient({
+    required Dio dio,
+    required TokenManager tokenManager,
+    required ConnectivityManager connectivityManager,
+  }) : _dio = dio,
+       _tokenManager = tokenManager,
+       _connectivityManager = connectivityManager,
+       _requestQueue = RequestQueue() {
+    _setupInterceptors();
+    _initializeQueueProcessor();
+  }
+
+  void _setupInterceptors() {
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: _onRequest,
+        onError: _onError,
+        onResponse: _onResponse,
+      ),
+    );
+  }
+
+  Future<void> _onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    if (!await _connectivityManager.hasConnection()) {
+      _requestQueue.addRequest(options);
+      throw QueuedRequestException();
+    }
+
+    final token = await _tokenManager.getToken();
+    if (token != null) {
+      options.headers['Authorization'] = 'Bearer $token';
+    }
+
+    handler.next(options);
+  }
+
+  Future<void> _onError(
+    DioError error,
+    ErrorInterceptorHandler handler,
+  ) async {
+    if (error.response?.statusCode == 401) {
+      try {
+        await _tokenManager.refreshToken();
+        // Retry the request
+        final response = await _retry(error.requestOptions);
+        handler.resolve(response);
+        return;
+      } catch (e) {
+        // Token refresh failed
+        await _tokenManager.clearTokens();
+        handler.reject(error);
+        return;
+      }
+    }
+    handler.next(error);
+  }
+
+  void _onResponse(
+    Response response,
+    ResponseInterceptorHandler handler,
+  ) {
+    // Log response time
+    final requestTime = response.requestOptions.extra['startTime'] as DateTime;
+    final responseTime = DateTime.now().difference(requestTime);
+    debugPrint('Request took: ${responseTime.inMilliseconds}ms');
+    
+    handler.next(response);
+  }
+
+  Future<Response<T>> _retry<T>(RequestOptions requestOptions) async {
+    final options = Options(
+      method: requestOptions.method,
+      headers: requestOptions.headers,
+    );
+
+    return _dio.request<T>(
+      requestOptions.path,
+      data: requestOptions.data,
+      queryParameters: requestOptions.queryParameters,
+      options: options,
+    );
+  }
+
+  void _initializeQueueProcessor() {
+    _connectivityManager.onConnectivityChanged.listen((hasConnection) {
+      if (hasConnection) {
+        _processQueue();
+      }
+    });
+  }
+
+  Future<void> _processQueue() async {
+    while (_requestQueue.isNotEmpty) {
+      final request = _requestQueue.nextRequest();
+      if (request == null) break;
+
+      try {
+        await _retry(request);
+        _requestQueue.removeRequest(request);
+      } catch (e) {
+        // If request fails, leave it in queue for retry
+        break;
+      }
+    }
+  }
+}
+
+class RequestQueue {
+  final Queue<RequestOptions> _queue = Queue();
+
+  void addRequest(RequestOptions options) {
+    _queue.add(options);
+  }
+
+  RequestOptions? nextRequest() {
+    if (_queue.isEmpty) return null;
+    return _queue.first;
+  }
+
+  void removeRequest(RequestOptions options) {
+    _queue.remove(options);
+  }
+
+  bool get isNotEmpty => _queue.isNotEmpty;
+}
+```
+
+## 2. Advanced Logger with Categories
+```dart
+class AppLogger {
+  final Logger _logger;
+  final Analytics _analytics;
+  final bool _isDevelopment;
+
+  static final AppLogger _instance = AppLogger._internal(
+    Logger(),
+    FirebaseAnalytics.instance,
+    !kReleaseMode,
+  );
+
+  factory AppLogger() => _instance;
+
+  AppLogger._internal(this._logger, this._analytics, this._isDevelopment);
+
+  void logEvent(
+    LogEvent event, {
+    Map<String, dynamic>? parameters,
+    StackTrace? stackTrace,
+  }) {
+    // Log to console in development
+    if (_isDevelopment) {
+      _logToDevelopmentConsole(event, parameters, stackTrace);
+    }
+
+    // Log to analytics in production
+    if (!_isDevelopment) {
+      _logToAnalytics(event, parameters);
+    }
+
+    // Always log errors to crash reporting
+    if (event.level == LogLevel.error) {
+      _logToCrashlytics(event, parameters, stackTrace);
+    }
+  }
+
+  void _logToDevelopmentConsole(
+    LogEvent event,
+    Map<String, dynamic>? parameters,
+    StackTrace? stackTrace,
+  ) {
+    final message = _formatLogMessage(event, parameters);
+    
+    switch (event.level) {
+      case LogLevel.debug:
+        _logger.d(message, null, stackTrace);
+        break;
+      case LogLevel.info:
+        _logger.i(message, null, stackTrace);
+        break;
+      case LogLevel.warning:
+        _logger.w(message, null, stackTrace);
+        break;
+      case LogLevel.error:
+        _logger.e(message, null, stackTrace);
+        break;
+    }
+  }
+
+  String _formatLogMessage(LogEvent event, Map<String, dynamic>? parameters) {
+    final buffer = StringBuffer()
+      ..write('[${event.category}] ${event.message}');
+    
+    if (parameters != null && parameters.isNotEmpty) {
+      buffer.write(' Parameters: $parameters');
+    }
+    
+    return buffer.toString();
+  }
+
+  Future<void> _logToAnalytics(
+    LogEvent event,
+    Map<String, dynamic>? parameters,
+  ) async {
+    await _analytics.logEvent(
+      name: event.name,
+      parameters: {
+        'category': event.category.toString(),
+        'level': event.level.toString(),
+        if (parameters != null) ...parameters,
+      },
+    );
+  }
+
+  Future<void> _logToCrashlytics(
+    LogEvent event,
+    Map<String, dynamic>? parameters,
+    StackTrace? stackTrace,
+  ) async {
+    await FirebaseCrashlytics.instance.recordError(
+      event.message,
+      stackTrace,
+      reason: event.category.toString(),
+      information: [
+        if (parameters != null) ...parameters.entries.map((e) => '${e.key}: ${e.value}'),
+      ],
+    );
+  }
+}
+
+class LogEvent {
+  final String name;
+  final String message;
+  final LogLevel level;
+  final LogCategory category;
+
+  LogEvent({
+    required this.name,
+    required this.message,
+    required this.level,
+    required this.category,
+  });
+}
+
+enum LogLevel {
+  debug,
+  info,
+  warning,
+  error,
+}
+
+enum LogCategory {
+  network,
+  database,
+  authentication,
+  navigation,
+  userAction,
+  performance,
+  security,
+}
+```
+
+## 3. UI State Manager with Snapshots
+```dart
+class UIStateManager<T> {
+  final _stateController = StreamController<UIState<T>>.broadcast();
+  Stream<UIState<T>> get state => _stateController.stream;
+  
+  UIState<T> _currentState;
+  UIState<T> get currentState => _currentState;
+
+  final List<UIStateSnapshot<T>> _stateHistory = [];
+  static const int _maxHistorySize = 10;
+
+  UIStateManager(T initialData)
+      : _currentState = UIState.idle(data: initialData);
+
+  void updateState(UIState<T> newState) {
+    _saveSnapshot();
+    _currentState = newState;
+    _stateController.add(newState);
+  }
+
+  void _saveSnapshot() {
+    _stateHistory.add(UIStateSnapshot(
+      state: _currentState,
+      timestamp: DateTime.now(),
+    ));
+
+    if (_stateHistory.length > _maxHistorySize) {
+      _stateHistory.removeAt(0);
+    }
+  }
+
+  UIStateSnapshot<T>? getLastSnapshot() {
+    if (_stateHistory.isEmpty) return null;
+    return _stateHistory.last;
+  }
+
+  List<UIStateSnapshot<T>> getStateHistory() {
+    return List.unmodifiable(_stateHistory);
+  }
+
+  void dispose() {
+    _stateController.close();
+  }
+}
+
+class UIState<T> {
+  final T data;
+  final UIStatus status;
+  final String? error;
+  final bool isLoading;
+
+  UIState({
+    required this.data,
+    required this.status,
+    this.error,
+    this.isLoading = false,
+  });
+
+  factory UIState.idle({required T data}) {
+    return UIState(
+      data: data,
+      status: UIStatus.idle,
+    );
+  }
+
+  factory UIState.loading({required T data}) {
+    return UIState(
+      data: data,
+      status: UIStatus.loading,
+      isLoading: true,
+    );
+  }
+
+  factory UIState.success({required T data}) {
+    return UIState(
+      data: data,
+      status: UIStatus.success,
+    );
+  }
+
+  factory UIState.error({
+    required T data,
+    required String error,
+  }) {
+    return UIState(
+      data: data,
+      status: UIStatus.error,
+      error: error,
+    );
+  }
+
+  UIState<T> copyWith({
+    T? data,
+    UIStatus? status,
+    String? error,
+    bool? isLoading,
+  }) {
+    return UIState(
+      data: data ?? this.data,
+      status: status ?? this.status,
+      error: error ?? this.error,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
+}
+
+class UIStateSnapshot<T> {
+  final UIState<T> state;
+  final DateTime timestamp;
+
+  UIStateSnapshot({
+    required this.state,
+    required this.timestamp,
+  });
+}
+
+enum UIStatus {
+  idle,
+  loading,
+  success,
+  error,
+}
+```
+
+Important considerations:
+1. Handle network connectivity
+2. Queue failed requests
+3. Implement token refresh
+4. Log appropriately
+5. Track UI state changes
+6. Maintain state history
+7. Handle errors properly
+8. Clean up resources
+
+Would you like me to explain any of these components in more detail?
+
+## 1. App Lifecycle Coordinator
+```dart
+class AppLifecycleCoordinator with WidgetsBindingObserver {
+  final List<LifecycleAwareComponent> _components = [];
+  final _lifeCycleController = StreamController<AppLifecycleState>.broadcast();
+  
+  // App state trackers
+  DateTime? _lastPauseTime;
+  bool _isInBackground = false;
+  int _consecutiveCrashes = 0;
+  
+  Stream<AppLifecycleState> get lifecycleStream => _lifeCycleController.stream;
+
+  void initialize() {
+    WidgetsBinding.instance.addObserver(this);
+    _loadLastCrashInfo();
+    _setupErrorHandling();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _lifeCycleController.add(state);
+    
+    switch (state) {
+      case AppLifecycleState.paused:
+        _handleAppPaused();
+        break;
+      case AppLifecycleState.resumed:
+        _handleAppResumed();
+        break;
+      case AppLifecycleState.inactive:
+        _handleAppInactive();
+        break;
+      case AppLifecycleState.detached:
+        _handleAppDetached();
+        break;
+    }
+  }
+
+  void _handleAppPaused() {
+    _lastPauseTime = DateTime.now();
+    _isInBackground = true;
+    
+    for (final component in _components) {
+      component.onAppPaused();
+    }
+    
+    // Save app state
+    _saveAppState();
+  }
+
+  void _handleAppResumed() {
+    _isInBackground = false;
+    
+    if (_lastPauseTime != null) {
+      final backgroundDuration = DateTime.now().difference(_lastPauseTime!);
+      if (backgroundDuration > const Duration(minutes: 30)) {
+        _handleLongInactivity();
+      }
+    }
+    
+    for (final component in _components) {
+      component.onAppResumed();
+    }
+    
+    // Refresh necessary data
+    _refreshAppData();
+  }
+
+  Future<void> _handleLongInactivity() async {
+    // Handle long inactivity period
+    await _refreshTokens();
+    await _syncData();
+    await _checkForUpdates();
+  }
+
+  void _setupErrorHandling() {
+    FlutterError.onError = (details) {
+      _consecutiveCrashes++;
+      if (_consecutiveCrashes >= 3) {
+        _handleRepeatedCrashes();
+      }
+      
+      FirebaseCrashlytics.instance.recordFlutterError(details);
+    };
+  }
+
+  Future<void> _handleRepeatedCrashes() async {
+    // Reset app to a stable state
+    await _clearCache();
+    await _resetAppState();
+    _consecutiveCrashes = 0;
+  }
+
+  void registerComponent(LifecycleAwareComponent component) {
+    _components.add(component);
+  }
+
+  void unregisterComponent(LifecycleAwareComponent component) {
+    _components.remove(component);
+  }
+
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _lifeCycleController.close();
+    for (final component in _components) {
+      component.dispose();
+    }
+  }
+}
+
+abstract class LifecycleAwareComponent {
+  void onAppPaused() {}
+  void onAppResumed() {}
+  void onAppInactive() {}
+  void onAppDetached() {}
+  void dispose() {}
+}
+```
+
+## 2. Runtime Permission Handler
+```dart
+class PermissionHandler {
+  final _permissionStatusController = StreamController<PermissionStatus>.broadcast();
+  final Map<Permission, DateTime> _lastRequestTime = {};
+  
+  Stream<PermissionStatus> get permissionStatus => _permissionStatusController.stream;
+
+  Future<bool> requestPermission(Permission permission) async {
+    if (await _shouldShowRationale(permission)) {
+      await _showPermissionRationale(permission);
+    }
+
+    // Check cooldown period
+    if (_isInCooldown(permission)) {
+      return false;
+    }
+
+    final status = await permission.request();
+    _lastRequestTime[permission] = DateTime.now();
+    _permissionStatusController.add(status);
+
+    if (!status.isGranted) {
+      await _handleDeniedPermission(permission, status);
+    }
+
+    return status.isGranted;
+  }
+
+  bool _isInCooldown(Permission permission) {
+    final lastRequest = _lastRequestTime[permission];
+    if (lastRequest == null) return false;
+
+    final cooldownPeriod = const Duration(days: 1);
+    return DateTime.now().difference(lastRequest) < cooldownPeriod;
+  }
+
+  Future<bool> _shouldShowRationale(Permission permission) async {
+    if (Platform.isAndroid) {
+      return await permission.shouldShowRequestRationale;
+    }
+    return false;
+  }
+
+  Future<void> _handleDeniedPermission(
+    Permission permission,
+    PermissionStatus status,
+  ) async {
+    if (status.isPermanentlyDenied) {
+      await _showPermanentlyDeniedDialog(permission);
+    } else {
+      await _showDeniedDialog(permission);
+    }
+  }
+
+  Future<void> checkAndRequestPermissions(List<Permission> permissions) async {
+    for (final permission in permissions) {
+      final status = await permission.status;
+      if (!status.isGranted) {
+        await requestPermission(permission);
+      }
+    }
+  }
+
+  void dispose() {
+    _permissionStatusController.close();
+  }
+}
+```
+
+## 3. Memory Management Optimizer
+```dart
+class MemoryOptimizer {
+  static const _memorySampleInterval = Duration(seconds: 30);
+  static const _criticalMemoryThreshold = 500 * 1024 * 1024; // 500MB
+  
+  Timer? _memoryMonitorTimer;
+  final List<WeakReference<Object>> _trackedObjects = [];
+  final _memoryPressureController = StreamController<MemoryPressure>.broadcast();
+
+  Stream<MemoryPressure> get memoryPressure => _memoryPressureController.stream;
+
+  void startMonitoring() {
+    _memoryMonitorTimer = Timer.periodic(
+      _memorySampleInterval,
+      (_) => _checkMemoryUsage(),
+    );
+  }
+
+  Future<void> _checkMemoryUsage() async {
+    final memoryInfo = await _getMemoryInfo();
+    final usedMemory = memoryInfo.usedRam;
+    
+    if (usedMemory > _criticalMemoryThreshold) {
+      _handleHighMemoryUsage();
+    }
+    
+    _cleanupTrackedObjects();
+  }
+
+  void _handleHighMemoryUsage() {
+    _memoryPressureController.add(MemoryPressure.critical);
+    
+    // Clear caches
+    ImageCache().clear();
+    ImageCache().clearLiveImages();
+    
+    // Force garbage collection suggestion
+    _suggestGC();
+  }
+
+  void trackObject(Object object) {
+    _trackedObjects.add(WeakReference(object));
+  }
+
+  void _cleanupTrackedObjects() {
+    _trackedObjects.removeWhere((ref) => ref.target == null);
+  }
+
+  void _suggestGC() {
+    // Suggest garbage collection
+    // Note: This is just a suggestion, the system may ignore it
+    GC.collect();
+  }
+
+  Future<MemoryInfo> _getMemoryInfo() async {
+    if (Platform.isAndroid) {
+      return await _getAndroidMemoryInfo();
+    } else if (Platform.isIOS) {
+      return await _getIOSMemoryInfo();
+    }
+    throw UnsupportedError('Platform not supported');
+  }
+
+  void dispose() {
+    _memoryMonitorTimer?.cancel();
+    _memoryPressureController.close();
+  }
+}
+
+class MemoryInfo {
+  final int totalRam;
+  final int usedRam;
+  final int freeRam;
+
+  MemoryInfo({
+    required this.totalRam,
+    required this.usedRam,
+    required this.freeRam,
+  });
+}
+
+enum MemoryPressure {
+  normal,
+  moderate,
+  critical,
+}
+```
+
+## 4. Feature Flag Manager
+```dart
+class FeatureFlagManager {
+  final FirebaseRemoteConfig _remoteConfig;
+  final SharedPreferences _preferences;
+  final _flagUpdateController = StreamController<String>.broadcast();
+
+  Stream<String> get flagUpdates => _flagUpdateController.stream;
+
+  static const _defaultFlags = {
+    'new_ui_enabled': false,
+    'beta_features': false,
+    'maintenance_mode': false,
+    'force_update': false,
+  };
+
+  Future<void> initialize() async {
+    await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(minutes: 1),
+      minimumFetchInterval: const Duration(hours: 12),
+    ));
+
+    await _remoteConfig.setDefaults(_defaultFlags);
+    await _fetchAndActivate();
+  }
+
+  Future<void> _fetchAndActivate() async {
+    try {
+      await _remoteConfig.fetchAndActivate();
+      _notifyFlagUpdates();
+    } catch (e) {
+      debugPrint('Failed to fetch remote config: $e');
+    }
+  }
+
+  void _notifyFlagUpdates() {
+    for (final key in _defaultFlags.keys) {
+      if (_hasValueChanged(key)) {
+        _flagUpdateController.add(key);
+        _updateStoredValue(key);
+      }
+    }
+  }
+
+  bool _hasValueChanged(String key) {
+    final oldValue = _preferences.get(key);
+    final newValue = _getValue(key);
+    return oldValue != newValue;
+  }
+
+  void _updateStoredValue(String key) {
+    final value = _getValue(key);
+    if (value is bool) {
+      _preferences.setBool(key, value);
+    } else if (value is String) {
+      _preferences.setString(key, value);
+    } else if (value is int) {
+      _preferences.setInt(key, value);
+    } else if (value is double) {
+      _preferences.setDouble(key, value);
+    }
+  }
+
+  T getValue<T>(String key) {
+    return _getValue(key);
+  }
+
+  dynamic _getValue(String key) {
+    return _remoteConfig.getValue(key).value;
+  }
+
+  bool isFeatureEnabled(String feature) {
+    return _remoteConfig.getBool(feature);
+  }
+
+  void overrideFeature(String feature, dynamic value) {
+    assert(!kReleaseMode, 'Feature overrides are only allowed in debug mode');
+    // Implement feature override logic for testing
+  }
+
+  void clearOverrides() {
+    assert(!kReleaseMode, 'Feature overrides are only allowed in debug mode');
+    // Clear all feature overrides
+  }
+
+  void dispose() {
+    _flagUpdateController.close();
+  }
+}
+```
+
+Important considerations:
+1. Handle app lifecycle properly
+2. Manage permissions effectively
+3. Monitor memory usage
+4. Handle feature flags
+5. Track app state changes
+6. Clean up resources
+7. Handle errors properly
+8. Maintain user experience
+
+Would you like me to explain any of these components in more detail?
+## 1. App Security Manager
+```dart
+class AppSecurityManager {
+  final SecureStorage _secureStorage;
+  final BiometricService _biometricService;
+  final JailbreakDetector _jailbreakDetector;
+  final _securityStateController = StreamController<SecurityState>.broadcast();
+
+  Stream<SecurityState> get securityState => _securityStateController.stream;
+
+  Future<void> performSecurityChecks() async {
+    try {
+      await _checkDeviceIntegrity();
+      await _checkRootStatus();
+      await _checkEmulator();
+      await _checkDebugger();
+      await _checkTampering();
+      
+      _securityStateController.add(SecurityState.secure);
+    } catch (e) {
+      _securityStateController.add(SecurityState.compromised);
+      _handleSecurityViolation(e);
+    }
+  }
+
+  Future<void> _checkDeviceIntegrity() async {
+    if (await _jailbreakDetector.isJailBroken()) {
+      throw SecurityException('Device integrity compromised');
+    }
+  }
+
+  Future<void> _checkDebugger() async {
+    if (!kReleaseMode) return;
+    
+    if (await _isDebuggerAttached()) {
+      throw SecurityException('Debugger detected');
+    }
+  }
+
+  Future<bool> _isDebuggerAttached() async {
+    // Platform specific debugger detection
+    if (Platform.isAndroid) {
+      return await _checkAndroidDebugger();
+    } else if (Platform.isIOS) {
+      return await _checkIOSDebugger();
+    }
+    return false;
+  }
+
+  Future<void> _checkTampering() async {
+    final signatureHash = await _getAppSignature();
+    final storedHash = await _secureStorage.read('app_signature');
+    
+    if (storedHash != null && storedHash != signatureHash) {
+      throw SecurityException('App signature mismatch');
+    }
+  }
+
+  void _handleSecurityViolation(dynamic error) {
+    // Log security violation
+    FirebaseCrashlytics.instance.recordError(
+      error,
+      null,
+      reason: 'Security Violation',
+    );
+
+    // Take appropriate action based on security policy
+    if (_shouldBlockApp(error)) {
+      _blockApp();
+    }
+  }
+
+  bool _shouldBlockApp(dynamic error) {
+    // Implement security policy
+    return error is SecurityException &&
+           error.severity == SecuritySeverity.critical;
+  }
+
+  Future<void> _blockApp() async {
+    await _secureStorage.deleteAll();
+    exit(0);
+  }
+}
+
+class SecurityException implements Exception {
+  final String message;
+  final SecuritySeverity severity;
+
+  SecurityException(this.message, [this.severity = SecuritySeverity.high]);
+
+  @override
+  String toString() => 'SecurityException: $message';
+}
+
+enum SecuritySeverity {
+  low,
+  medium,
+  high,
+  critical,
+}
+
+enum SecurityState {
+  secure,
+  compromised,
+  unknown,
+}
+```
+
+## 2. Data Validation Service
+```dart
+class ValidationService {
+  static final _instance = ValidationService._internal();
+  factory ValidationService() => _instance;
+  ValidationService._internal();
+
+  final _validators = <String, ValidatorRule>{};
+  final _customValidators = <String, CustomValidator>{};
+
+  void registerValidator(String key, ValidatorRule rule) {
+    _validators[key] = rule;
+  }
+
+  void registerCustomValidator(String key, CustomValidator validator) {
+    _customValidators[key] = validator;
+  }
+
+  ValidationResult validate(String key, dynamic value) {
+    final rule = _validators[key];
+    if (rule == null) {
+      throw ValidationException('No validator registered for key: $key');
+    }
+
+    try {
+      // Run standard validation
+      final result = rule.validate(value);
+      if (!result.isValid) {
+        return result;
+      }
+
+      // Run custom validation if exists
+      final customValidator = _customValidators[key];
+      if (customValidator != null) {
+        return customValidator(value);
+      }
+
+      return ValidationResult.valid();
+    } catch (e) {
+      return ValidationResult.invalid(
+        'Validation failed: ${e.toString()}',
+      );
+    }
+  }
+
+  ValidationResult validateAll(Map<String, dynamic> data) {
+    final errors = <String, String>{};
+
+    for (final entry in data.entries) {
+      final result = validate(entry.key, entry.value);
+      if (!result.isValid) {
+        errors[entry.key] = result.error!;
+      }
+    }
+
+    return errors.isEmpty
+        ? ValidationResult.valid()
+        : ValidationResult.invalid('Multiple validation errors', errors);
+  }
+}
+
+class ValidatorRule {
+  final List<Validator> validators;
+
+  ValidatorRule(this.validators);
+
+  ValidationResult validate(dynamic value) {
+    for (final validator in validators) {
+      final result = validator(value);
+      if (!result.isValid) {
+        return result;
+      }
+    }
+    return ValidationResult.valid();
+  }
+}
+
+class ValidationResult {
+  final bool isValid;
+  final String? error;
+  final Map<String, String>? fieldErrors;
+
+  ValidationResult.valid()
+      : isValid = true,
+        error = null,
+        fieldErrors = null;
+
+  ValidationResult.invalid([this.error, this.fieldErrors])
+      : isValid = false;
+}
+
+typedef Validator = ValidationResult Function(dynamic value);
+typedef CustomValidator = ValidationResult Function(dynamic value);
+
+// Predefined validators
+class Validators {
+  static Validator required() {
+    return (value) {
+      if (value == null || value.toString().isEmpty) {
+        return ValidationResult.invalid('Field is required');
+      }
+      return ValidationResult.valid();
+    };
+  }
+
+  static Validator email() {
+    return (value) {
+      if (value == null || value.toString().isEmpty) {
+        return ValidationResult.valid();
+      }
+
+      final emailRegex = RegExp(
+        r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+      );
+      if (!emailRegex.hasMatch(value.toString())) {
+        return ValidationResult.invalid('Invalid email format');
+      }
+      return ValidationResult.valid();
+    };
+  }
+
+  static Validator minLength(int length) {
+    return (value) {
+      if (value == null || value.toString().length < length) {
+        return ValidationResult.invalid(
+          'Minimum length is $length characters',
+        );
+      }
+      return ValidationResult.valid();
+    };
+  }
+}
+```
+
+## 3. Dynamic UI Manager
+```dart
+class DynamicUIManager {
+  final RemoteConfig _remoteConfig;
+  final _uiConfigController = StreamController<UIConfig>.broadcast();
+
+  Stream<UIConfig> get uiConfig => _uiConfigController.stream;
+
+  Future<void> initialize() async {
+    await _fetchUIConfig();
+    _startConfigListener();
+  }
+
+  Future<void> _fetchUIConfig() async {
+    try {
+      final configJson = _remoteConfig.getString('ui_config');
+      final config = UIConfig.fromJson(json.decode(configJson));
+      _uiConfigController.add(config);
+    } catch (e) {
+      debugPrint('Failed to fetch UI config: $e');
+      _uiConfigController.add(UIConfig.defaultConfig());
+    }
+  }
+
+  void _startConfigListener() {
+    _remoteConfig.onConfigUpdated.listen((_) {
+      _fetchUIConfig();
+    });
+  }
+
+  Widget buildDynamicWidget(String widgetId, BuildContext context) {
+    final config = _getWidgetConfig(widgetId);
+    return DynamicWidget(config: config);
+  }
+
+  WidgetConfig? _getWidgetConfig(String widgetId) {
+    // Implement widget config retrieval
+    return null;
+  }
+}
+
+class UIConfig {
+  final Map<String, WidgetConfig> widgets;
+  final ThemeConfig theme;
+  final LayoutConfig layout;
+
+  UIConfig({
+    required this.widgets,
+    required this.theme,
+    required this.layout,
+  });
+
+  factory UIConfig.fromJson(Map<String, dynamic> json) {
+    return UIConfig(
+      widgets: (json['widgets'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(
+          key,
+          WidgetConfig.fromJson(value),
+        ),
+      ),
+      theme: ThemeConfig.fromJson(json['theme']),
+      layout: LayoutConfig.fromJson(json['layout']),
+    );
+  }
+
+  factory UIConfig.defaultConfig() {
+    return UIConfig(
+      widgets: {},
+      theme: ThemeConfig.defaultTheme(),
+      layout: LayoutConfig.defaultLayout(),
+    );
+  }
+}
+
+class DynamicWidget extends StatelessWidget {
+  final WidgetConfig config;
+
+  const DynamicWidget({
+    required this.config,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    switch (config.type) {
+      case WidgetType.container:
+        return _buildContainer();
+      case WidgetType.text:
+        return _buildText();
+      case WidgetType.button:
+        return _buildButton(context);
+      default:
+        return const SizedBox();
+    }
+  }
+
+  Widget _buildContainer() {
+    return Container(
+      padding: config.padding?.toEdgeInsets(),
+      margin: config.margin?.toEdgeInsets(),
+      decoration: config.decoration?.toBoxDecoration(),
+      child: config.child != null 
+          ? DynamicWidget(config: config.child!)
+          : null,
+    );
+  }
+
+  Widget _buildText() {
+    return Text(
+      config.text ?? '',
+      style: config.textStyle?.toTextStyle(),
+      textAlign: config.textAlign,
+    );
+  }
+
+  Widget _buildButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => _handleAction(config.action, context),
+      style: config.buttonStyle?.toButtonStyle(),
+      child: Text(config.text ?? ''),
+    );
+  }
+
+  void _handleAction(String? action, BuildContext context) {
+    if (action == null) return;
+    
+    // Handle different action types
+    if (action.startsWith('navigate:')) {
+      final route = action.substring(9);
+      Navigator.of(context).pushNamed(route);
+    }
+  }
+}
+```
+
+Important considerations:
+1. Implement proper security checks
+2. Handle validation comprehensively
+3. Manage dynamic UI updates
+4. Handle errors gracefully
+5. Maintain app integrity
+6. Follow security best practices
+7. Validate user input
+8. Keep UI responsive
+
+Would you like me to explain any of these components in more detail?
+
+## 1. Advanced Analytics Tracker
+```dart
+class AnalyticsTracker {
+  final FirebaseAnalytics _analytics;
+  final Queue<AnalyticsEvent> _eventQueue = Queue();
+  final bool _enabled;
+  bool _isSending = false;
+
+  AnalyticsTracker({
+    required FirebaseAnalytics analytics,
+    required bool enabled,
+  })  : _analytics = analytics,
+        _enabled = enabled;
+
+  Future<void> trackEvent({
+    required String name,
+    Map<String, dynamic>? parameters,
+    bool immediate = false,
+  }) async {
+    if (!_enabled) return;
+
+    final event = AnalyticsEvent(
+      name: name,
+      parameters: parameters,
+      timestamp: DateTime.now(),
+    );
+
+    if (immediate) {
+      await _sendEvent(event);
+    } else {
+      _eventQueue.add(event);
+      _processPendingEvents();
+    }
+  }
+
+  Future<void> trackUserProperties(Map<String, String> properties) async {
+    if (!_enabled) return;
+
+    for (final entry in properties.entries) {
+      await _analytics.setUserProperty(
+        name: entry.key,
+        value: entry.value,
+      );
+    }
+  }
+
+  Future<void> trackScreen(String screenName, {String? screenClass}) async {
+    if (!_enabled) return;
+
+    await _analytics.setCurrentScreen(
+      screenName: screenName,
+      screenClassOverride: screenClass,
+    );
+
+    await trackEvent(
+      name: 'screen_view',
+      parameters: {
+        'screen_name': screenName,
+        if (screenClass != null) 'screen_class': screenClass,
+      },
+    );
+  }
+
+  Future<void> _processPendingEvents() async {
+    if (_isSending || _eventQueue.isEmpty) return;
+
+    _isSending = true;
+    while (_eventQueue.isNotEmpty) {
+      final event = _eventQueue.removeFirst();
+      await _sendEvent(event);
+    }
+    _isSending = false;
+  }
+
+  Future<void> _sendEvent(AnalyticsEvent event) async {
+    try {
+      await _analytics.logEvent(
+        name: event.name,
+        parameters: {
+          ...?event.parameters,
+          'timestamp': event.timestamp.toIso8601String(),
+        },
+      );
+    } catch (e) {
+      debugPrint('Failed to log analytics event: $e');
+    }
+  }
+}
+
+class AnalyticsEvent {
+  final String name;
+  final Map<String, dynamic>? parameters;
+  final DateTime timestamp;
+
+  AnalyticsEvent({
+    required this.name,
+    this.parameters,
+    required this.timestamp,
+  });
+}
+```
+
+## 2. Crash Reporter with Breadcrumbs
+```dart
+class CrashReporter {
+  final FirebaseCrashlytics _crashlytics;
+  final Queue<Breadcrumb> _breadcrumbs = Queue();
+  static const int _maxBreadcrumbs = 100;
+
+  CrashReporter(this._crashlytics) {
+    _setupErrorHandlers();
+  }
+
+  void _setupErrorHandlers() {
+    // Catch Flutter errors
+    FlutterError.onError = (details) {
+      _crashlytics.recordFlutterError(details);
+    };
+
+    // Catch async errors
+    PlatformDispatcher.instance.onError = (error, stack) {
+      _crashlytics.recordError(error, stack);
+      return true;
+    };
+  }
+
+  void addBreadcrumb(
+    String message, {
+    Map<String, dynamic>? data,
+    BreadcrumbType type = BreadcrumbType.info,
+  }) {
+    final breadcrumb = Breadcrumb(
+      message: message,
+      timestamp: DateTime.now(),
+      data: data,
+      type: type,
+    );
+
+    _breadcrumbs.add(breadcrumb);
+    if (_breadcrumbs.length > _maxBreadcrumbs) {
+      _breadcrumbs.removeFirst();
+    }
+
+    _crashlytics.setCustomKey(
+      'last_action',
+      '$message at ${breadcrumb.timestamp}',
+    );
+  }
+
+  Future<void> recordError(
+    dynamic error,
+    StackTrace stackTrace, {
+    dynamic reason,
+    Iterable<DiagnosticsNode>? information,
+    bool fatal = false,
+  }) async {
+    // Add breadcrumbs to crash report
+    for (final breadcrumb in _breadcrumbs) {
+      await _crashlytics.setCustomKey(
+        'breadcrumb_${breadcrumb.timestamp.millisecondsSinceEpoch}',
+        breadcrumb.toString(),
+      );
+    }
+
+    await _crashlytics.recordError(
+      error,
+      stackTrace,
+      reason: reason,
+      information: information,
+      fatal: fatal,
+    );
+  }
+}
+
+class Breadcrumb {
+  final String message;
+  final DateTime timestamp;
+  final Map<String, dynamic>? data;
+  final BreadcrumbType type;
+
+  Breadcrumb({
+    required this.message,
+    required this.timestamp,
+    this.data,
+    required this.type,
+  });
+
+  @override
+  String toString() {
+    return '${type.name}: $message ${data ?? ''}';
+  }
+}
+
+enum BreadcrumbType {
+  info,
+  debug,
+  error,
+  warning,
+  user,
+}
+```
+
+## 3. Accessibility Manager
+```dart
+class AccessibilityManager {
+  final _semanticsController = StreamController<bool>.broadcast();
+  Stream<bool> get semanticsEnabled => _semanticsController.stream;
+
+  void initialize() {
+    // Listen for system accessibility changes
+    WidgetsBinding.instance.addObserver(_AccessibilityObserver(
+      onSemanticsChanged: (enabled) {
+        _semanticsController.add(enabled);
+      },
+    ));
+  }
+
+  Widget wrapWithAccessibility({
+    required Widget child,
+    required String label,
+    String? hint,
+    VoidCallback? onTap,
+  }) {
+    return Semantics(
+      label: label,
+      hint: hint,
+      button: onTap != null,
+      enabled: onTap != null,
+      child: ExcludeSemantics(
+        child: GestureDetector(
+          onTap: onTap,
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  String getAccessibilityText(BuildContext context, String key) {
+    // Get localized accessibility text
+    return Intl.message(
+      key,
+      name: key,
+      desc: 'Accessibility description for $key',
+      locale: Localizations.localeOf(context).toString(),
+    );
+  }
+
+  void announce(String message) {
+    SemanticsService.announce(message, TextDirection.ltr);
+  }
+}
+
+class _AccessibilityObserver extends WidgetsBindingObserver {
+  final void Function(bool) onSemanticsChanged;
+
+  _AccessibilityObserver({required this.onSemanticsChanged});
+
+  @override
+  void didChangePlatformBrightness() {
+    final window = WidgetsBinding.instance.window;
+    final semanticsEnabled = window.semanticsEnabled;
+    onSemanticsChanged(semanticsEnabled);
+  }
+}
+```
+
+## 4. Performance Profiler
+```dart
+class PerformanceProfiler {
+  final Map<String, List<Duration>> _metrics = {};
+  final Map<String, Stopwatch> _activeProfiles = {};
+  final _performanceController = StreamController<PerformanceMetric>.broadcast();
+
+  Stream<PerformanceMetric> get metrics => _performanceController.stream;
+
+  void startProfile(String name) {
+    final stopwatch = Stopwatch()..start();
+    _activeProfiles[name] = stopwatch;
+  }
+
+  void endProfile(String name) {
+    final stopwatch = _activeProfiles.remove(name);
+    if (stopwatch == null) return;
+
+    stopwatch.stop();
+    final duration = stopwatch.elapsed;
+
+    _metrics.putIfAbsent(name, () => []).add(duration);
+    _performanceController.add(
+      PerformanceMetric(
+        name: name,
+        duration: duration,
+        timestamp: DateTime.now(),
+      ),
+    );
+
+    if (_metrics[name]!.length > 100) {
+      _metrics[name]!.removeAt(0);
+    }
+  }
+
+  PerformanceStats getStats(String name) {
+    final measurements = _metrics[name];
+    if (measurements == null || measurements.isEmpty) {
+      return PerformanceStats.empty();
+    }
+
+    measurements.sort();
+    final count = measurements.length;
+    
+    return PerformanceStats(
+      average: _calculateAverage(measurements),
+      median: measurements[count ~/ 2],
+      percentile95: measurements[(count * 0.95).floor()],
+      min: measurements.first,
+      max: measurements.last,
+      count: count,
+    );
+  }
+
+  Duration _calculateAverage(List<Duration> durations) {
+    final total = durations.fold<Duration>(
+      Duration.zero,
+      (a, b) => a + b,
+    );
+    return Duration(
+      microseconds: total.inMicroseconds ~/ durations.length,
+    );
+  }
+
+  void clearMetrics() {
+    _metrics.clear();
+    _activeProfiles.clear();
+  }
+}
+
+class PerformanceMetric {
+  final String name;
+  final Duration duration;
+  final DateTime timestamp;
+
+  PerformanceMetric({
+    required this.name,
+    required this.duration,
+    required this.timestamp,
+  });
+}
+
+class PerformanceStats {
+  final Duration average;
+  final Duration median;
+  final Duration percentile95;
+  final Duration min;
+  final Duration max;
+  final int count;
+
+  PerformanceStats({
+    required this.average,
+    required this.median,
+    required this.percentile95,
+    required this.min,
+    required this.max,
+    required this.count,
+  });
+
+  factory PerformanceStats.empty() {
+    return PerformanceStats(
+      average: Duration.zero,
+      median: Duration.zero,
+      percentile95: Duration.zero,
+      min: Duration.zero,
+      max: Duration.zero,
+      count: 0,
+    );
+  }
+}
+```
+
+More components are available. Would you like me to continue with the next set of components?
+
+The remaining components include:
+5. Advanced Image Cache Manager
+6. Real-time Network Monitor
+7. Advanced App State Manager
+8. User Interaction Tracker
+9. Background Task Scheduler
+10. Device Health Monitor
+
+And many more. Would you like me to show the implementation of any of these or continue with additional components?
+
+
+
+
+
+# Production App Requirements Checklist
+
+## 1. Analytics & Monitoring
+- Firebase Analytics integration
+  - User engagement metrics
+  - Feature usage tracking
+  - User journey analysis
+  - Conversion tracking
+- Crashlytics setup
+  - Crash reporting
+  - Error tracking
+  - User impact analysis
+- Performance monitoring
+  - App startup time
+  - API response times
+  - UI rendering performance
+  - Memory usage
+  - Battery consumption
+
+## 2. Security
+- Data encryption
+  - Secure local storage
+  - Network security (SSL/TLS)
+  - API key protection
+- Authentication & Authorization
+  - Secure login mechanisms
+  - Session management
+  - Token handling
+- Code obfuscation
+  - ProGuard rules
+  - Sensitive data protection
+- Security testing
+  - Penetration testing
+  - Vulnerability scanning
+- Compliance
+  - GDPR
+  - CCPA
+  - Industry-specific regulations
+
+## 3. Testing
+- Unit tests
+  - Business logic coverage
+  - Data layer testing
+  - Service layer testing
+- Integration tests
+  - API integration
+  - Database integration
+  - Third-party service integration
+- UI/Widget tests
+  - Component testing
+  - Screen flow testing
+- End-to-end tests
+  - User journey testing
+  - Critical path testing
+- Performance tests
+  - Load testing
+  - Stress testing
+  - Memory leak testing
+
+## 4. CI/CD Pipeline
+- Automated build process
+  - Build variants (debug, release)
+  - Environment configurations
+- Automated testing
+  - Pre-commit hooks
+  - Test automation
+- Deployment automation
+  - Version management 
+  - Release notes generation
+- Code quality checks
+  - Static code analysis
+  - Code coverage reports
+  - Linting
+
+## 5. App Store Optimization
+- Store listing
+  - Compelling screenshots
+  - Clear app description
+  - Keyword optimization
+- Rating & Reviews management
+  - User feedback handling
+  - Rating prompts
+- Update strategy
+  - Release notes
+  - Version history
+- Localization
+  - Multi-language support
+  - Regional adaptations
+
+## 6. Documentation
+- Technical documentation
+  - Architecture overview
+  - API documentation
+  - Setup instructions
+- User documentation
+  - User guides
+  - FAQs
+  - Support documentation
+- Maintenance documentation
+  - Deployment procedures
+  - Troubleshooting guides
+  - Recovery procedures
+
+## 7. Performance Optimization
+- App size optimization
+  - Asset optimization
+  - Code minification
+  - Dependencies audit
+- Memory management
+  - Cache strategies
+  - Resource cleanup
+- Battery optimization
+  - Background processing
+  - Network calls optimization
+- Load time optimization
+  - Lazy loading
+  - Data prefetching
+  - Image optimization
+
+## 8. User Experience
+- Accessibility
+  - Screen reader support
+  - Color contrast
+  - Font scaling
+- Offline support
+  - Data caching
+  - Offline functionality
+  - Sync mechanisms
+- Error handling UI
+  - User-friendly error messages
+  - Recovery options
+  - Graceful degradation
+
+## 9. Infrastructure
+- Backend services
+  - API scalability
+  - Database optimization
+  - Server monitoring
+- CDN setup
+  - Asset delivery
+  - Cache management
+- Backup strategy
+  - Data backup
+  - Recovery procedures
+- Environment management
+  - Development
+  - Staging
+  - Production
+
+## 10. Support & Maintenance
+- User support
+  - Help desk system
+  - Bug reporting system
+  - Feedback channels
+- Monitoring tools
+  - Server monitoring
+  - API monitoring
+  - Usage analytics
+- Update strategy
+  - Regular updates
+  - Hotfix procedures
+  - Deprecation policy
+
+## 11. Data Management
+- Data backup
+  - Regular backups
+  - Backup verification
+  - Recovery testing
+- Data migration
+  - Version migration
+  - Schema updates
+  - Data cleanup
+- Privacy
+  - Data retention policy
+  - Data deletion procedures
+  - Privacy policy
+
+## 12. Business Requirements
+- Monetization
+  - Payment integration
+  - Subscription management
+  - Revenue tracking
+- Marketing
+  - Deep linking
+  - Attribution tracking
+  - Campaign analytics
+- Legal compliance
+  - Terms of service
+  - Privacy policy
+  - License agreements
+
+## 13. Deployment Strategy
+- Release planning
+  - Version numbering
+  - Release schedule
+  - Feature flags
+- Beta testing
+  - TestFlight/Internal testing
+  - Beta user management
+  - Feedback collection
+- Rollback plan
+  - Version rollback
+  - Data rollback
+  - Emergency procedures
+
+## 14. Quality Assurance
+- Manual testing
+  - Functionality testing
+  - Usability testing
+  - Compatibility testing
+- Automated testing
+  - Regression testing
+  - Performance testing
+  - Security testing
+- Device coverage
+  - Device matrix
+  - OS version support
+  - Screen size testing1976#Sulekha12

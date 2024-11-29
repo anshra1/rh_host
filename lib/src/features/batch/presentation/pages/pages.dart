@@ -1,13 +1,13 @@
 
     import 'package:flutter/material.dart';
     class BatchPage extends StatelessWidget {
-        const BatchPage({Key? key}) : super(key: key);
+        const BatchPage({super.key});
       
         @override
         Widget build(BuildContext context) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Batch Page'),
+              title: const Text('Batch Page'),
             ),
             );
             }

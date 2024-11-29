@@ -1,16 +1,16 @@
 import 'package:rh_host/src/core/typedef/typedef.dart';
 import 'package:rh_host/src/core/usecases/usecases.dart';
-import '../repositories/passcode_repo.dart';
+import 'package:rh_host/src/features/passcode/domain/repositories/passcode_repo.dart';
 
-class ShouldShowPasscode extends FutureUseCaseWithoutParams<bool> {
-  ShouldShowPasscode({
-    required this.authRepo,
+class ShouldShowPasscodeUseCase extends FutureUseCaseWithoutParams<bool> {
+  ShouldShowPasscodeUseCase({
+    required this.passcodeRepo,
   });
 
-  final PasscodeRepo authRepo;
+  final PasscodeRepo passcodeRepo;
 
   @override
   ResultFuture<bool> call() {
-    return authRepo.shouldShowPasscode();
+    return passcodeRepo.shouldShowPasscode();
   }
 }
