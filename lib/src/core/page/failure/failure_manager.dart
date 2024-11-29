@@ -1,17 +1,20 @@
+// ignore_for_file: sort_unnamed_constructors_first
+
 import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
-import 'package:rh_host/src/core/errror/failure.dart';
+import 'package:rh_host/src/core/error/failures/failure.dart';
 import 'package:rh_host/src/core/page/failure/failure_config.dart';
 import 'package:rh_host/src/core/page/failure/failure_dialog.dart';
 import 'package:rh_host/src/core/page/failure/failure_snack_bar.dart';
 
+
 class FailureManager {
-  factory FailureManager() => _instance;
   FailureManager._internal();
-  static final FailureManager _instance = FailureManager._internal();
+  factory FailureManager() => instance;
+  static final FailureManager instance = FailureManager._internal();
 
   late FailureConfig _config;
   final _overlayQueue = Queue<Failure>();

@@ -3,11 +3,35 @@ part of 'import.dart';
 GetIt sl = GetIt.instance;
 
 Future<void> init() async {
+  await _initStorage();
+  await _initNetworkChecker();
+  await _errorHandler();
   await _initPasscode();
 }
 
-Future<void> _initPasscode() async {
+Future<void> _initStorage() async {
   final prefs = await SharedPreferences.getInstance();
+
+  sl.registerLazySingleton<AppStorage>(
+    () => SharedPrefsStorage(prefs: prefs),
+  );
+}
+
+Future<void> _initNetworkChecker() async {
+  final checker = InternetConnection.createInstance();
+  sl.registerFactory<NetworkChecker>(() => NetworkCheckerImpl(checker));
+}
+
+Future<void> _errorHandler() async {
+  sl.registerLazySingleton<ErrorHandler>(
+    () => ErrorHandler(
+      analytics: FirebaseAnalytics.instance,
+      crashlytics: FirebaseCrashlytics.instance,
+    ),
+  );
+}
+
+Future<void> _initPasscode() async {
   sl
     ..registerFactory(
       () => PasscodeCubit(
@@ -23,12 +47,18 @@ Future<void> _initPasscode() async {
     ..registerLazySingleton(() => ShouldShowPasscodeUseCase(passcodeRepo: sl()))
     //
     ..registerLazySingleton<PasscodeRepo>(
-      () => PasscodeRepositoryImpl(sl()),
+      () => PasscodeRepositoryImpl(
+        remoteDataSource: sl(),
+        errorHandler: sl(),
+      ),
     )
     ..registerLazySingleton<PasscodeRemoteDataSource>(
       () => PasscodeRemoteDataSourceImpl(
-        prefs: prefs,
+        prefs: sl(),
         firestoreClient: FirebaseFirestore.instance,
+        timeProvider: const TimeProvider(config: TimeConfig()),
+        networkChecker: sl(),
+        retryPolicy: sl(),
       ),
     );
 }

@@ -100,7 +100,7 @@ var _navigationItem = [
     title: const Text('Books'),
     selectedColor: Colors.pink,
   ),
-  
+
   AdvancedSalomonBottomBarItem(
     icon: const Icon(FontAwesomeIcons.user),
     title: const Text('Sevices'),

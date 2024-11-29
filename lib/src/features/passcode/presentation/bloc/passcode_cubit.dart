@@ -28,29 +28,31 @@ class PasscodeCubit extends Cubit<PasscodeState> {
     final result = await _setNewPasscode(params);
 
     result.fold(
-      (failure) => emit(PasscodeError(failure.errorMessage)),
+      (failure) => emit(PasscodeError(failure.message)),
       (_) => emit(const PasscodeSet()),
     );
   }
 
   Future<void> verifyPasscode(int passcode) async {
-    print('z start');
+   
     emit(const PasscodeLoading());
     final result = await _verifyPasscode(passcode);
     result.fold(
       (failure) => emit(PasscodeError(failure.message)),
       (isVerified) => emit(
-        isVerified ? const PasscodeVerified() : const PasscodeError('Invalid passcode'),
+        isVerified
+            ? const PasscodeVerified()
+            : const PasscodeError('Invalid passcode'),
       ),
     );
-    print('z end');
+   
   }
 
   Future<void> togglePasscodeScreen() async {
     emit(const PasscodeLoading());
     final result = await _enableDisablePasscode();
     result.fold(
-      (failure) => emit(PasscodeError(failure.errorMessage)),
+      (failure) => emit(PasscodeError(failure.message)),
       (_) => emit(const PasscodeSettingChanged()),
     );
   }
@@ -59,7 +61,7 @@ class PasscodeCubit extends Cubit<PasscodeState> {
     emit(const PasscodeLoading());
     final result = await _shouldShowPasscodeUseCase();
     result.fold(
-      (failure) => emit(PasscodeError(failure.errorMessage)),
+      (failure) => emit(PasscodeError(failure.message)),
       (shouldShow) => emit(ShouldShowPasscode(shouldShow)),
     );
   }

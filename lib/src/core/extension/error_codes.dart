@@ -1,4 +1,4 @@
-import 'package:rh_host/src/core/errror/error_codes.dart';
+import 'package:rh_host/src/core/enum/error_codes.dart';
 
 extension ErrorCodeX on ErrorCode {
   bool get requiresLogout => [
@@ -17,6 +17,4 @@ extension ErrorCodeX on ErrorCode {
         ErrorCode.timeOut,
         ErrorCode.serverError,
       ].contains(this);
-
- 
 }

@@ -12,4 +12,4 @@ abstract class PasscodeRepo {
   ResultFuture<void> enableDisablePasscode();
 
   ResultFuture<bool> shouldShowPasscode();
-} 
+}

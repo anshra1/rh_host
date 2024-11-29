@@ -4,7 +4,8 @@ import 'package:rh_host/src/core/usecases/usecases.dart';
 import 'package:rh_host/src/features/passcode/domain/repositories/passcode_repo.dart';
 
 // ignore: lines_longer_than_80_chars
-class SetNewPasscode extends FutureUseCaseWithParams<void, SetNewPasscodeParams> {
+class SetNewPasscode
+    extends FutureUseCaseWithParams<void, SetNewPasscodeParams> {
   SetNewPasscode({
     required this.passcodeRepo,
   });

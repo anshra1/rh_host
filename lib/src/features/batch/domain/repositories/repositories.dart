@@ -1,5 +1,3 @@
- 
-    abstract class BatchRepository {
-        // Future<User> getUser(String userId);
-      }
-    
+abstract class BatchRepository {
+  // Future<User> getUser(String userId);
+}

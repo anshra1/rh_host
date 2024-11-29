@@ -1,11 +1,10 @@
+part of 'services_cubit.dart';
 
-  part of 'services_cubit.dart';
-  
-  abstract class ServicesState extends Equatable {
+abstract class ServicesState extends Equatable {
   const ServicesState();
 
   @override
   List<Object> get props => [];
-  }
-  class ServicesInitial extends ServicesState {}
-  
+}
+
+class ServicesInitial extends ServicesState {}

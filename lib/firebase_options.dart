@@ -46,7 +46,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '644855396750',
     projectId: 'rh-library',
     authDomain: 'rh-library.firebaseapp.com',
-    databaseURL: 'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'rh-library.appspot.com',
   );
 
@@ -55,7 +56,8 @@ class DefaultFirebaseOptions {
     appId: '1:644855396750:android:0a9041328a0414af23ccdf',
     messagingSenderId: '644855396750',
     projectId: 'rh-library',
-    databaseURL: 'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'rh-library.appspot.com',
   );
 
@@ -64,10 +66,13 @@ class DefaultFirebaseOptions {
     appId: '1:644855396750:ios:d9abbd1e63c6542023ccdf',
     messagingSenderId: '644855396750',
     projectId: 'rh-library',
-    databaseURL: 'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'rh-library.appspot.com',
-    androidClientId: '644855396750-f2t5rfv1sp2rki3l23nj3216rbctus6m.apps.googleusercontent.com',
-    iosClientId: '644855396750-9eqg2vn17i2ciqkl4hp3onv4acbakd7h.apps.googleusercontent.com',
+    androidClientId:
+        '644855396750-f2t5rfv1sp2rki3l23nj3216rbctus6m.apps.googleusercontent.com',
+    iosClientId:
+        '644855396750-9eqg2vn17i2ciqkl4hp3onv4acbakd7h.apps.googleusercontent.com',
     iosBundleId: 'com.example.rhHost',
   );
 
@@ -76,10 +81,13 @@ class DefaultFirebaseOptions {
     appId: '1:644855396750:ios:d9abbd1e63c6542023ccdf',
     messagingSenderId: '644855396750',
     projectId: 'rh-library',
-    databaseURL: 'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'rh-library.appspot.com',
-    androidClientId: '644855396750-f2t5rfv1sp2rki3l23nj3216rbctus6m.apps.googleusercontent.com',
-    iosClientId: '644855396750-9eqg2vn17i2ciqkl4hp3onv4acbakd7h.apps.googleusercontent.com',
+    androidClientId:
+        '644855396750-f2t5rfv1sp2rki3l23nj3216rbctus6m.apps.googleusercontent.com',
+    iosClientId:
+        '644855396750-9eqg2vn17i2ciqkl4hp3onv4acbakd7h.apps.googleusercontent.com',
     iosBundleId: 'com.example.rhHost',
   );
 
@@ -89,8 +97,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '644855396750',
     projectId: 'rh-library',
     authDomain: 'rh-library.firebaseapp.com',
-    databaseURL: 'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://rh-library-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'rh-library.appspot.com',
   );
-
 }

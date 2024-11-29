@@ -8,4 +8,3 @@ enum ErrorSeverity {
   const ErrorSeverity(this.value);
   final int value;
 }
-

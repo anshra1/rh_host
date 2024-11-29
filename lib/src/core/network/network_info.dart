@@ -1,6 +1,5 @@
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
-// lib/core/network/network_info.dart
 abstract class NetworkChecker {
   Future<bool> get isConnected;
   Stream<InternetStatus> get onStatusChange;

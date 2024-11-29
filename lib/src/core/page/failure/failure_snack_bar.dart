@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:rh_host/src/core/errror/failure.dart';
+import 'package:rh_host/src/core/error/failures/failure.dart';
 import 'package:rh_host/src/core/page/failure/failure_config.dart';
 import 'package:rh_host/src/core/page/failure/failure_icon.dart';
 import 'package:rh_host/src/core/page/failure/failure_utils.dart';
 
 class FailureSnackBar extends SnackBar {
   FailureSnackBar({
-    required Failure failure, required FailureConfig config, super.key,
+    required Failure failure,
+    required FailureConfig config,
+    super.key,
   }) : super(
           content: Row(
             children: [

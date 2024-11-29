@@ -25,7 +25,7 @@ class PasscodeVerified extends PasscodeState {
 }
 
 class PasscodeSettingChanged extends PasscodeState {
-  const PasscodeSettingChanged(); 
+  const PasscodeSettingChanged();
 }
 
 class ShouldShowPasscode extends PasscodeState {
@@ -44,5 +44,3 @@ class PasscodeError extends PasscodeState {
   @override
   List<Object?> get props => [message];
 }
-
-

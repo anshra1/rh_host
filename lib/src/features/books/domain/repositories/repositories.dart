@@ -1,5 +1,3 @@
- 
-    abstract class BooksRepository {
-        // Future<User> getUser(String userId);
-      }
-    
+abstract class BooksRepository {
+  // Future<User> getUser(String userId);
+}

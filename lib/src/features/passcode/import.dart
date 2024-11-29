@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rh_host/src/core/constants/colors.dart';
-import 'package:rh_host/src/core/constants/constants.dart';
 import 'package:rh_host/src/core/constants/font.dart';
-
 import 'package:rh_host/src/core/constants/gap.dart';
+import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/extension/center.dart';
 import 'package:rh_host/src/core/extension/context.dart';
 import 'package:rh_host/src/core/extension/padding.dart';

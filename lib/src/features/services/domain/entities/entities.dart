@@ -1,6 +1,4 @@
-
-    class ServicesEntity {
-        // ...
-        // An entity represents a real-world object with a distinct identity. 
-    }
-    
+class ServicesEntity {
+  // ...
+  // An entity represents a real-world object with a distinct identity.
+}

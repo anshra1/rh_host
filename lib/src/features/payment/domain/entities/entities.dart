@@ -1,6 +1,4 @@
-
-    class PaymentEntity {
-        // ...
-        // An entity represents a real-world object with a distinct identity. 
-    }
-    
+class PaymentEntity {
+  // ...
+  // An entity represents a real-world object with a distinct identity.
+}

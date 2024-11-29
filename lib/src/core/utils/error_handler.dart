@@ -11,21 +11,21 @@
 //           message: failure.message,
 //           actionButton: RetryButton(),
 //         );
-        
+
 //       case ErrorCode.unauthorized:
 //         return ErrorView(
 //           icon: Icons.lock,
 //           message: failure.message,
 //           actionButton: LoginButton(),
 //         );
-        
+
 //       case ErrorCode.noInternet:
 //         return ErrorView(
 //           icon: Icons.wifi_off,
 //           message: failure.message,
 //           actionButton: RefreshButton(),
 //         );
-        
+
 //       default:
 //         return GenericErrorView(message: failure.message);
 //     }

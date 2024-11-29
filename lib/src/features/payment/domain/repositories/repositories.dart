@@ -1,5 +1,3 @@
- 
-    abstract class PaymentRepository {
-        // Future<User> getUser(String userId);
-      }
-    
+abstract class PaymentRepository {
+  // Future<User> getUser(String userId);
+}

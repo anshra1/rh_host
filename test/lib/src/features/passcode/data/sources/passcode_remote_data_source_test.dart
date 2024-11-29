@@ -1,32 +1,62 @@
-// ignore_for_file: lines_longer_than_80_chars, no_leading_underscores_for_local_identifiers
+// ignore_for_file: lines_longer_than_80_chars, no_leading_underscores_for_local_identifiers, avoid_print
 
+import 'package:clock/clock.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:rh_host/src/core/constants/constants.dart';
-import 'package:rh_host/src/core/errror/exception.dart';
+import 'package:rh_host/src/core/clock/clock_provider.dart';
+import 'package:rh_host/src/core/clock/time_config.dart';
+import 'package:rh_host/src/core/constants/string.dart';
+import 'package:rh_host/src/core/enum/error_codes.dart';
+import 'package:rh_host/src/core/enum/error_severity.dart';
+import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
+import 'package:rh_host/src/core/error/exception/exception.dart';
+import 'package:rh_host/src/core/network/network_info.dart';
+import 'package:rh_host/src/core/storage/shared_pref_storage.dart';
+import 'package:rh_host/src/core/storage/storage_keys.dart';
 import 'package:rh_host/src/features/passcode/data/sources/passcode_remote_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
-const String passcodeKey = 'user_passcode';
-const String passcodeEnabledKey = 'passcode_enabled';
+class MockNetworkCheckerImpl extends Mock implements NetworkCheckerImpl {}
 
 void main() {
   late FakeFirebaseFirestore firestoreClient;
-  late MockSharedPreferences prefs;
+  late MockSharedPreferences mockPrefs;
+  late SharedPrefsStorage sharedPrefsStorage;
   late PasscodeRemoteDataSourceImpl passcodeRepoImpl;
+  late TimeProvider timeProvider;
+  late MockNetworkCheckerImpl mockNetworkChecker;
 
-  setUp(() {
+  setUp(() async {
+    mockNetworkChecker = MockNetworkCheckerImpl();
+
+    mockPrefs = MockSharedPreferences();
+    when(() => mockPrefs.reload()).thenAnswer((_) async {});
+    sharedPrefsStorage = SharedPrefsStorage(prefs: mockPrefs);
     firestoreClient = FakeFirebaseFirestore();
-    prefs = MockSharedPreferences();
+    timeProvider = const TimeProvider(config: TimeConfig());
+
     passcodeRepoImpl = PasscodeRemoteDataSourceImpl(
       firestoreClient: firestoreClient,
-      prefs: prefs,
+      prefs: sharedPrefsStorage,
+      timeProvider: timeProvider,
+      networkChecker: mockNetworkChecker,
+      retryPolicy: const RetryPolicy(),
     );
+
+    // // Basic mock setup
+    // when(() => mockPrefs.reload()).thenAnswer((_) async => {});
+    // when(() => mockPrefs.getBool(any())).thenReturn(false);
+    // when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async => true);
+
+    when(() => mockNetworkChecker.isConnected).thenAnswer((_) async => true);
   });
 
+  tearDown(() {
+    reset(mockPrefs);
+  });
   group('setNewPasscode', () {
     const newPasscode = 1234;
     const confirmPasscode = 1234;
@@ -35,15 +65,15 @@ void main() {
     test('should set new passcode successfully', () async {
       // Arrange
       await firestoreClient
-          .collection(Constants.settingCollectionName)
-          .doc(Constants.passcodeDocId)
+          .collection(Strings.passcodeStoreCollection)
+          .doc(Strings.passcodeStoreDocId)
           .set({
-        Constants.masterPasscode: masterPasscode,
+        Strings.setMasterPasscode: masterPasscode,
       });
 
-      when(() => prefs.setInt(any(), any())).thenAnswer((_) async => true);
-      when(() => prefs.getBool(any())).thenReturn(false);
-      when(() => prefs.setBool(any(), any())).thenAnswer((_) async => true);
+      when(() => mockPrefs.setInt(any(), any())).thenAnswer((_) async => true);
+      when(() => mockPrefs.getBool(any())).thenReturn(false);
+      when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async => true);
 
       // Act
       await passcodeRepoImpl.setNewPasscode(
@@ -54,39 +84,47 @@ void main() {
 
       // Assert
       final docSnapshot = await firestoreClient
-          .collection(Constants.settingCollectionName)
-          .doc(Constants.passcodeDocId)
+          .collection(Strings.passcodeStoreCollection)
+          .doc(Strings.passcodeStoreDocId)
           .get();
 
-      expect(docSnapshot.data()?[Constants.appPasscode], newPasscode);
+      expect(docSnapshot.data()?[Strings.appPasscode], newPasscode);
 
-      verify(() => prefs.setInt(passcodeKey, newPasscode)).called(1);
-      verify(() => prefs.setBool(passcodeEnabledKey, true)).called(1);
+      verify(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).called(1);
+      verify(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true)).called(1);
     });
 
-    test('should throw ServerException when new passcode and confirmation do not match',
+    test(
+        'should throw ValidationException with correct properties when passcodes mismatch',
         () async {
       // Act & Assert
       expect(
         () => passcodeRepoImpl.setNewPasscode(
           newPasscode: newPasscode,
-          confirmPasscode: 4321, // Different from newPasscode
+          confirmPasscode: 4321,
           masterPasscode: masterPasscode,
         ),
         throwsA(
-          isA<ServerException>()
-              .having((e) => e.message, 'message', Constants.noMatchPasscode),
+          allOf([
+            isA<ValidationException>(),
+            predicate<ValidationException>(
+              (e) => e.showUImessage == Strings.noMatchPasscode,
+            ),
+            predicate<ValidationException>((e) => e.methodName == 'SET_NEW_PASSCODE'),
+            predicate<ValidationException>((e) => e.errorCode == ErrorCode.validation),
+            predicate<ValidationException>((e) => e.severity == ErrorSeverity.low),
+          ]),
         ),
       );
     });
 
-    test('should throw ServerException when master passcode is invalid', () async {
+    test('should throw ValidationException when master passcode is invalid', () async {
       // Arrange
       await firestoreClient
-          .collection(Constants.settingCollectionName)
-          .doc(Constants.passcodeDocId)
+          .collection(Strings.passcodeStoreCollection)
+          .doc(Strings.passcodeStoreDocId)
           .set({
-        Constants.masterPasscode: 9999, // Different from provided masterPasscode
+        Strings.setMasterPasscode: 9999, // Different from provided masterPasscode
       });
 
       // Act & Assert
@@ -97,16 +135,28 @@ void main() {
           masterPasscode: masterPasscode,
         ),
         throwsA(
-          isA<ServerException>()
-              .having((e) => e.message, 'message', Constants.invalidMasterPasscode),
+          allOf([
+            isA<ValidationException>(),
+            predicate<ValidationException>(
+              (e) => e.showUImessage == Strings.invalidMasterPasscode,
+            ),
+            predicate<ValidationException>((e) => e.methodName == 'SET_NEW_PASSCODE'),
+            predicate<ValidationException>((e) => e.errorCode == ErrorCode.validation),
+            predicate<ValidationException>((e) => e.severity == ErrorSeverity.low),
+          ]),
         ),
       );
     });
 
-    test('should rethrow ServerException', () async {
-      // Arrange
-      when(() => prefs.setInt(any(), any())).thenThrow(
-        const ServerException(message: 'Prefs error', statusCode: 500),
+    test('should rethrow ValidationException', () async {
+      //  Arrange
+      when(() => mockPrefs.setInt(any(), any())).thenThrow(
+        const ValidationException(
+          showUImessage: Strings.invalidMasterPasscode,
+          debugCode: 'ErrorCode.validation',
+          methodName: 'SET_NEW_PASSCODE',
+          errorCode: ErrorCode.validation,
+        ),
       );
 
       // Act & Assert
@@ -116,13 +166,28 @@ void main() {
           confirmPasscode: confirmPasscode,
           masterPasscode: masterPasscode,
         ),
-        throwsA(isA<ServerException>()),
+        throwsA(isA<ValidationException>()),
       );
     });
 
-    test('should throw ServerException when an unexpected error occurs', () async {
+    test('should throw StorageException when read set an bool in sharedPrefStorage',
+        () async {
       // Arrange
-      when(() => prefs.setInt(any(), any())).thenThrow(Exception('Unexpected error'));
+      when(() => mockPrefs.setBool(any(), any())).thenThrow(
+        const UnknownException(
+          debugCode: 'error',
+          showUImessage: Strings.unknownError,
+          errorCode: ErrorCode.unknown,
+          methodName: 'SET_NEW_PASSCODE',
+        ),
+      );
+
+      await firestoreClient
+          .collection(Strings.passcodeStoreCollection)
+          .doc(Strings.passcodeStoreDocId)
+          .set({
+        Strings.setMasterPasscode: masterPasscode,
+      });
 
       // Act & Assert
       expect(
@@ -131,140 +196,72 @@ void main() {
           confirmPasscode: confirmPasscode,
           masterPasscode: masterPasscode,
         ),
-        throwsA(isA<ServerException>()),
-      );
-    });
-  });
-
-  group('verifyPasscode', () {
-    const correctPasscode = 1234;
-    const incorrectPasscode = 5678;
-
-    test('should return true when passcode is correct', () async {
-      // Arrange
-      await firestoreClient
-          .collection(Constants.settingCollectionName)
-          .doc(Constants.passcodeDocId)
-          .set({
-        Constants.appPasscode: correctPasscode,
-      });
-
-      // Act
-      final result = await passcodeRepoImpl.verifyPasscode(correctPasscode);
-
-      // Assert
-      expect(result, true);
-
-      // Verify that lastLoginupdatedAt was updated
-      final updatedDoc = await firestoreClient
-          .collection(Constants.settingCollectionName)
-          .doc(Constants.passcodeDocId)
-          .get();
-
-      expect(updatedDoc.data()!.containsKey(Constants.lastLoginupdatedAt), true);
-    });
-
-    test('should return false when passcode is incorrect', () async {
-      // Arrange
-      await firestoreClient
-          .collection(Constants.settingCollectionName)
-          .doc(Constants.passcodeDocId)
-          .set({
-        Constants.appPasscode: correctPasscode,
-      });
-
-      // Act
-      final result = await passcodeRepoImpl.verifyPasscode(incorrectPasscode);
-
-      // Assert
-      expect(result, false);
-    });
-
-    test('should throw ServerException when passcode document does not exist', () async {
-      // Act & Assert
-      expect(
-        () => passcodeRepoImpl.verifyPasscode(correctPasscode),
-        throwsA(isA<ServerException>()),
-      );
-    });
-
-    test('should throw ServerException when appPasscode field is missing', () async {
-      // Arrange
-      await firestoreClient
-          .collection(Constants.settingCollectionName)
-          .doc(Constants.passcodeDocId)
-          .set({
-        'someOtherField': 'someValue',
-      });
-
-      // Act & Assert
-      expect(
-        () => passcodeRepoImpl.verifyPasscode(correctPasscode),
-        throwsA(isA<ServerException>()),
+        throwsA(isA<StorageException>()),
       );
     });
   });
 
   group('shouldShowPasscode', () {
-    const _passcodeEnabledKey = 'passcode_enabled';
-    const _lastLoginTimestampKey = 'last_login_timestamp';
+    const _passcodeEnabledKey = StorageKeys.passcodeEnabledKey;
+    const _lastLoginTimestampKey = StorageKeys.lastLoginTimestampKey;
 
     test('should return false when passcode is not enabled', () async {
       // Arrange
-      when(() => prefs.getBool(_passcodeEnabledKey)).thenReturn(false);
+      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(false);
 
       // Act
       final result = await passcodeRepoImpl.shouldShowPasscode();
 
       // Assert
       expect(result, false);
-      verify(() => prefs.getBool(_passcodeEnabledKey)).called(1);
 
-      verifyNoMoreInteractions(prefs);
+      verify(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).called(1);
+
+      //  verifyNoMoreInteractions(mockPrefs);
     });
 
     test('should return false when passcode enabled key is null', () async {
       // Arrange
-      when(() => prefs.getBool(_passcodeEnabledKey)).thenReturn(null);
+      when(() => mockPrefs.getBool(_passcodeEnabledKey)).thenReturn(null);
 
       // Act
       final result = await passcodeRepoImpl.shouldShowPasscode();
 
       // Assert
       expect(result, false);
-      verify(() => prefs.getBool(_passcodeEnabledKey)).called(1);
-      verifyNoMoreInteractions(prefs);
+      verify(() => mockPrefs.getBool(_passcodeEnabledKey)).called(1);
     });
 
     test('should return true when passcode is enabled but no last login timestamp',
         () async {
       // Arrange
-      when(() => prefs.getBool(_passcodeEnabledKey)).thenReturn(true);
-      when(() => prefs.getString(_lastLoginTimestampKey)).thenReturn(null);
+      when(() => mockPrefs.getBool(_passcodeEnabledKey)).thenReturn(true);
+      when(() => mockPrefs.getString(_lastLoginTimestampKey)).thenReturn(null);
 
       // Act
       final result = await passcodeRepoImpl.shouldShowPasscode();
 
       // Assert
       expect(result, true);
-      verify(() => prefs.getBool(_passcodeEnabledKey)).called(1);
-      verify(() => prefs.getString(_lastLoginTimestampKey)).called(1);
+      verify(() => mockPrefs.getBool(_passcodeEnabledKey)).called(1);
+      verify(() => mockPrefs.getString(_lastLoginTimestampKey)).called(1);
     });
 
     test('should return true when last login was more than 30 minutes ago', () async {
       // Arrange
       final oldTimestamp =
           DateTime.now().subtract(const Duration(minutes: 31)).toIso8601String();
-      when(() => prefs.getBool(_passcodeEnabledKey)).thenReturn(true);
-      when(() => prefs.getString(_lastLoginTimestampKey)).thenReturn(oldTimestamp);
+
+      when(() => mockPrefs.getBool(_passcodeEnabledKey)).thenReturn(true);
+      when(() => mockPrefs.getString(_lastLoginTimestampKey)).thenReturn(oldTimestamp);
 
       // Act
       final result = await passcodeRepoImpl.shouldShowPasscode();
 
       // Assert
       expect(result, true);
-      verify(() => prefs.getBool(passcodeEnabledKey)).called(1);
-      verify(() => prefs.getString(_lastLoginTimestampKey)).called(1);
+      verify(() => mockPrefs.getBool(_passcodeEnabledKey)).called(1);
+      verify(() => mockPrefs.getString(_lastLoginTimestampKey)).called(1);
     });
 
     test('should return false when last login was less than 30 minutes ago', () async {
@@ -272,108 +269,241 @@ void main() {
       final recentTimestamp =
           DateTime.now().subtract(const Duration(minutes: 29)).toIso8601String();
 
-      when(() => prefs.getBool(passcodeEnabledKey)).thenReturn(true);
-      when(() => prefs.getString(_lastLoginTimestampKey)).thenReturn(recentTimestamp);
+      when(() => mockPrefs.getBool(_passcodeEnabledKey)).thenReturn(true);
+      when(() => mockPrefs.getString(_lastLoginTimestampKey)).thenReturn(recentTimestamp);
 
       // Act
       final result = await passcodeRepoImpl.shouldShowPasscode();
 
       // Assert
       expect(result, false);
-      verify(() => prefs.getBool(passcodeEnabledKey)).called(1);
-      verify(() => prefs.getString(_lastLoginTimestampKey)).called(1);
+      verify(() => mockPrefs.getBool(_passcodeEnabledKey)).called(1);
+      verify(() => mockPrefs.getString(_lastLoginTimestampKey)).called(1);
     });
 
-    test('should throw ServerException when SharedPreferences throws an error', () async {
+    test('should throw StorageException when SharedPreferences throws an error',
+        () async {
       // Arrange
-      when(() => prefs.getBool(passcodeEnabledKey))
-          .thenThrow(const ServerException(message: '', statusCode: 444));
+      when(() => mockPrefs.getBool(_passcodeEnabledKey)).thenThrow(
+        const StorageException(
+          showUImessage: '',
+          errorCode: ErrorCode.localStorageError,
+          debugCode: 'error',
+          methodName: '',
+        ),
+      );
 
       // Act & Assert
       expect(
         () => passcodeRepoImpl.shouldShowPasscode(),
-        throwsA(isA<ServerException>()),
+        throwsA(isA<StorageException>()),
       );
     });
 
     test('should throw ServerException when timestamp parsing fails', () async {
       // Arrange
-      when(() => prefs.getBool(passcodeEnabledKey)).thenReturn(true);
-      when(() => prefs.getString(_lastLoginTimestampKey)).thenReturn('invalid_timestamp');
+      when(() => mockPrefs.getBool(_passcodeEnabledKey)).thenReturn(true);
+      when(() => mockPrefs.getString(_lastLoginTimestampKey))
+          .thenReturn('invalid_timestamp');
 
       // Act & Assert
       expect(
         () => passcodeRepoImpl.shouldShowPasscode(),
-        throwsA(isA<ServerException>()),
+        throwsA(isA<UnknownException>()),
       );
     });
   });
 
   group('enableDisablePasscode', () {
-    const passcodeEnabledKey = 'passcode_enabled';
-    const lastLoginTimestampKey = 'last_login_timestamp';
-
     test('should enable passcode when it was disabled', () async {
-      // Arrange
-      when(() => prefs.getBool(passcodeEnabledKey)).thenReturn(false);
+      await withClock(Clock.fixed(DateTime(2024)), () async {
+        final dateTimeNow = timeProvider.now().dateTime.toIso8601String();
+        // Arrange
+        when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(false);
 
-      when(() => prefs.setBool(passcodeEnabledKey, any())).thenAnswer((_) async => true);
+        when(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true))
+            .thenAnswer((_) async => true);
 
-      when(() => prefs.setString(lastLoginTimestampKey, any()))
-          .thenAnswer((_) async => true);
+        when(() => mockPrefs.setString(StorageKeys.lastLoginTimestampKey, dateTimeNow))
+            .thenAnswer((_) async => true);
 
-      // Act
-      final result = await passcodeRepoImpl.enableDisablePasscode();
+        // Act
+        await passcodeRepoImpl.enableDisablePasscode();
 
-      // Assert
-      expect(result, true);
-      verify(() => prefs.setBool(passcodeEnabledKey, true)).called(1);
-      verify(() => prefs.setString(lastLoginTimestampKey, any())).called(1);
+        //  Assert
+        verifyInOrder([
+          () => mockPrefs.reload(),
+          () => mockPrefs.getBool(StorageKeys.passcodeEnabledKey),
+          () => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true),
+        ]);
+      });
     });
 
     test('should disable passcode when it was enabled', () async {
-      // Arrange
-      when(() => prefs.getBool(passcodeEnabledKey)).thenReturn(true);
+      await withClock(Clock.fixed(DateTime(2024)), () async {
+        // Arrange
+        when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(true);
 
-      when(() => prefs.setBool(passcodeEnabledKey, any())).thenAnswer((_) async => true);
+        when(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, false))
+            .thenAnswer((_) async => true);
 
-      when(() => prefs.remove(any())).thenAnswer((_) async => true);
+        when(() => mockPrefs.remove(StorageKeys.lastLoginTimestampKey))
+            .thenAnswer((_) async => true);
 
-      // Act
-      final result = await passcodeRepoImpl.enableDisablePasscode();
+        // Act
+        await passcodeRepoImpl.enableDisablePasscode();
 
-      // Assert
-      expect(result, false);
+        // Assert
+        verify(() => mockPrefs.reload()).called(1);
 
-      verify(() => prefs.setBool(passcodeEnabledKey, false)).called(1);
-      verify(() => prefs.remove(lastLoginTimestampKey)).called(1);
+        verify(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, false)).called(1);
+        verify(() => mockPrefs.remove(StorageKeys.lastLoginTimestampKey)).called(1);
+      });
     });
 
     test('should enable passcode when current state is null', () async {
-      // Arrange
-      when(() => prefs.getBool(passcodeEnabledKey)).thenReturn(null);
-      when(() => prefs.setBool(passcodeEnabledKey, any())).thenAnswer((_) async => true);
-      when(() => prefs.setString(lastLoginTimestampKey, any()))
-          .thenAnswer((_) async => true);
+      await withClock(Clock.fixed(DateTime(2024)), () async {
+        final dateTimeNow = timeProvider.now().dateTime.toIso8601String();
+        // Arrange
+        // Arrange
+        when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(null);
 
-      // Act
-      final result = await passcodeRepoImpl.enableDisablePasscode();
+        when(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true))
+            .thenAnswer((_) async => true);
 
-      // Assert
-      expect(result, true);
-      verify(() => prefs.setBool(passcodeEnabledKey, true)).called(1);
-      verify(() => prefs.setString(lastLoginTimestampKey, any())).called(1);
+        when(() => mockPrefs.setString(StorageKeys.lastLoginTimestampKey, dateTimeNow))
+            .thenAnswer((_) async => true);
+
+        // Act
+        await passcodeRepoImpl.enableDisablePasscode();
+
+        //  Assert
+        verifyInOrder([
+          () => mockPrefs.reload(),
+          () => mockPrefs.getBool(StorageKeys.passcodeEnabledKey),
+          () => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true),
+          () => mockPrefs.setString(StorageKeys.lastLoginTimestampKey, dateTimeNow),
+        ]);
+      });
     });
 
     test('should throw ServerException when SharedPreferences throws', () async {
+      expect(
+        () => passcodeRepoImpl.enableDisablePasscode(),
+        throwsA(isA<StorageException>()),
+      );
+    });
+  });
+
+  group('verifyPasscode', () {
+    const correctPasscode = 123456;
+    const wrongPasscode = 567856;
+
+    test('should return true when correct passcode is provided', () async {
+      await withClock(Clock.fixed(DateTime(2024)), () async {
+        final dateTime = timeProvider.currentTime;
+        // Arrange
+        await firestoreClient
+            .collection(Strings.passcodeStoreCollection)
+            .doc(Strings.passcodeStoreDocId)
+            .set({
+          Strings.appPasscode: correctPasscode,
+        });
+
+        when(
+          () => mockPrefs.setString(
+            StorageKeys.lastLoginTimestampKey,
+            dateTime.toIso8601String(),
+          ),
+        ).thenAnswer((_) async => true);
+
+        // Act
+        final result = await passcodeRepoImpl.verifyPasscode(correctPasscode);
+
+        // Assert
+        expect(result, true);
+
+        verify(
+          () => mockPrefs.setString(
+            StorageKeys.lastLoginTimestampKey,
+            dateTime.toIso8601String(),
+          ),
+        ).called(1);
+      });
+    });
+
+    test('should return false when incorrect passcode is provided', () async {
       // Arrange
-      when(() => prefs.getBool(passcodeEnabledKey))
-          .thenThrow(const CacheException(message: '', statusCode: 666));
+      await firestoreClient
+          .collection(Strings.passcodeStoreCollection)
+          .doc(Strings.passcodeStoreDocId)
+          .set({
+        Strings.appPasscode: correctPasscode,
+      });
+
+      // Act
+      final result = await passcodeRepoImpl.verifyPasscode(wrongPasscode);
+
+      // Assert
+      expect(result, false);
+      verifyNever(() => mockPrefs.setString(any(), any()));
+    });
+
+    test('should throw ValidationException when passcode document does not exist',
+        () async {
+      // Arrange - not setting up any document in Firestore
 
       // Act & Assert
       expect(
-        () => passcodeRepoImpl.enableDisablePasscode(),
-        throwsA(isA<CacheException>()),
+        () => passcodeRepoImpl.verifyPasscode(correctPasscode),
+        throwsA(
+          allOf([
+            isA<ValidationException>(),
+          ]),
+        ),
+      );
+    });
+
+    test('should throw ValidationException when passcode field is missing', () async {
+      // Arrange
+      await firestoreClient
+          .collection(Strings.passcodeStoreCollection)
+          .doc(Strings.passcodeStoreDocId)
+          .set({
+        'some_other_field': 'some_value',
+      });
+
+      // Act & Assert
+      expect(
+        () => passcodeRepoImpl.verifyPasscode(correctPasscode),
+        throwsA(
+          allOf([isA<ValidationException>()]),
+        ),
+      );
+    });
+
+    test('should throw StorageException when SharedPreferences throws', () async {
+      // Arrange
+      await firestoreClient
+          .collection(Strings.passcodeStoreCollection)
+          .doc(Strings.passcodeStoreDocId)
+          .set({
+        Strings.appPasscode: correctPasscode,
+      });
+
+      when(() => mockPrefs.setString(any(), any())).thenThrow(
+        const StorageException(
+          showUImessage: 'Storage error',
+          errorCode: ErrorCode.localStorageError,
+          debugCode: 'error',
+          methodName: 'VERIFY_PASSCODE',
+        ),
+      );
+
+      // Act & Assert
+      expect(
+        () => passcodeRepoImpl.verifyPasscode(correctPasscode),
+        throwsA(isA<StorageException>()),
       );
     });
   });

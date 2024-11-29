@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
-import 'package:rh_host/src/core/errror/error_codes.dart';
-import 'package:rh_host/src/core/errror/failure.dart';
+import 'package:rh_host/src/core/error/failures/failure.dart';
 
 class FailureUtils {
   const FailureUtils._();
@@ -51,9 +51,13 @@ class FailureUtils {
 
     // Then check if there's a specific color for the error code
     final codeColor = switch (failure.code) {
-      ErrorCode.noInternet || ErrorCode.connectionLost || ErrorCode.networkError => Colors.blue.shade700,
+      ErrorCode.noInternet ||
+      ErrorCode.connectionLost ||
+      ErrorCode.networkError =>
+        Colors.blue.shade700,
       ErrorCode.unauthorized || ErrorCode.forbidden => Colors.orange.shade700,
-      ErrorCode.serverError || ErrorCode.serverGeneric => Colors.red.shade700, _ => null,
+      ErrorCode.serverError || ErrorCode.serverGeneric => Colors.red.shade700,
+      _ => null,
     };
 
     // Return code-specific color if available, otherwise severity color
@@ -85,6 +89,7 @@ class FailureUtils {
       // Not found
       ErrorCode.notFound => 'Not Found',
       ErrorCode.notFoundPasscode => 'Passcode Not Found',
+      ErrorCode.validation => 'Validation Error',
 
       // Default
       _ => failure.category.name.toTitleCase(),

@@ -41,7 +41,7 @@ class PasscodePageState extends State<PasscodePage> {
             if (state is PasscodeError) {
               CoreUtils.showSnackBar(context, state.message);
             } else if (state is PasscodeLoading) {
-             // CoreUtils.showLoadingDialog(context);
+              // CoreUtils.showLoadingDialog(context);
             } else if (state is PasscodeVerified) {
               context.go(HomePage.routeName);
             }
@@ -56,7 +56,7 @@ class PasscodePageState extends State<PasscodePage> {
                     Icon(Icons.lock_outline, size: 50, color: AppColor.primaryColor),
                     kGap20,
                     Text(
-                      Constants.pleaseEnterPinCode,
+                      Strings.pleaseEnterPinCode,
                       style: p18.bold,
                     ),
                     kGap20,
@@ -113,7 +113,7 @@ class PasscodePageState extends State<PasscodePage> {
     return TextButton(
       onPressed: () => context.go(RouteName.resetPinPage),
       child: Text(
-        Constants.forgetPin,
+        Strings.forgetPin,
         style: context.theme.textTheme.bodyLarge!.bold.primaryColor,
       ),
     ).padRight(10);

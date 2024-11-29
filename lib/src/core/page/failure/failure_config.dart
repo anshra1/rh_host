@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rh_host/src/core/errror/error_codes.dart';
+import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/page/failure/failure_action.dart';
 import 'package:rh_host/src/core/page/failure/failure_manager.dart';
 

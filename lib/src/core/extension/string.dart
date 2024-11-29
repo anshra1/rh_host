@@ -1,18 +1,31 @@
-import 'package:rh_host/src/core/enum/%20error_catogory.dart';
+import 'package:rh_host/src/core/enum/error_codes.dart';
 
 extension FirebasePlugin on String {
-  ErrorCategory get getErrorCategory {
+  ErrorCode get getFirebaseErrorCode {
     switch (this) {
       case 'firebase_auth':
-        return ErrorCategory.authentication;
+        return ErrorCode.authentication;
+
       case 'cloud_firestore':
-        return ErrorCategory.firestoreClient;
+        return ErrorCode.firestoreClient;
+
       case 'firebase_storage':
-        return ErrorCategory.firebaseStorage;
+        return ErrorCode.firebaseStorage;
+
       case 'firebase_core':
-        return ErrorCategory.firebaseCore;
+        return ErrorCode.firebaseCore;
+
+      case 'firebase_messaging':
+        return ErrorCode.firebaseMessaging;
+
+      case 'firebase_crashlytics':
+        return ErrorCode.firebaseCrashlytics;
+
+      case 'firebase_analytics':
+        return ErrorCode.firebaseAnalytics;
+
       default:
-        return ErrorCategory.unknown;
+        return ErrorCode.unknown;
     }
   }
 }

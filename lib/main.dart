@@ -25,7 +25,7 @@ Future<void> main() async {
     return true;
   };
 
-  await init(); 
+  await init();
 
   FlutterNativeSplash.remove();
 

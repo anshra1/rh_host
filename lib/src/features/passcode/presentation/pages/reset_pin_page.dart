@@ -7,7 +7,7 @@ class ResetPinPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child:  const Text('Reset Pin Page').center(),
+      child: const Text('Reset Pin Page').center(),
     );
   }
 }
