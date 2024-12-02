@@ -1,8 +1,6 @@
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rh_host/src/features/passcode/domain/usecases/enable_disable_passcode.dart';
-import 'package:rh_host/src/features/passcode/domain/usecases/set_new_passcode.dart';
-import 'package:rh_host/src/features/passcode/domain/usecases/should_show_passcode.dart';
-import 'package:rh_host/src/features/passcode/domain/usecases/verify_passcode.dart';
+import 'package:rh_host/src/features/passcode/domain/usecases/passcode_usecase.dart';
 import 'package:rh_host/src/features/passcode/presentation/bloc/passcode_state.dart';
 
 class PasscodeCubit extends Cubit<PasscodeState> {
@@ -10,59 +8,71 @@ class PasscodeCubit extends Cubit<PasscodeState> {
     required SetNewPasscode setNewPasscode,
     required VerifyPasscode verifyPasscode,
     required EnableDisablePasscode enableDisablePasscode,
-    required ShouldShowPasscodeUseCase shouldShowPasscodeUseCase,
+    required ShouldShowPasscode shouldShowPasscode,
   })  : _setNewPasscode = setNewPasscode,
         _verifyPasscode = verifyPasscode,
         _enableDisablePasscode = enableDisablePasscode,
-        _shouldShowPasscodeUseCase = shouldShowPasscodeUseCase,
+        _shouldShowPasscode = shouldShowPasscode,
         super(const PasscodeInitial());
 
   final SetNewPasscode _setNewPasscode;
   final VerifyPasscode _verifyPasscode;
   final EnableDisablePasscode _enableDisablePasscode;
-  final ShouldShowPasscodeUseCase _shouldShowPasscodeUseCase;
+  final ShouldShowPasscode _shouldShowPasscode;
 
-  Future<void> setNewPasscode(SetNewPasscodeParams params) async {
+  Future<void> setPasscode({
+    required int newPasscode,
+    required int confirmPasscode,
+    required int masterPasscode,
+  }) async {
     emit(const PasscodeLoading());
 
-    final result = await _setNewPasscode(params);
+    final result = await _setNewPasscode(
+      SetNewPasscodeParams(
+        newPasscode: newPasscode,
+        confirmPasscode: confirmPasscode,
+        masterPasscode: masterPasscode,
+      ),
+    );
 
     result.fold(
-      (failure) => emit(PasscodeError(failure.message)),
-      (_) => emit(const PasscodeSet()),
+      (failure) => emit(PasscodeError(failure)),
+      (isSet) => emit(PasscodeSet(isSet: isSet)),
     );
   }
 
   Future<void> verifyPasscode(int passcode) async {
-   
     emit(const PasscodeLoading());
-    final result = await _verifyPasscode(passcode);
+
+    final result = await _verifyPasscode(VerifyPasscodeParams(passcode));
+
     result.fold(
-      (failure) => emit(PasscodeError(failure.message)),
-      (isVerified) => emit(
-        isVerified
-            ? const PasscodeVerified()
-            : const PasscodeError('Invalid passcode'),
+      (failure) => emit(PasscodeError(failure)),
+      (isValid) => emit(
+        isValid ? const PasscodeVerified() : const PasscodeInvalid(),
       ),
     );
-   
   }
 
-  Future<void> togglePasscodeScreen() async {
+  Future<void> togglePasscode() async {
     emit(const PasscodeLoading());
+
     final result = await _enableDisablePasscode();
+
     result.fold(
-      (failure) => emit(PasscodeError(failure.message)),
-      (_) => emit(const PasscodeSettingChanged()),
+      (failure) => emit(PasscodeError(failure)),
+      (isEnabled) => emit(PasscodeEnabled(isEnabled: isEnabled)),
     );
   }
 
   Future<void> checkShouldShowPasscode() async {
     emit(const PasscodeLoading());
-    final result = await _shouldShowPasscodeUseCase();
+
+    final result = await _shouldShowPasscode();
+
     result.fold(
-      (failure) => emit(PasscodeError(failure.message)),
-      (shouldShow) => emit(ShouldShowPasscode(shouldShow)),
+      (failure) => emit(PasscodeError(failure)),
+      (shouldShow) => emit(PasscodeShowRequired(shouldShow: shouldShow)),
     );
   }
 }

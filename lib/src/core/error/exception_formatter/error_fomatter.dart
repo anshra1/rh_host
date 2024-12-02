@@ -6,7 +6,7 @@ import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/exception_formatter/stack_trace_parser.dart';
-import 'package:rh_host/src/core/logger/debug_logger.dart';
+import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 
 class ErrorFormatter {
   const ErrorFormatter._();

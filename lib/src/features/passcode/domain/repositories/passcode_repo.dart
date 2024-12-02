@@ -1,7 +1,7 @@
 import 'package:rh_host/src/core/typedef/typedef.dart';
 
 abstract class PasscodeRepo {
-  ResultFuture<void> setNewPasscode({
+  ResultFuture<bool> setNewPasscode({
     required int newPasscode,
     required int confirmPasscode,
     required int masterPasscode,
@@ -9,7 +9,7 @@ abstract class PasscodeRepo {
 
   ResultFuture<bool> verifyPasscode(int passcode);
 
-  ResultFuture<void> enableDisablePasscode();
+  ResultFuture<bool> enableDisablePasscode();
 
   ResultFuture<bool> shouldShowPasscode();
 }

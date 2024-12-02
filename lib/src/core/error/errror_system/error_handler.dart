@@ -5,45 +5,24 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/errror_system/error_details.dart';
-import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
-import 'package:rh_host/src/core/logger/debug_logger.dart';
+import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 
 class ErrorHandler {
   ErrorHandler({
     required FirebaseAnalytics analytics,
     required FirebaseCrashlytics crashlytics,
-    RetryPolicy? retryPolicy,
   })  : _analytics = analytics,
-        _crashlytics = crashlytics,
-        _retryPolicy = retryPolicy ?? DefaultRetryPolicy();
+        _crashlytics = crashlytics;
 
   final FirebaseAnalytics _analytics;
   final FirebaseCrashlytics _crashlytics;
-  final RetryPolicy _retryPolicy;
 
   // Caching and batching
   static final Map<String, String> _errorMessageCache = {};
   static final Map<String, ErrorDetails> _errorDetailsCache = {};
   final List<ErrorDetails> _analyticsQueue = [];
   static const int _analyticsBatchSize = 10;
-
-  Future<T> handleWithRetry<T>({
-    required Future<T> Function() operation,
-    required String context,
-    RetryPolicy? customRetryPolicy,
-    ErrorSeverity minimumSeverity = ErrorSeverity.medium,
-  }) async {
-    final policy = customRetryPolicy ?? _retryPolicy;
-    try {
-      return await policy.execute(operation);
-    } catch (error, stackTrace) {
-      if (_shouldProcess(error, minimumSeverity)) {
-        await handleError(error, stackTrace: stackTrace, context: context);
-      }
-      rethrow;
-    }
-  }
 
   Future<void> handleError(
     dynamic error, {

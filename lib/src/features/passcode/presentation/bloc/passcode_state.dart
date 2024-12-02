@@ -1,7 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, avoid_positional_boolean_parameters
 import 'package:equatable/equatable.dart';
+import 'package:rh_host/src/core/error/failures/failure.dart';
 
-abstract class PasscodeState extends Equatable {
+sealed class PasscodeState extends Equatable {
   const PasscodeState();
 
   @override
@@ -16,20 +16,25 @@ class PasscodeLoading extends PasscodeState {
   const PasscodeLoading();
 }
 
+class PasscodeEnabled extends PasscodeState {
+  const PasscodeEnabled({required this.isEnabled});
+
+  final bool isEnabled;
+
+  @override
+  List<Object?> get props => [isEnabled];
+}
+
 class PasscodeSet extends PasscodeState {
-  const PasscodeSet();
-}
+  const PasscodeSet({required this.isSet});
 
-class PasscodeVerified extends PasscodeState {
-  const PasscodeVerified();
-}
+  final bool isSet;
 
-class PasscodeSettingChanged extends PasscodeState {
-  const PasscodeSettingChanged();
+  @override
+  List<Object?> get props => [isSet];
 }
-
-class ShouldShowPasscode extends PasscodeState {
-  const ShouldShowPasscode(this.shouldShow);
+class PasscodeShowRequired extends PasscodeState {
+  const PasscodeShowRequired({required this.shouldShow});
 
   final bool shouldShow;
 
@@ -37,10 +42,19 @@ class ShouldShowPasscode extends PasscodeState {
   List<Object?> get props => [shouldShow];
 }
 
+class PasscodeVerified extends PasscodeState {
+  const PasscodeVerified();
+}
+
+class PasscodeInvalid extends PasscodeState {
+  const PasscodeInvalid();
+}
+
 class PasscodeError extends PasscodeState {
-  const PasscodeError(this.message);
-  final String message;
+  const PasscodeError(this.failure);
+
+  final Failure failure;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

@@ -39,9 +39,9 @@ class PasscodePageState extends State<PasscodePage> {
         child: BlocConsumer<PasscodeCubit, PasscodeState>(
           listener: (context, state) {
             if (state is PasscodeError) {
-              CoreUtils.showSnackBar(context, state.message);
+              CoreUtils.showSnackBar(context, state.failure.message);
             } else if (state is PasscodeLoading) {
-              // CoreUtils.showLoadingDialog(context);
+               CoreUtils.showLoadingDialog(context);
             } else if (state is PasscodeVerified) {
               context.go(HomePage.routeName);
             }

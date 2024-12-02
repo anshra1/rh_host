@@ -19,7 +19,7 @@ Future<void> _initStorage() async {
 
 Future<void> _initNetworkChecker() async {
   final checker = InternetConnection.createInstance();
-  sl.registerFactory<NetworkChecker>(() => NetworkCheckerImpl(checker));
+  sl.registerFactory<NetworkCheckerSealed>(() => NetworkChecker(checker));
 }
 
 Future<void> _errorHandler() async {
@@ -38,13 +38,13 @@ Future<void> _initPasscode() async {
         setNewPasscode: sl(),
         verifyPasscode: sl(),
         enableDisablePasscode: sl(),
-        shouldShowPasscodeUseCase: sl(),
+        shouldShowPasscode: sl(),
       ),
     )
     ..registerLazySingleton(() => SetNewPasscode(passcodeRepo: sl()))
     ..registerLazySingleton(() => VerifyPasscode(passcodeRepo: sl()))
     ..registerLazySingleton(() => EnableDisablePasscode(passcodeRepo: sl()))
-    ..registerLazySingleton(() => ShouldShowPasscodeUseCase(passcodeRepo: sl()))
+    ..registerLazySingleton(() => ShouldShowPasscode(passcodeRepo: sl()))
     //
     ..registerLazySingleton<PasscodeRepo>(
       () => PasscodeRepositoryImpl(

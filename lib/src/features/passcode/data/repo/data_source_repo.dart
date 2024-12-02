@@ -6,7 +6,7 @@ import 'package:rh_host/src/features/passcode/data/sources/passcode_remote_data_
 import 'package:rh_host/src/features/passcode/domain/repositories/passcode_repo.dart';
 
 class PasscodeRepositoryImpl implements PasscodeRepo {
-  PasscodeRepositoryImpl({
+  const PasscodeRepositoryImpl({
     required PasscodeRemoteDataSource remoteDataSource,
     required ErrorHandler errorHandler,
   })  : _remoteDataSource = remoteDataSource,
@@ -16,72 +16,79 @@ class PasscodeRepositoryImpl implements PasscodeRepo {
   final ErrorHandler _errorHandler;
 
   @override
-  ResultFuture<void> setNewPasscode({
+  ResultFuture<bool> setNewPasscode({
     required int newPasscode,
     required int confirmPasscode,
     required int masterPasscode,
   }) async {
     try {
-      await _errorHandler.handleWithRetry(
-        operation: () async {
-          await _remoteDataSource.setNewPasscode(
-            newPasscode: newPasscode,
-            confirmPasscode: confirmPasscode,
-            masterPasscode: masterPasscode,
-          );
-        },
-        context: 'set new passcode',
+      final result = await _remoteDataSource.setNewPasscode(
+        newPasscode: newPasscode,
+        confirmPasscode: confirmPasscode,
+        masterPasscode: masterPasscode,
       );
-
-      return const Right(null);
+      return Right(result);
     } catch (e, s) {
-      await _errorHandler.handleError(e, stackTrace: s);
-      final failure = ErrorMapper.mapErrorToFailure(e);
-      return Left(failure);
+      await _errorHandler.handleError(
+        e,
+        stackTrace: s,
+        context: 'PasscodeRepositoryImpl.setNewPasscode',
+        additionalData: {
+          'newPasscode': newPasscode.toString().length,
+          'confirmPasscode': confirmPasscode.toString().length,
+          // ignore: unnecessary_null_comparison
+          'hasMasterPasscode': masterPasscode != null,
+        },
+      );
+      return Left(ErrorMapper.mapErrorToFailure(e));
     }
   }
 
   @override
   ResultFuture<bool> verifyPasscode(int passcode) async {
     try {
-      final result = await _errorHandler.handleWithRetry(
-        operation: () => _remoteDataSource.verifyPasscode(passcode),
-        context: 'verify passcode',
-      );
-
-      return Right(result);
+      final isValid = await _remoteDataSource.verifyPasscode(passcode);
+      return Right(isValid);
     } catch (e, s) {
-      await _errorHandler.handleError(e, stackTrace: s);
-      final failure = ErrorMapper.mapErrorToFailure(e);
-      return Left(failure);
+      await _errorHandler.handleError(
+        e,
+        stackTrace: s,
+        context: 'PasscodeRepositoryImpl.verifyPasscode',
+        additionalData: {
+          'passcodeLength': passcode.toString().length,
+        },
+      );
+      return Left(ErrorMapper.mapErrorToFailure(e));
     }
   }
 
   @override
-  ResultFuture<void> enableDisablePasscode() async {
-    // No initial network check needed as this operation primarily uses SharedPreferences
+  ResultFuture<bool> enableDisablePasscode() async {
     try {
-      await _errorHandler.handleWithRetry(
-        operation: _remoteDataSource.enableDisablePasscode,
-        context: 'enable/disable passcode',
-      );
-      return const Right(null);
+      final result = await _remoteDataSource.enableDisablePasscode();
+      return Right(result);
     } catch (e, s) {
-      await _errorHandler.handleError(e, stackTrace: s);
-      final failure = ErrorMapper.mapErrorToFailure(e);
-      return Left(failure);
+      await _errorHandler.handleError(
+        e,
+        stackTrace: s,
+        context: 'PasscodeRepositoryImpl.enableDisablePasscode',
+      );
+      return Left(ErrorMapper.mapErrorToFailure(e));
     }
   }
 
   @override
   ResultFuture<bool> shouldShowPasscode() async {
     try {
-      final result = await _remoteDataSource.shouldShowPasscode();
-      return Right(result);
+      final shouldShow = await _remoteDataSource.shouldShowPasscode();
+      return Right(shouldShow);
     } catch (e, s) {
-      await _errorHandler.handleError(e, stackTrace: s);
-      final failure = ErrorMapper.mapErrorToFailure(e);
-      return Left(failure);
+      await _errorHandler.handleError(
+        e,
+        stackTrace: s,
+        context: 'PasscodeRepositoryImpl.shouldShowPasscode',
+      );
+      return Left(ErrorMapper.mapErrorToFailure(e));
     }
   }
 }

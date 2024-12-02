@@ -1,19 +1,19 @@
 // ignore_for_file: lines_longer_than_80_chars, require_trailing_commas
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rh_host/src/core/clock/clock_provider.dart';
+import 'package:rh_host/src/core/system/clock/clock_provider.dart';
 import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/exception/exception_thrower.dart';
-import 'package:rh_host/src/core/network/network_info.dart';
-import 'package:rh_host/src/core/network/operation_helper.dart';
-import 'package:rh_host/src/core/storage/shared_pref_storage.dart';
-import 'package:rh_host/src/core/storage/storage_keys.dart';
+import 'package:rh_host/src/core/system/network/network_info.dart';
+import 'package:rh_host/src/core/utils/operation_helper.dart';
+import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';
+import 'package:rh_host/src/core/system/storage/storage_keys.dart';
 
 abstract class PasscodeRemoteDataSource {
-  Future<void> setNewPasscode({
+  Future<bool> setNewPasscode({
     required int newPasscode,
     required int confirmPasscode,
     required int masterPasscode,
@@ -21,7 +21,7 @@ abstract class PasscodeRemoteDataSource {
 
   Future<bool> verifyPasscode(int passcode);
 
-  Future<void> enableDisablePasscode();
+  Future<bool> enableDisablePasscode();
 
   Future<bool> shouldShowPasscode();
 }
@@ -31,7 +31,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
     required SharedPrefsStorage prefs,
     required FirebaseFirestore firestoreClient,
     required TimeProvider timeProvider,
-    required NetworkCheckerImpl networkChecker,
+    required NetworkChecker networkChecker,
     required RetryPolicy retryPolicy,
   })  : _prefs = prefs,
         _timeProvider = timeProvider,
@@ -42,11 +42,11 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
   final SharedPrefsStorage _prefs;
   final FirebaseFirestore _firestoreClient;
   final TimeProvider _timeProvider;
-  final NetworkCheckerImpl _networkInfo;
+  final NetworkChecker _networkInfo;
   final RetryPolicy _retryPolicy;
 
   @override
-  Future<void> enableDisablePasscode() async {
+  Future<bool> enableDisablePasscode() async {
     const methodName = 'ENABLE_DISABLE_PASSCODE';
     try {
       final isPasscodeEnabled =
@@ -71,6 +71,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
           _prefs.delete(StorageKeys.lastLoginTimestampKey),
         ]);
       }
+      return newState;
     } catch (e, s) {
       // Handle any other unexpected errors
       throw ExceptionThrower.unknownException(
@@ -82,7 +83,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
   }
 
   @override
-  Future<void> setNewPasscode({
+  Future<bool> setNewPasscode({
     required int newPasscode,
     required int confirmPasscode,
     required int masterPasscode,
@@ -104,7 +105,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
       );
 
       // Local SharedPrefs operations don't need remote wrapper
-      await _updatePasscodeState();
+      return await _updatePasscodeState();
     } catch (e, s) {
       throw ExceptionThrower.throwUnknownExceptionWithFirebase(
         error: e,
@@ -157,10 +158,33 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
   }
 
   // Local operation doesn't need remote wrapper
-  Future<void> _updatePasscodeState() async {
-    final isEnabled = await _prefs.read<bool>(StorageKeys.passcodeEnabledKey) ?? false;
-    if (!isEnabled) {
-      await _prefs.write<bool>(StorageKeys.passcodeEnabledKey, true);
+  Future<bool> _updatePasscodeState() async {
+    try {
+      // First check current state
+      final currentState =
+          await _prefs.read<bool>(StorageKeys.passcodeEnabledKey) ?? false;
+
+      // If already enabled, still update timestamp and return true
+      if (currentState) {
+        await _prefs.write<String>(
+          StorageKeys.lastLoginTimestampKey,
+          DateTime.now().toIso8601String(),
+        );
+        return true;
+      }
+
+      // If not enabled, enable it and update timestamp
+      final result = await _prefs.write<bool>(StorageKeys.passcodeEnabledKey, true);
+      if (result) {
+        await _prefs.write<String>(
+          StorageKeys.lastLoginTimestampKey,
+          DateTime.now().toIso8601String(),
+        );
+      }
+
+      return result;
+    } catch (e) {
+      return false;
     }
   }
 

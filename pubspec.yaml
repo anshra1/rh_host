@@ -24,6 +24,7 @@ dependencies:
   firebase_auth: ^4.19.0
   firebase_core: ^2.28.0
   firebase_crashlytics: ^3.5.7
+  firebase_performance: 0.9.4+7
   firebase_storage: ^11.7.0
   flutter:
     sdk: flutter
@@ -33,18 +34,21 @@ dependencies:
   flutter_hooks: ^0.20.5
   flutter_native_splash: ^2.4.1
   flutter_screenutil: ^5.9.3
+  flutter_secure_storage: ^9.2.2
   font_awesome_flutter: ^10.7.0
   freezed: ^2.5.7
   freezed_annotation: ^2.4.4
   gap: ^3.0.1
   go_router: ^14.2.3
   google_fonts: ^6.2.1
+  http: ^1.2.2
   hugeicons: ^0.0.7
   image_picker: ^1.1.2
   internet_connection_checker_plus: ^2.5.2
   intl: ^0.19.0
   logger: ^2.4.0
   package_info_plus: ^8.1.0
+  provider: ^6.1.2
   shared_preferences: ^2.3.2
   synchronized: ^3.3.0+3
 

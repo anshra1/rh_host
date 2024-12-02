@@ -85,6 +85,19 @@ class ValidationFailure extends Failure {
   List<Object?> get props => [...super.props];
 }
 
+class TimeoutFailure extends Failure {
+  const TimeoutFailure({
+    required super.message,
+    required super.code,
+    super.category,
+    super.isRecoverable,
+    super.severity,
+  });
+
+  @override
+  List<Object?> get props => [...super.props];
+}
+
 class UnknownFailure extends Failure {
   const UnknownFailure({
     required super.message,

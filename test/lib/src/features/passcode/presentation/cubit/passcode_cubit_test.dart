@@ -1,161 +1,271 @@
-// import 'package:bloc_test/bloc_test.dart';
-// import 'package:dartz/dartz.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:mocktail/mocktail.dart';
-// import 'package:rh_host/src/core/error/failure.dart';
-// import 'package:rh_host/src/features/passcode/domain/usecases/enable_disable_passcode.dart';
-// import 'package:rh_host/src/features/passcode/domain/usecases/set_new_passcode.dart';
-// import 'package:rh_host/src/features/passcode/domain/usecases/should_show_passcode.dart';
-// import 'package:rh_host/src/features/passcode/domain/usecases/verify_passcode.dart';
-// import 'package:rh_host/src/features/passcode/presentation/bloc/passcode_cubit.dart';
-// import 'package:rh_host/src/features/passcode/presentation/bloc/passcode_state.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:rh_host/src/core/enum/error_catogory.dart';
+import 'package:rh_host/src/core/enum/error_codes.dart';
+import 'package:rh_host/src/core/enum/error_severity.dart';
+import 'package:rh_host/src/core/error/failures/failure.dart';
+import 'package:rh_host/src/features/passcode/domain/usecases/passcode_usecase.dart';
+import 'package:rh_host/src/features/passcode/presentation/bloc/passcode_cubit.dart';
+import 'package:rh_host/src/features/passcode/presentation/bloc/passcode_state.dart';
 
-// class MockSetNewPasscode extends Mock implements SetNewPasscode {}
+const tFailure = ServerFailure(
+  message: 'Error',
+  code: ErrorCode.serverError,
+  category: ErrorCategory.server,
+  isRecoverable: null,
+  severity: ErrorSeverity.low,
+);
 
-// class MockVerifyPasscode extends Mock implements VerifyPasscode {}
+class MockSetNewPasscode extends Mock implements SetNewPasscode {}
 
-// class MockEnableDisablePasscode extends Mock implements EnableDisablePasscode {}
+class MockVerifyPasscode extends Mock implements VerifyPasscode {}
 
-// class MockShouldShowPasscodeUseCase extends Mock
-//     implements ShouldShowPasscodeUseCase {}
+class MockEnableDisablePasscode extends Mock implements EnableDisablePasscode {}
 
-// void main() {
-//   late PasscodeCubit passcodeBloc;
-//   late MockSetNewPasscode mockSetNewPasscode;
-//   late MockVerifyPasscode mockVerifyPasscode;
-//   late MockEnableDisablePasscode mockEnableDisablePasscode;
-//   late MockShouldShowPasscodeUseCase mockShouldShowPasscodeUseCase;
+class MockShouldShowPasscode extends Mock implements ShouldShowPasscode {}
 
-//   setUp(() {
-//     mockSetNewPasscode = MockSetNewPasscode();
-//     mockVerifyPasscode = MockVerifyPasscode();
-//     mockEnableDisablePasscode = MockEnableDisablePasscode();
-//     mockShouldShowPasscodeUseCase = MockShouldShowPasscodeUseCase();
-//     passcodeBloc = PasscodeCubit(
-//       setNewPasscode: mockSetNewPasscode,
-//       verifyPasscode: mockVerifyPasscode,
-//       enableDisablePasscode: mockEnableDisablePasscode,
-//       shouldShowPasscodeUseCase: mockShouldShowPasscodeUseCase,
-//     );
-//   });
+void main() {
+  late PasscodeCubit cubit;
+  late MockSetNewPasscode mockSetNewPasscode;
+  late MockVerifyPasscode mockVerifyPasscode;
+  late MockEnableDisablePasscode mockEnableDisablePasscode;
+  late MockShouldShowPasscode mockShouldShowPasscode;
 
-//   tearDown(() {
-//     passcodeBloc.close();
-//   });
+  const tNewPasscode = 123456;
+  const tConfirmPasscode = 123456;
+  const tMasterPasscode = 000000;
 
-//   group('setNewPasscode', () {
-//     const tParams = SetNewPasscodeParams(
-//         newPasscode: 1234, confirmPasscode: 1234, masterPasscode: 5678);
+  const tParams = SetNewPasscodeParams(
+    newPasscode: tNewPasscode,
+    confirmPasscode: tConfirmPasscode,
+    masterPasscode: tMasterPasscode,
+  );
 
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, PasscodeSet] when successful',
-//       build: () {
-//         when(() => mockSetNewPasscode(tParams))
-//             .thenAnswer((_) async => const Right(null));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.setNewPasscode(tParams),
-//       expect: () => const [PasscodeLoading(), PasscodeSet()],
-//     );
+  setUp(() {
+    mockSetNewPasscode = MockSetNewPasscode();
+    mockVerifyPasscode = MockVerifyPasscode();
+    mockEnableDisablePasscode = MockEnableDisablePasscode();
+    mockShouldShowPasscode = MockShouldShowPasscode();
 
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, PasscodeError] when unsuccessful',
-//       build: () {
-//         when(() => mockSetNewPasscode(tParams)).thenAnswer((_) async =>
-//             const Left(ServerFailure(message: 'Error', statusCode: 500)));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.setNewPasscode(tParams),
-//       expect: () =>
-//           [const PasscodeLoading(), const PasscodeError('500 Error Error')],
-//     );
-//   });
+    cubit = PasscodeCubit(
+      setNewPasscode: mockSetNewPasscode,
+      verifyPasscode: mockVerifyPasscode,
+      enableDisablePasscode: mockEnableDisablePasscode,
+      shouldShowPasscode: mockShouldShowPasscode,
+    );
+  });
 
-//   group('verifyPasscode', () {
-//     const tPasscode = 1234;
+  tearDown(() {
+    cubit.close();
+  });
 
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, PasscodeVerified] when passcode is valid',
-//       build: () {
-//         when(() => mockVerifyPasscode(tPasscode))
-//             .thenAnswer((_) async => const Right(true));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.verifyPasscode(tPasscode),
-//       expect: () => const [PasscodeLoading(), PasscodeVerified()],
-//     );
+  test('initial state should be PasscodeInitial', () {
+    expect(cubit.state, const PasscodeInitial());
+  });
 
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, PasscodeError] when passcode is invalid',
-//       build: () {
-//         when(() => mockVerifyPasscode(tPasscode))
-//             .thenAnswer((_) async => const Right(false));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.verifyPasscode(tPasscode),
-//       expect: () =>
-//           const [PasscodeLoading(), PasscodeError('Invalid passcode')],
-//     );
-//   });
+  group('setPasscode', () {
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeSet] when successful',
+      build: () {
+        when(() => mockSetNewPasscode(tParams))
+            .thenAnswer((_) async => const Right(true));
+        return cubit;
+      },
+      act: (cubit) => cubit.setPasscode(
+        newPasscode: tNewPasscode,
+        confirmPasscode: tConfirmPasscode,
+        masterPasscode: tMasterPasscode,
+      ),
+      expect: () => const [
+        PasscodeLoading(),
+        PasscodeSet(isSet: true),
+      ],
+      verify: (_) {
+        verify(() => mockSetNewPasscode(tParams)).called(1);
+      },
+    );
 
-//   group('togglePasscodeScreen', () {
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, PasscodeSettingChanged] when successful',
-//       build: () {
-//         when(() => mockEnableDisablePasscode())
-//             .thenAnswer((_) async => const Right(null));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.togglePasscodeScreen(),
-//       expect: () => const [PasscodeLoading(), PasscodeSettingChanged()],
-//     );
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeError] when fails',
+      build: () {
+        when(() => mockSetNewPasscode(tParams))
+            .thenAnswer((_) async => const Left(tFailure));
+        return cubit;
+      },
+      act: (cubit) => cubit.setPasscode(
+        newPasscode: tNewPasscode,
+        confirmPasscode: tConfirmPasscode,
+        masterPasscode: tMasterPasscode,
+      ),
+      expect: () => [
+        const PasscodeLoading(),
+        const PasscodeError(tFailure),
+      ],
+      verify: (_) {
+        verify(() => mockSetNewPasscode(tParams)).called(1);
+      },
+    );
+  });
 
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, PasscodeError] when unsuccessful',
-//       build: () {
-//         when(() => mockEnableDisablePasscode()).thenAnswer((_) async =>
-//             const Left(ServerFailure(message: 'Error', statusCode: 500)));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.togglePasscodeScreen(),
-//       expect: () =>
-//           [const PasscodeLoading(), const PasscodeError('500 Error Error')],
-//     );
-//   });
+  group('verifyPasscode', () {
+    const tPasscode = 123456;
+    const tVerifyParams = VerifyPasscodeParams(tPasscode);
 
-//   group('checkShouldShowPasscode', () {
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, ShouldShowPasscode(true)] when passcode should be shown',
-//       build: () {
-//         when(() => mockShouldShowPasscodeUseCase())
-//             .thenAnswer((_) async => const Right(true));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.checkShouldShowPasscode(),
-//       expect: () => const [PasscodeLoading(), ShouldShowPasscode(true)],
-//     );
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeVerified] when passcode is valid',
+      build: () {
+        when(() => mockVerifyPasscode(tVerifyParams))
+            .thenAnswer((_) async => const Right(true));
+        return cubit;
+      },
+      act: (cubit) => cubit.verifyPasscode(tPasscode),
+      expect: () => const [
+        PasscodeLoading(),
+        PasscodeVerified(),
+      ],
+      verify: (_) {
+        verify(() => mockVerifyPasscode(tVerifyParams)).called(1);
+      },
+    );
 
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, ShouldShowPasscode(false)] when passcode should not be shown',
-//       build: () {
-//         when(() => mockShouldShowPasscodeUseCase())
-//             .thenAnswer((_) async => const Right(false));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.checkShouldShowPasscode(),
-//       expect: () => const [PasscodeLoading(), ShouldShowPasscode(false)],
-//     );
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeInvalid] when passcode is invalid',
+      build: () {
+        when(() => mockVerifyPasscode(tVerifyParams))
+            .thenAnswer((_) async => const Right(false));
+        return cubit;
+      },
+      act: (cubit) => cubit.verifyPasscode(tPasscode),
+      expect: () => const [
+        PasscodeLoading(),
+        PasscodeInvalid(),
+      ],
+      verify: (_) {
+        verify(() => mockVerifyPasscode(tVerifyParams)).called(1);
+      },
+    );
 
-//     blocTest<PasscodeCubit, PasscodeState>(
-//       'emits [PasscodeLoading, PasscodeError] when unsuccessful',
-//       build: () {
-//         when(() => mockShouldShowPasscodeUseCase()).thenAnswer((_) async =>
-//             const Left(ServerFailure(message: 'Error', statusCode: 500)));
-//         return passcodeBloc;
-//       },
-//       act: (bloc) => bloc.checkShouldShowPasscode(),
-//       expect: () =>
-//           [const PasscodeLoading(), const PasscodeError('500 Error Error')],
-//     );
-//   });
-// }
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeError] when verify fails',
+      build: () {
+        when(() => mockVerifyPasscode(tVerifyParams))
+            .thenAnswer((_) async => const Left(tFailure));
+        return cubit;
+      },
+      act: (cubit) => cubit.verifyPasscode(tPasscode),
+      expect: () => [
+        const PasscodeLoading(),
+        const PasscodeError(tFailure),
+      ],
+      verify: (_) {
+        verify(() => mockVerifyPasscode(tVerifyParams)).called(1);
+      },
+    );
+  });
+
+  group('togglePasscode', () {
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeEnabled(true)] when enabled',
+      build: () {
+        when(() => mockEnableDisablePasscode())
+            .thenAnswer((_) async => const Right(true));
+        return cubit;
+      },
+      act: (cubit) => cubit.togglePasscode(),
+      expect: () => const [
+        PasscodeLoading(),
+        PasscodeEnabled(isEnabled: true),
+      ],
+      verify: (_) {
+        verify(() => mockEnableDisablePasscode()).called(1);
+      },
+    );
+
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeEnabled(false)] when disabled',
+      build: () {
+        when(() => mockEnableDisablePasscode())
+            .thenAnswer((_) async => const Right(false));
+        return cubit;
+      },
+      act: (cubit) => cubit.togglePasscode(),
+      expect: () => const [
+        PasscodeLoading(),
+        PasscodeEnabled(isEnabled: false),
+      ],
+      verify: (_) {
+        verify(() => mockEnableDisablePasscode()).called(1);
+      },
+    );
+
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeError] when toggle fails',
+      build: () {
+        when(() => mockEnableDisablePasscode())
+            .thenAnswer((_) async => const Left(tFailure));
+        return cubit;
+      },
+      act: (cubit) => cubit.togglePasscode(),
+      expect: () => [
+        const PasscodeLoading(),
+        const PasscodeError(tFailure),
+      ],
+      verify: (_) {
+        verify(() => mockEnableDisablePasscode()).called(1);
+      },
+    );
+  });
+
+  group('checkShouldShowPasscode', () {
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeShowRequired(true)] when should show',
+      build: () {
+        when(() => mockShouldShowPasscode()).thenAnswer((_) async => const Right(true));
+        return cubit;
+      },
+      act: (cubit) => cubit.checkShouldShowPasscode(),
+      expect: () => const [
+        PasscodeLoading(),
+        PasscodeShowRequired(shouldShow: true),
+      ],
+      verify: (_) {
+        verify(() => mockShouldShowPasscode()).called(1);
+      },
+    );
+
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeShowRequired(false)] when should not show',
+      build: () {
+        when(() => mockShouldShowPasscode()).thenAnswer((_) async => const Right(false));
+        return cubit;
+      },
+      act: (cubit) => cubit.checkShouldShowPasscode(),
+      expect: () => const [
+        PasscodeLoading(),
+        PasscodeShowRequired(shouldShow: false),
+      ],
+      verify: (_) {
+        verify(() => mockShouldShowPasscode()).called(1);
+      },
+    );
+
+    blocTest<PasscodeCubit, PasscodeState>(
+      'emits [PasscodeLoading, PasscodeError] when check fails',
+      build: () {
+        when(() => mockShouldShowPasscode())
+            .thenAnswer((_) async => const Left(tFailure));
+        return cubit;
+      },
+      act: (cubit) => cubit.checkShouldShowPasscode(),
+      expect: () => [
+        const PasscodeLoading(),
+        const PasscodeError(tFailure),
+      ],
+      verify: (_) {
+        verify(() => mockShouldShowPasscode()).called(1);
+      },
+    );
+  });
+}

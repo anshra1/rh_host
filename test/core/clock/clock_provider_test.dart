@@ -3,10 +3,10 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:rh_host/src/core/clock/app_time.dart';
-import 'package:rh_host/src/core/clock/clock_provider.dart';
-import 'package:rh_host/src/core/clock/time_config.dart';
-import 'package:rh_host/src/core/logger/debug_logger.dart';
+import 'package:rh_host/src/core/system/clock/app_time.dart';
+import 'package:rh_host/src/core/system/clock/clock_provider.dart';
+import 'package:rh_host/src/core/system/clock/time_config.dart';
+import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 
 class MockDebugLogger extends Mock implements DebugLogger {}
 
