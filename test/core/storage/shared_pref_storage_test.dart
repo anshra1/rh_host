@@ -1,6 +1,9 @@
+// Flutter imports:
 import 'package:flutter/services.dart';
+// Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+// Project imports:
 import 'package:rh_host/src/core/enum/storage_type.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';
@@ -10,12 +13,12 @@ class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 void main() {
   late MockSharedPreferences mockPrefs;
-  late SharedPrefsStorage storage;
+  late SharedPrefsStorages storage;
 
   setUp(() {
     mockPrefs = MockSharedPreferences();
     when(() => mockPrefs.reload()).thenAnswer((_) async {});
-    storage = SharedPrefsStorage(prefs: mockPrefs);
+    storage = SharedPrefsStorages(prefs: mockPrefs);
   });
 
   group('initialization', () {
@@ -115,7 +118,7 @@ void main() {
       when(() => mockPrefs.setString('key', value)).thenAnswer((_) async => true);
 
       final result = await storage.write(key, value);
-   //   final result2 = await storage.write('key', value);
+      //   final result2 = await storage.write('key', value);
 
       expect(result, true);
       verify(() => mockPrefs.setString(key, value)).called(1);
@@ -154,12 +157,9 @@ void main() {
 
       when(() => mockPrefs.setString('string_key', 'value'))
           .thenAnswer((_) async => true);
-      when(() => mockPrefs.setInt('int_key', 42))
-          .thenAnswer((_) async => true);
-      when(() => mockPrefs.setBool('bool_key', true))
-          .thenAnswer((_) async => true);
-      when(() => mockPrefs.setDouble('double_key', 3.14))
-          .thenAnswer((_) async => true);
+      when(() => mockPrefs.setInt('int_key', 42)).thenAnswer((_) async => true);
+      when(() => mockPrefs.setBool('bool_key', true)).thenAnswer((_) async => true);
+      when(() => mockPrefs.setDouble('double_key', 3.14)).thenAnswer((_) async => true);
       when(() => mockPrefs.setStringList('list_key', ['one', 'two']))
           .thenAnswer((_) async => true);
 
@@ -170,8 +170,7 @@ void main() {
       verify(() => mockPrefs.setInt('int_key', 42)).called(1);
       verify(() => mockPrefs.setBool('bool_key', true)).called(1);
       verify(() => mockPrefs.setDouble('double_key', 3.14)).called(1);
-      verify(() => mockPrefs.setStringList('list_key', ['one', 'two']))
-          .called(1);
+      verify(() => mockPrefs.setStringList('list_key', ['one', 'two'])).called(1);
     });
   });
 

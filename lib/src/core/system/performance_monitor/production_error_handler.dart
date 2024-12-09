@@ -1,8 +1,13 @@
+// ignore_for_file: unused_field, avoid_dynamic_calls
+
+// Dart imports:
 import 'dart:async';
 
+// Package imports:
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -100,7 +105,7 @@ class ProductionErrorHandler {
       await _crashlytics.recordError(e, s,
           reason: 'Error handler failure',
           fatal: true,
-          information: ['Original error: $error']);
+          information: ['Original error: $error'],);
     }
   }
 
@@ -152,7 +157,7 @@ class ProductionErrorHandler {
       debugPrint('Error processing error event: $e\n$s');
       await _crashlytics.recordError(e, s,
           reason: 'Error processing failure',
-          information: ['Original context: ${event.context}']);
+          information: ['Original context: ${event.context}'],);
     }
   }
 

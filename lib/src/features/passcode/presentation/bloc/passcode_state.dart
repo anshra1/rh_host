@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:equatable/equatable.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/error/failures/failure.dart';
 
 sealed class PasscodeState extends Equatable {
@@ -8,16 +11,16 @@ sealed class PasscodeState extends Equatable {
   List<Object?> get props => [];
 }
 
-class PasscodeInitial extends PasscodeState {
-  const PasscodeInitial();
+class PasscodeInitialState extends PasscodeState {
+  const PasscodeInitialState();
 }
 
 class PasscodeLoading extends PasscodeState {
   const PasscodeLoading();
 }
 
-class PasscodeEnabled extends PasscodeState {
-  const PasscodeEnabled({required this.isEnabled});
+class PasscodeEnabledState extends PasscodeState {
+  const PasscodeEnabledState({required this.isEnabled});
 
   final bool isEnabled;
 
@@ -25,16 +28,17 @@ class PasscodeEnabled extends PasscodeState {
   List<Object?> get props => [isEnabled];
 }
 
-class PasscodeSet extends PasscodeState {
-  const PasscodeSet({required this.isSet});
+class NewPasscodeSetState extends PasscodeState {
+  const NewPasscodeSetState({required this.isSet});
 
   final bool isSet;
 
   @override
   List<Object?> get props => [isSet];
 }
-class PasscodeShowRequired extends PasscodeState {
-  const PasscodeShowRequired({required this.shouldShow});
+
+class PasscodeShowRequiredState extends PasscodeState {
+  const PasscodeShowRequiredState({required this.shouldShow});
 
   final bool shouldShow;
 
@@ -42,16 +46,21 @@ class PasscodeShowRequired extends PasscodeState {
   List<Object?> get props => [shouldShow];
 }
 
-class PasscodeVerified extends PasscodeState {
-  const PasscodeVerified();
+class PasscodeVerifiedState extends PasscodeState {
+  const PasscodeVerifiedState({required this.isValid});
+
+  final bool isValid;
+
+  @override
+  List<Object?> get props => [isValid];
 }
 
-class PasscodeInvalid extends PasscodeState {
-  const PasscodeInvalid();
+class PasscodeVerificationFailedState extends PasscodeState {
+  const PasscodeVerificationFailedState();
 }
 
-class PasscodeError extends PasscodeState {
-  const PasscodeError(this.failure);
+class PasscodeErrorState extends PasscodeState {
+  const PasscodeErrorState(this.failure);
 
   final Failure failure;
 

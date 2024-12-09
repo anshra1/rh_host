@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/constants/colors.dart';
 
 extension TextStyleExtension on TextStyle {

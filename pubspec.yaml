@@ -62,6 +62,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   google_sign_in_mocks: ^0.3.0
+  import_sorter: ^4.6.0
   mocktail: ^1.0.3
   path_provider_platform_interface: ^2.1.2
   plugin_platform_interface: ^2.1.8

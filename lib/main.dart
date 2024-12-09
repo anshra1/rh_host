@@ -1,34 +1,53 @@
-import 'package:firebase_core/firebase_core.dart';
+// ignore_for_file: avoid_redundant_argument_values
+
+// Package imports:
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:rh_host/firebase_options.dart';
+// Project imports:
 import 'package:rh_host/re_name.dart';
 import 'package:rh_host/src/core/config/import.dart';
+import 'package:rh_host/src/core/system/alert_system/alert_config.dart';
+import 'package:rh_host/src/core/system/alert_system/alert_manager.dart';
+import 'package:rh_host/src/core/system/failure/failure_manager.dart';
 
 Future<void> main() async {
-  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  try {
+    // Keep splash screen up until app is fully initialized
+    final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+    await init();
+    // Remove splash screen
+    FlutterNativeSplash.remove();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+    await FailureManager.initialize(
+      config: const FailureConfig(
+        shouldShowStackTrace: kDebugMode,
+      ),
+    );
 
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
-  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+    AlertManager().initialize(
+      config: const AlertConfig(
+        defaultSnackBarBehavior: SnackBarBehavior.floating,
+        defaultDuration: Duration(seconds: 3),
+      ),
+    );
 
-  await init();
-
-  FlutterNativeSplash.remove();
-
-  //  This is the main app
-  runApp(const RootApp());
+    // Run app inside error boundary
+    runApp(const RootApp());
+  } catch (error, stackTrace) {
+    // Log fatal initialization errors
+    if (!kDebugMode) {
+      await FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+        fatal: true,
+        reason: 'Error during app initialization',
+      );
+    }
+    rethrow; // Rethrow to show error screen
+  }
 }

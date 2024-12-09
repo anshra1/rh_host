@@ -1,71 +1,115 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:collection';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/alert_type.dart';
 import 'package:rh_host/src/core/system/alert_system/alert.dart';
 import 'package:rh_host/src/core/system/alert_system/alert_action.dart';
 import 'package:rh_host/src/core/system/alert_system/alert_config.dart';
-import 'package:rh_host/src/core/system/alert_system/alert_icon.dart';
-import 'package:rh_host/src/core/system/alert_system/alert_utils.dart';
+
+// Then the AlertManager implementation:
 
 class AlertManager {
-  factory AlertManager() => _instance;
+  factory AlertManager() => instance;
   AlertManager._internal();
-  static final AlertManager _instance = AlertManager._internal();
+  static final AlertManager instance = AlertManager._internal();
 
-  late AlertConfig _config;
-  final _alertQueue = Queue<Alert>();
+  late final AlertConfig _config;
+  final Queue<_AlertItem> _alertQueue = Queue<_AlertItem>();
   Timer? _queueTimer;
+  bool _isProcessing = false;
 
   void initialize({AlertConfig? config}) {
     _config = config ?? const AlertConfig();
   }
 
-  void show(BuildContext context, Alert alert) {
-    _alertQueue.add(alert);
-    _processQueue(context);
-  }
+  Future<void> show(BuildContext context, Alert alert) async {
+    if (!context.mounted) return;
 
-  void _processQueue(BuildContext context) {
-    if (_queueTimer?.isActive ?? false) return;
-    if (_alertQueue.isEmpty) return;
-
-    final alert = _alertQueue.removeFirst();
-    _showAlert(context, alert);
-
-    _queueTimer = Timer(alert.duration, () {
-      _queueTimer = null;
-      _processQueue(context);
-    });
-  }
-
-  void clearAll(BuildContext context) {
-    _alertQueue.clear();
-    _queueTimer?.cancel();
-    _queueTimer = null;
-    ScaffoldMessenger.of(context).clearSnackBars();
-  }
-
-  void _showAlert(BuildContext context, Alert alert) {
-    switch (alert.type) {
-      case AlertType.error:
-        _showAlertDialog(context, alert);
-      case AlertType.warning:
-        _showAlertSnackBar(context, alert);
-      case AlertType.success:
-        _showAlertDialog(context, alert);
-      case AlertType.info:
-        _showAlertToast(context, alert);
+    try {
+      _alertQueue.add(_AlertItem(context: context, alert: alert));
+      if (!_isProcessing) {
+        await _processQueue();
+      }
+    } catch (e, stackTrace) {
+      debugPrint('Error showing alert: $e\n$stackTrace');
     }
   }
 
-  void _showAlertDialog(BuildContext context, Alert alert) {
-    showDialog<void>(
+  Future<void> _processQueue() async {
+    if (_alertQueue.isEmpty || _isProcessing) return;
+
+    _isProcessing = true;
+
+    try {
+      while (_alertQueue.isNotEmpty) {
+        final item = _alertQueue.removeFirst();
+        if (item.context.mounted) {
+          await _showAlert(item.context, item.alert);
+          // Wait for duration before showing next alert
+          await Future<void>.delayed(item.alert.duration);
+        }
+      }
+    } finally {
+      _isProcessing = false;
+    }
+  }
+
+  Color _getAlertColor(AlertType type) {
+    switch (type) {
+      case AlertType.error:
+        return Colors.red;
+      case AlertType.warning:
+        return Colors.orange;
+      case AlertType.success:
+        return Colors.green;
+      case AlertType.info:
+        return Colors.blue;
+    }
+  }
+
+  IconData _getAlertIcon(AlertType type) {
+    switch (type) {
+      case AlertType.error:
+        return Icons.error_outline;
+      case AlertType.warning:
+        return Icons.warning_amber_rounded;
+      case AlertType.success:
+        return Icons.check_circle_outline;
+      case AlertType.info:
+        return Icons.info_outline;
+    }
+  }
+
+  Future<void> _showAlert(BuildContext context, Alert alert) async {
+    if (!context.mounted) return;
+
+    switch (alert.type) {
+      case AlertType.error:
+        await _showAlertDialog(context, alert);
+      case AlertType.warning:
+        _showAlertSnackBar(context, alert);
+      case AlertType.success:
+        await _showAlertDialog(context, alert);
+      case AlertType.info:
+        _showAlertSnackBar(context, alert);
+    }
+  }
+
+  Future<void> _showAlertDialog(BuildContext context, Alert alert) {
+    return showDialog<void>(
       context: context,
       barrierDismissible: alert.dismissible,
-      builder: (context) => AlertDialog(
-        icon: AlertIcon(alert: alert),
+      builder: (BuildContext context) => AlertDialog(
+        icon: Icon(
+          _getAlertIcon(alert.type),
+          color: _getAlertColor(alert.type),
+          size: 28,
+        ),
         title: alert.title != null ? Text(alert.title!) : null,
         content: Text(alert.message),
         actions: [
@@ -91,6 +135,60 @@ class AlertManager {
     );
   }
 
+  void _showAlertSnackBar(BuildContext context, Alert alert) {
+    final theme = Theme.of(context);
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(
+                _getAlertIcon(alert.type),
+                color: theme.colorScheme.onError,
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (alert.title != null)
+                      Text(
+                        alert.title!,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onError,
+                        ),
+                      ),
+                    Text(
+                      alert.message,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onError,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: _getAlertColor(alert.type),
+          behavior: _config.defaultSnackBarBehavior,
+          duration: alert.duration,
+          action: alert.action != null
+              ? SnackBarAction(
+                  label: alert.action!.label,
+                  onPressed: alert.action!.onPressed,
+                  textColor: alert.action!.textColor ?? theme.colorScheme.onError,
+                )
+              : null,
+        ),
+      );
+  }
+
+  // Convenience methods
   void showSuccess(
     BuildContext context, {
     required String message,
@@ -105,102 +203,84 @@ class AlertManager {
         title: title,
         type: AlertType.success,
         action: action,
-        duration: duration ?? const Duration(seconds: 3),
+        duration: duration ?? _config.defaultDuration,
       ),
     );
   }
 
- void _showAlertSnackBar(BuildContext context, Alert alert) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              AlertIcon(alert: alert),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (alert.title != null)
-                      Text(
-                        alert.title!,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    Text(alert.message),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: AlertUtils.getColor(alert),
-          behavior: _config.defaultSnackBarBehavior,
-          duration: alert.duration,
-          action: alert.action != null
-              ? SnackBarAction(
-                  label: alert.action!.label,
-                  onPressed: alert.action!.onPressed,
-                  textColor: alert.action!.textColor,
-                )
-              : null,
-        ),
-      );
+  void showError(
+    BuildContext context, {
+    required String message,
+    String? title,
+    AlertAction? action,
+    Duration? duration,
+  }) {
+    show(
+      context,
+      Alert(
+        message: message,
+        title: title,
+        type: AlertType.error,
+        action: action,
+        duration: duration ?? _config.defaultDuration,
+      ),
+    );
   }
 
-  void _showAlertToast(BuildContext context, Alert alert) {
-    // Implement using your preferred toast package
-    // For example, using fluttertoast:
-    /*
-    Fluttertoast.showToast(
-      msg: alert.message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: AlertUtils.getColor(alert),
-      textColor: Colors.white,
+  void showWarning(
+    BuildContext context, {
+    required String message,
+    String? title,
+    AlertAction? action,
+    Duration? duration,
+  }) {
+    show(
+      context,
+      Alert(
+        message: message,
+        title: title,
+        type: AlertType.warning,
+        action: action,
+        duration: duration ?? _config.defaultDuration,
+      ),
     );
-    */
+  }
+
+  void showInfo(
+    BuildContext context, {
+    required String message,
+    String? title,
+    AlertAction? action,
+    Duration? duration,
+  }) {
+    show(
+      context,
+      Alert(
+        message: message,
+        title: title,
+        type: AlertType.info,
+        action: action,
+        duration: duration ?? _config.defaultDuration,
+      ),
+    );
+  }
+
+  void clearAll(BuildContext context) {
+    _alertQueue.clear();
+    _queueTimer?.cancel();
+    _queueTimer = null;
+    _isProcessing = false;
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+    }
   }
 }
 
-// void main(BuildContext context) {
-//   AlertManager().showSuccess(
-//     context,
-//     message: 'Profile updated successfully',
-//     action: AlertAction(
-//       label: 'View',
-//       onPressed: navigateToProfile,
-//     ),
-//   );
-
-// // Info message
-//   AlertManager().showInfo(
-//     message: 'New version available',
-//     title: 'Update',
-//     action: AlertAction(
-//       label: 'Update Now',
-//       onPressed: startUpdate,
-//     ),
-//   );
-
-// // Warning message
-//   AlertManager().showWarning(
-//     context,
-//     message: 'Your session will expire soon',
-//     action: AlertAction(
-//       label: 'Extend',
-//       onPressed: extendSession,
-//     ),
-//   );
-
-// // Error message
-//   AlertManager().showError(
-//     context,
-//     message: 'Failed to save changes',
-//     action: AlertAction(
-//       label: 'Retry',
-//       onPressed: saveChanges,
-//     ),
-//   );
-// }
+class _AlertItem {
+  _AlertItem({
+    required this.context,
+    required this.alert,
+  });
+  final BuildContext context;
+  final Alert alert;
+}

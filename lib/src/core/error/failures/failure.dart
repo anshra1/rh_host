@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:equatable/equatable.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';

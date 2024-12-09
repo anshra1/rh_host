@@ -1,21 +1,27 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/system/network/network_info.dart';
 
 class ConnectivityService extends ChangeNotifier {
   ConnectivityService({
-    NetworkCheckerSealed? networkChecker,
+    NetworkChecker? networkChecker,
   }) : _networkChecker = networkChecker ??
-            NetworkChecker(
+            NetworkCheckerImpl(
               InternetConnection.createInstance(),
             ) {
     _initialize();
   }
 
-  final NetworkCheckerSealed _networkChecker;
+  final NetworkChecker _networkChecker;
   bool _hasConnection = true;
   DateTime? _lastOfflineTime;
   int _consecutiveFailures = 0;

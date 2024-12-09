@@ -1,7 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+
+// Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/config/keyboard.dart';
+import 'package:rh_host/src/core/constants/theme.dart';
 import 'package:rh_host/src/core/routes/import.dart';
 
 class RootApp extends StatelessWidget {
@@ -9,17 +14,25 @@ class RootApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterNativeSplash.remove();
     return ScreenUtilInit(
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, ch) => DismissKeyboard(
+      builder: (context, child) => DismissKeyboard(
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'library-app',
-          //theme: MyTheme.lightTheme,
+          theme: AppTheme.lightTheme,
           themeMode: ThemeMode.light,
           routerConfig: AppRouter.router,
+          // App-wide configurations
+          builder: (context, child) {
+            // Apply any app-wide configurations like text scaling
+            return MediaQuery(
+              // Prevent text scaling from device settings
+              data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+              child: child!,
+            );
+          },
         ),
       ),
     );

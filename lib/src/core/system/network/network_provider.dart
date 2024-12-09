@@ -1,7 +1,13 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/system/network/network_info.dart';
 
 // lib/core/providers/network_provider.dart
@@ -9,7 +15,7 @@ class NetworkProvider extends ChangeNotifier {
   NetworkProvider(this._networkInfo) {
     _init();
   }
-  final NetworkCheckerSealed _networkInfo;
+  final NetworkChecker _networkInfo;
   StreamSubscription<InternetStatus>? _subscription;
   bool _hasConnection = false;
 

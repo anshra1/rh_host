@@ -1,9 +1,42 @@
 // firebase_error_config.dart
+
+// Package imports:
 import 'package:firebase_core/firebase_core.dart';
+
+// Project imports:
+import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 
 class FirebaseErrorConfig {
+  static ErrorCategory getCategory(FirebaseException error) {
+    switch (error.plugin) {
+      case 'firebase_auth':
+        return ErrorCategory.authentication;
+
+      case 'cloud_firestore':
+        return ErrorCategory.firestoreClient;
+
+      case 'firebase_storage':
+        return ErrorCategory.firebaseStorage;
+
+      case 'firebase_core':
+        return ErrorCategory.firebaseCore;
+
+      case 'firebase_messaging':
+        return ErrorCategory.firebaseMessaging;
+
+      case 'firebase_crashlytics':
+        return ErrorCategory.firebaseCrashlytics;
+
+      case 'firebase_analytics':
+        return ErrorCategory.firebaseAnalytics;
+
+      default:
+        return ErrorCategory.unknown;
+    }
+  }
+
   static ErrorCode getErrorCode(FirebaseException error) {
     switch (error.plugin) {
       case 'firebase_auth':
@@ -195,6 +228,33 @@ class FirebaseErrorConfig {
     'storage/no-default-bucket': false,
   };
 
+  // Get combined severity map
+  static Map<String, ErrorSeverity> get _allSeverities => {
+        ...authSeverityMap,
+        ...firestoreSeverityMap,
+        ...storageSeverityMap,
+      };
+
+  // Get error severity with fallback
+  static ErrorSeverity getSeverity(FirebaseException error) {
+    // Try exact code match
+    final severity = _allSeverities[error.code];
+    if (severity != null) return severity;
+
+    // Try with plugin prefix
+    final prefixedCode = '${error.plugin}/${error.code}';
+    final prefixedSeverity = _allSeverities[prefixedCode];
+    if (prefixedSeverity != null) return prefixedSeverity;
+
+    // Default based on plugin
+    return switch (error.plugin) {
+      'firebase_auth' => ErrorSeverity.medium,
+      'cloud_firestore' => ErrorSeverity.medium,
+      'firebase_storage' => ErrorSeverity.medium,
+      _ => ErrorSeverity.low,
+    };
+  }
+
   // User-friendly messages for all error codes
   static final Map<String, String> userMessages = {
     // Auth Messages
@@ -232,31 +292,14 @@ class FirebaseErrorConfig {
     'storage/invalid-url': 'Invalid storage URL',
   };
 
-  // Get combined severity map
-  static Map<String, ErrorSeverity> get _allSeverities => {
-        ...authSeverityMap,
-        ...firestoreSeverityMap,
-        ...storageSeverityMap,
-      };
+  // User-friendly messages for all error codes
+  static final Map<String, String> technicalMessageCodes = {
+    // Firestore Messages
+    'permission-denied': 'May be the problem in firestore rules',
+  };
 
-  // Get error severity with fallback
-  static ErrorSeverity getSeverity(FirebaseException error) {
-    // Try exact code match
-    final severity = _allSeverities[error.code];
-    if (severity != null) return severity;
-
-    // Try with plugin prefix
-    final prefixedCode = '${error.plugin}/${error.code}';
-    final prefixedSeverity = _allSeverities[prefixedCode];
-    if (prefixedSeverity != null) return prefixedSeverity;
-
-    // Default based on plugin
-    return switch (error.plugin) {
-      'firebase_auth' => ErrorSeverity.medium,
-      'cloud_firestore' => ErrorSeverity.medium,
-      'firebase_storage' => ErrorSeverity.medium,
-      _ => ErrorSeverity.low,
-    };
+  static String technicalMessage(FirebaseException error) {
+    return technicalMessageCodes[error.code] ?? '';
   }
 
   // Get recoverability status with fallback

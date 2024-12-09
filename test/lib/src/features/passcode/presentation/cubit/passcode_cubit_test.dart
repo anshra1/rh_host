@@ -1,7 +1,10 @@
+// Package imports:
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
@@ -62,7 +65,7 @@ void main() {
   });
 
   test('initial state should be PasscodeInitial', () {
-    expect(cubit.state, const PasscodeInitial());
+    expect(cubit.state, const PasscodeInitialState());
   });
 
   group('setPasscode', () {
@@ -73,14 +76,14 @@ void main() {
             .thenAnswer((_) async => const Right(true));
         return cubit;
       },
-      act: (cubit) => cubit.setPasscode(
+      act: (cubit) => cubit.setNewPasscode(
         newPasscode: tNewPasscode,
         confirmPasscode: tConfirmPasscode,
         masterPasscode: tMasterPasscode,
       ),
       expect: () => const [
         PasscodeLoading(),
-        PasscodeSet(isSet: true),
+        NewPasscodeSetState(isSet: true),
       ],
       verify: (_) {
         verify(() => mockSetNewPasscode(tParams)).called(1);
@@ -94,14 +97,14 @@ void main() {
             .thenAnswer((_) async => const Left(tFailure));
         return cubit;
       },
-      act: (cubit) => cubit.setPasscode(
+      act: (cubit) => cubit.setNewPasscode(
         newPasscode: tNewPasscode,
         confirmPasscode: tConfirmPasscode,
         masterPasscode: tMasterPasscode,
       ),
       expect: () => [
         const PasscodeLoading(),
-        const PasscodeError(tFailure),
+        const PasscodeErrorState(tFailure),
       ],
       verify: (_) {
         verify(() => mockSetNewPasscode(tParams)).called(1);
@@ -123,7 +126,7 @@ void main() {
       act: (cubit) => cubit.verifyPasscode(tPasscode),
       expect: () => const [
         PasscodeLoading(),
-        PasscodeVerified(),
+        PasscodeVerifiedState(isValid: true),
       ],
       verify: (_) {
         verify(() => mockVerifyPasscode(tVerifyParams)).called(1);
@@ -140,7 +143,7 @@ void main() {
       act: (cubit) => cubit.verifyPasscode(tPasscode),
       expect: () => const [
         PasscodeLoading(),
-        PasscodeInvalid(),
+        PasscodeVerificationFailedState(),
       ],
       verify: (_) {
         verify(() => mockVerifyPasscode(tVerifyParams)).called(1);
@@ -157,7 +160,7 @@ void main() {
       act: (cubit) => cubit.verifyPasscode(tPasscode),
       expect: () => [
         const PasscodeLoading(),
-        const PasscodeError(tFailure),
+        const PasscodeErrorState(tFailure),
       ],
       verify: (_) {
         verify(() => mockVerifyPasscode(tVerifyParams)).called(1);
@@ -173,10 +176,10 @@ void main() {
             .thenAnswer((_) async => const Right(true));
         return cubit;
       },
-      act: (cubit) => cubit.togglePasscode(),
+      act: (cubit) => cubit.enableDisablePasscode(),
       expect: () => const [
         PasscodeLoading(),
-        PasscodeEnabled(isEnabled: true),
+        PasscodeEnabledState(isEnabled: true),
       ],
       verify: (_) {
         verify(() => mockEnableDisablePasscode()).called(1);
@@ -190,10 +193,10 @@ void main() {
             .thenAnswer((_) async => const Right(false));
         return cubit;
       },
-      act: (cubit) => cubit.togglePasscode(),
+      act: (cubit) => cubit.enableDisablePasscode(),
       expect: () => const [
         PasscodeLoading(),
-        PasscodeEnabled(isEnabled: false),
+        PasscodeEnabledState(isEnabled: false),
       ],
       verify: (_) {
         verify(() => mockEnableDisablePasscode()).called(1);
@@ -207,10 +210,10 @@ void main() {
             .thenAnswer((_) async => const Left(tFailure));
         return cubit;
       },
-      act: (cubit) => cubit.togglePasscode(),
+      act: (cubit) => cubit.enableDisablePasscode(),
       expect: () => [
         const PasscodeLoading(),
-        const PasscodeError(tFailure),
+        const PasscodeErrorState(tFailure),
       ],
       verify: (_) {
         verify(() => mockEnableDisablePasscode()).called(1);
@@ -225,10 +228,10 @@ void main() {
         when(() => mockShouldShowPasscode()).thenAnswer((_) async => const Right(true));
         return cubit;
       },
-      act: (cubit) => cubit.checkShouldShowPasscode(),
+      act: (cubit) => cubit.shouldShowPasscode(),
       expect: () => const [
         PasscodeLoading(),
-        PasscodeShowRequired(shouldShow: true),
+        PasscodeShowRequiredState(shouldShow: true),
       ],
       verify: (_) {
         verify(() => mockShouldShowPasscode()).called(1);
@@ -241,10 +244,10 @@ void main() {
         when(() => mockShouldShowPasscode()).thenAnswer((_) async => const Right(false));
         return cubit;
       },
-      act: (cubit) => cubit.checkShouldShowPasscode(),
+      act: (cubit) => cubit.shouldShowPasscode(),
       expect: () => const [
         PasscodeLoading(),
-        PasscodeShowRequired(shouldShow: false),
+        PasscodeShowRequiredState(shouldShow: false),
       ],
       verify: (_) {
         verify(() => mockShouldShowPasscode()).called(1);
@@ -258,10 +261,10 @@ void main() {
             .thenAnswer((_) async => const Left(tFailure));
         return cubit;
       },
-      act: (cubit) => cubit.checkShouldShowPasscode(),
+      act: (cubit) => cubit.shouldShowPasscode(),
       expect: () => [
         const PasscodeLoading(),
-        const PasscodeError(tFailure),
+        const PasscodeErrorState(tFailure),
       ],
       verify: (_) {
         verify(() => mockShouldShowPasscode()).called(1);

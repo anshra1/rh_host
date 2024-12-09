@@ -1,6 +1,11 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:collection';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
@@ -86,7 +91,7 @@ class LoadingController {
       severity: ErrorSeverity.medium,
     );
 
-    FailureManager().show(context, failure);
+    FailureManager.instance.show(context, failure);
   }
 
   // Future<void> _logLoadingStarted(

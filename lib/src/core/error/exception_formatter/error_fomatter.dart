@@ -1,7 +1,10 @@
 // import 'package:rh_host/src/core/error/exception/exception.dart';
 // import 'package:rh_host/src/core/error/exception_formatter/stack_trace_parser.dart';
 
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';

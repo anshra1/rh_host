@@ -1,7 +1,12 @@
 // ignore_for_file: avoid_redundant_argument_values, prefer_final_in_for_each
 
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
 import 'package:logger/logger.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/system/logger/logger.dart';
 
 class DebugLogger {

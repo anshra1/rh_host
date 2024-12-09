@@ -13,11 +13,13 @@ class Strings {
   // passcode
   static const String failedToSetNewPasscode = 'Failed to set new passcode';
   static const String invalidMasterPasscode = 'invalid master passcode';
-  static const String noMatchPasscode = 'invalid master passcode';
+
+  static const String newAndConfirmPasscodeNoMatch = 'New and confirm not match';
   static const String passcodeNotSet = 'passcode is not set';
   static const String failedToVerifyPasscode = 'Failed to verify passcode';
-  static const String pleaseEnterPinCode = 'Please enter your PIN code';
+  static const String pleaseEnterPasscode = 'Please enter your Passcode';
   static const String forgetPin = 'Forgot PIN?';
+  static const String invalidPinCode = 'Invalid Pin Code';
 
   // Error
   static const String unknownError = 'unknown Error';

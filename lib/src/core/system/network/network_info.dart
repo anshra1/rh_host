@@ -1,12 +1,13 @@
+// Package imports:
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
-sealed class NetworkCheckerSealed {
+abstract class NetworkChecker {
   Future<bool> get isConnected;
   Stream<InternetStatus> get onStatusChange;
 }
 
-class NetworkChecker implements NetworkCheckerSealed {
-  NetworkChecker(this.connectionChecker);
+class NetworkCheckerImpl implements NetworkChecker {
+  NetworkCheckerImpl(this.connectionChecker);
 
   final InternetConnection connectionChecker;
 

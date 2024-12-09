@@ -1,14 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+// Dart imports:
 import 'dart:async';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/storage_type.dart';
 import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 import 'package:rh_host/src/core/system/storage/app_storage.dart';
 import 'package:rh_host/src/core/system/storage/storage_context.dart';
 import 'package:rh_host/src/core/system/storage/storage_retry_manager.dart';
+// Package imports:
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPrefsStorage implements AppStorage {
-  SharedPrefsStorage({required SharedPreferences prefs}) : _prefs = prefs;
+class SharedPrefsStorages implements AppStorage {
+  SharedPrefsStorages({required SharedPreferences prefs}) : _prefs = prefs;
 
   final SharedPreferences _prefs;
   bool _isInitialized = false;

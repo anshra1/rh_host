@@ -1,16 +1,18 @@
 // ignore_for_file: lines_longer_than_80_chars, no_leading_underscores_for_local_identifiers, avoid_print
 
+// Package imports:
 import 'package:clock/clock.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:rh_host/src/core/system/clock/clock_provider.dart';
-import 'package:rh_host/src/core/system/clock/time_config.dart';
+// Project imports:
 import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
+import 'package:rh_host/src/core/system/clock/clock_provider.dart';
+import 'package:rh_host/src/core/system/clock/time_config.dart';
 import 'package:rh_host/src/core/system/network/network_info.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';
 import 'package:rh_host/src/core/system/storage/storage_keys.dart';
@@ -19,12 +21,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
-class MockNetworkCheckerImpl extends Mock implements NetworkChecker {}
+class MockNetworkCheckerImpl extends Mock implements NetworkCheckerImpl {}
 
 void main() {
   late FakeFirebaseFirestore firestoreClient;
   late MockSharedPreferences mockPrefs;
-  late SharedPrefsStorage sharedPrefsStorage;
+  late SharedPrefsStorages sharedPrefsStorage;
   late PasscodeRemoteDataSourceImpl passcodeRepoImpl;
   late TimeProvider timeProvider;
   late MockNetworkCheckerImpl mockNetworkChecker;
@@ -33,7 +35,7 @@ void main() {
     mockNetworkChecker = MockNetworkCheckerImpl();
     mockPrefs = MockSharedPreferences();
     when(() => mockPrefs.reload()).thenAnswer((_) async {});
-    sharedPrefsStorage = SharedPrefsStorage(prefs: mockPrefs);
+    sharedPrefsStorage = SharedPrefsStorages(prefs: mockPrefs);
     firestoreClient = FakeFirebaseFirestore();
     timeProvider = const TimeProvider(config: TimeConfig());
 
@@ -41,7 +43,7 @@ void main() {
       firestoreClient: firestoreClient,
       prefs: sharedPrefsStorage,
       timeProvider: timeProvider,
-      networkChecker: mockNetworkChecker,
+      networkCheckerImpl: mockNetworkChecker,
       retryPolicy: const RetryPolicy(),
     );
 
@@ -124,7 +126,7 @@ void main() {
           allOf([
             isA<ValidationException>(),
             predicate<ValidationException>(
-              (e) => e.showUImessage == Strings.noMatchPasscode,
+              (e) => e.showUImessage == Strings.invalidMasterPasscode,
             ),
             predicate<ValidationException>((e) => e.errorCode == ErrorCode.validation),
             predicate<ValidationException>((e) => e.severity == ErrorSeverity.low),

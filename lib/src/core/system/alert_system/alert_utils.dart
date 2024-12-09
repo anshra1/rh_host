@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/alert_type.dart';
 import 'package:rh_host/src/core/system/alert_system/alert.dart';
 

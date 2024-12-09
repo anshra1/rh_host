@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:equatable/equatable.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/alert_type.dart';
 import 'package:rh_host/src/core/system/alert_system/alert_action.dart';
 

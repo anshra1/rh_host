@@ -1,16 +1,19 @@
 // ignore_for_file: lines_longer_than_80_chars, require_trailing_commas
 
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rh_host/src/core/system/clock/clock_provider.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/exception/exception_thrower.dart';
+import 'package:rh_host/src/core/system/clock/clock_provider.dart';
 import 'package:rh_host/src/core/system/network/network_info.dart';
-import 'package:rh_host/src/core/utils/operation_helper.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';
 import 'package:rh_host/src/core/system/storage/storage_keys.dart';
+import 'package:rh_host/src/core/utils/method/operation_helper.dart';
 
 abstract class PasscodeRemoteDataSource {
   Future<bool> setNewPasscode({
@@ -28,21 +31,21 @@ abstract class PasscodeRemoteDataSource {
 
 class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
   PasscodeRemoteDataSourceImpl({
-    required SharedPrefsStorage prefs,
+    required SharedPrefsStorages prefs,
     required FirebaseFirestore firestoreClient,
     required TimeProvider timeProvider,
-    required NetworkChecker networkChecker,
+    required NetworkCheckerImpl networkCheckerImpl,
     required RetryPolicy retryPolicy,
   })  : _prefs = prefs,
         _timeProvider = timeProvider,
-        _networkInfo = networkChecker,
+        _networkInfo = networkCheckerImpl,
         _retryPolicy = retryPolicy,
         _firestoreClient = firestoreClient;
 
-  final SharedPrefsStorage _prefs;
+  final SharedPrefsStorages _prefs;
   final FirebaseFirestore _firestoreClient;
   final TimeProvider _timeProvider;
-  final NetworkChecker _networkInfo;
+  final NetworkCheckerImpl _networkInfo;
   final RetryPolicy _retryPolicy;
 
   @override
@@ -75,7 +78,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
     } catch (e, s) {
       // Handle any other unexpected errors
       throw ExceptionThrower.unknownException(
-        error: e,
+        dartError: e,
         stackTrace: s,
         methodName: methodName,
       );
@@ -108,7 +111,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
       return await _updatePasscodeState();
     } catch (e, s) {
       throw ExceptionThrower.throwUnknownExceptionWithFirebase(
-        error: e,
+        dartError: e,
         stackTrace: s,
         methodName: methodName,
       );
@@ -118,7 +121,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
   Future<void> _validatePasscodes(int newPasscode, int confirmPasscode) async {
     if (newPasscode != confirmPasscode) {
       throw const ValidationException(
-        showUImessage: Strings.noMatchPasscode,
+        showUImessage: Strings.invalidMasterPasscode,
         debugCode: 'ErrorCode.validation',
         methodName: 'SET_NEW_PASSCODE',
         errorCode: ErrorCode.validation,
@@ -216,10 +219,10 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
 
       // Check if it's been more than 30 minutes since the last login
       final timeSinceLastLogin = _timeProvider.currentTime.difference(lastLogin);
-      return timeSinceLastLogin.inMinutes > 30;
+      return timeSinceLastLogin.inSeconds > 1;
     } catch (e, s) {
       throw ExceptionThrower.throwUnknownExceptionWithFirebase(
-        error: e,
+        dartError: e,
         stackTrace: s,
         methodName: methodName,
       );
@@ -248,7 +251,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
       return isValid;
     } catch (e, s) {
       throw ExceptionThrower.throwUnknownExceptionWithFirebase(
-        error: e,
+        dartError: e,
         stackTrace: s,
         methodName: methodName,
       );
@@ -259,7 +262,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
     const methodName = 'VERIFY_PASSCODE_performLocalValidations';
 
     // 2. Check input validation
-    if (passcode.toString().length != 6) {
+    if (passcode.toString().length != 4) {
       throw const ValidationException(
         debugCode: 'invalid_passcode_format',
         methodName: methodName,
@@ -288,6 +291,7 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
         }
 
         final storedPasscode = docSnapshot.data()![Strings.appPasscode];
+
         if (storedPasscode is! int) {
           throw const ValidationException(
             debugCode: 'invalid_stored_passcode_type',

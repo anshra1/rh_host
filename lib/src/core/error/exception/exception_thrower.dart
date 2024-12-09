@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:firebase_core/firebase_core.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
@@ -10,28 +13,35 @@ import 'package:rh_host/src/core/system/storage/shared_pref_error_config.dart';
 
 class ExceptionThrower {
   ExceptionThrower._();
+
   static Never throwUnknownExceptionWithFirebase({
-    required dynamic error,
     required StackTrace stackTrace,
     required String methodName,
+    required dynamic dartError,
   }) {
-    if (error is AppException) {
-      throw error; // Rethrow if already an AppException
+    if (dartError is AppException) {
+      DebugLogger.instance.error(dartError.toString());
+      throw dartError; // Rethrow if already an AppException
     }
 
-    if (error is FirebaseException) {
-      throw serverFirebaseException(
-        error: error,
-        stackTrace: stackTrace,
+    if (dartError is FirebaseException) {
+      throw firebaseServerException(
+        dartStackTrace: stackTrace,
         methodName: methodName,
+        firebaseException: dartError,
       );
     }
 
+    
     throw unknownException(
-      error: error,
+      dartError: dartError,
       stackTrace: stackTrace,
       methodName: methodName,
     );
+
+    
+    
+    
   }
 
   static Never throwExceptionWithCatch({
@@ -40,56 +50,63 @@ class ExceptionThrower {
     required String methodName,
   }) {
     if (error is AppException) {
+      DebugLogger.instance.error(error.toString());
       throw error; // Rethrow if already an AppException
     }
 
     throw unknownException(
-      error: error,
+      dartError: error,
       stackTrace: stackTrace,
       methodName: methodName,
     );
   }
 
-  static Never serverFirebaseException({
-    required FirebaseException error,
-    required StackTrace stackTrace,
+  static Never firebaseServerException({
+    required FirebaseException firebaseException,
+    required StackTrace dartStackTrace,
     required String methodName,
   }) {
-    final serverity = FirebaseErrorConfig.getSeverity(error);
-    final errorCode = FirebaseErrorConfig.getErrorCode(error);
-    final isRecoverable = FirebaseErrorConfig.isRecoverable(error);
+    final serverity = FirebaseErrorConfig.getSeverity(firebaseException);
+    final errorCode = FirebaseErrorConfig.getErrorCode(firebaseException);
+    final isRecoverable = FirebaseErrorConfig.isRecoverable(firebaseException);
+    final technicalMessage = FirebaseErrorConfig.technicalMessage(firebaseException);
+    final category = FirebaseErrorConfig.getCategory(firebaseException);
 
     final serverException = ServerException(
       errorCode: errorCode,
-      debugCode: error.code,
-      showUImessage: error.message ?? 'Firebase Error Occurred',
-      debugDetails: error.stackTrace.toString(),
+      debugCode: firebaseException.code,
+      showUImessage: firebaseException.message ?? 'Firebase Error Occurred',
+      debugDetails:
+          'Custom Details $technicalMessage \n Firebase StackTrace: ${firebaseException.stackTrace}',
       severity: serverity,
       isRecoverable: isRecoverable,
-      dartStackTrace: stackTrace,
+      dartError: 'Dart Error is FirebaseException',
+      dartStackTrace: dartStackTrace,
       methodName: methodName,
+      errorCategory: category,
     );
-    DebugLogger.instance.error(serverException.toString(), error, stackTrace);
+    DebugLogger.instance.error(serverException.toString());
     throw serverException;
   }
 
   static Never unknownException({
-    required dynamic error,
+    required dynamic dartError,
     required String methodName,
     StackTrace? stackTrace,
   }) {
-    if (error is AppException) {
-      throw error; // Rethrow if already an AppException
+    if (dartError is AppException) {
+      throw dartError; // Rethrow if already an AppException
     }
 
     final unknownExcetion = UnknownException(
-      debugCode: error,
+      debugCode: 'Unknown Error',
+      dartError: dartError,
       showUImessage: Strings.unknownError,
       dartStackTrace: stackTrace,
       errorCode: ErrorCode.unknown,
       methodName: methodName,
     );
-    DebugLogger.instance.error(unknownExcetion.toString(), error, stackTrace);
+    DebugLogger.instance.error(unknownExcetion.toString(), dartError, stackTrace);
     throw unknownExcetion;
   }
 
@@ -109,13 +126,13 @@ class ExceptionThrower {
   }
 
   static Never sharedPrefanceException(
-    dynamic error,
-    StackTrace stackTrace, {
+    dynamic dartError,
+    StackTrace dartStackTrace, {
     required String methodName,
     required String fallbackMessage,
     ErrorSeverity? errorSeverity,
   }) {
-    final storageDebugCode = SharedPrefErrorConfig.getStorageDebugCode(error);
+    final storageDebugCode = SharedPrefErrorConfig.getStorageDebugCode(dartError);
     final severity = SharedPrefErrorConfig.getSeverity(storageDebugCode);
     final isRecoverable = SharedPrefErrorConfig.isRecoverable(storageDebugCode);
     final errorCode =
@@ -127,11 +144,12 @@ class ExceptionThrower {
     final userUIMessage = SharedPrefErrorConfig.getUserMessage(errorCode);
 
     final storageException = StorageException(
+      dartError: dartError,
       showUImessage: userUIMessage,
       debugDetails: debugDetails,
       debugCode: storageDebugCode.toString(),
       methodName: methodName,
-      stackTrace: stackTrace,
+      dartStackTrace: dartStackTrace,
       errorCode: errorCode,
       severity: errorSeverity ?? severity,
       isRecoverable: isRecoverable,
@@ -139,7 +157,7 @@ class ExceptionThrower {
 
     // Log full details for debugging
     DebugLogger.instance.error(
-      ErrorFormatter.format(storageException, stackTrace),
+      ErrorFormatter.format(storageException, dartStackTrace),
     );
 
     throw storageException;

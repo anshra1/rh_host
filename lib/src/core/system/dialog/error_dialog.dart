@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:rh_host/src/core/system/dialog/alert_dialog_model.dart';
 
 class ErrorDialog extends AlertDialogModel<bool> {

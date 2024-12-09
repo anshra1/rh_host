@@ -1,6 +1,9 @@
 // ignore_for_file: use_super_parameters
 
+// Package imports:
 import 'package:equatable/equatable.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
@@ -11,31 +14,31 @@ abstract class AppException extends Equatable implements Exception {
     required this.errorCode,
     required this.showUImessage,
     required this.methodName,
-    this.debugDetails,
-    this.stackTrace,
+    required this.dartError,
+    required this.debugDetails,
+    this.dartStackTrace,
     this.severity = ErrorSeverity.low,
     this.category = ErrorCategory.unknown,
     this.isRecoverable,
-    this.dartError,
   });
 
+  final dynamic dartError;
   final dynamic debugCode;
   final ErrorCode errorCode;
   final String? showUImessage;
   final String? debugDetails;
-  final StackTrace? stackTrace;
   final ErrorSeverity severity;
   final ErrorCategory category;
   final bool? isRecoverable;
   final String methodName;
-  final dynamic dartError;
+  final StackTrace? dartStackTrace;
 
   @override
   List<Object?> get props => [
         debugCode,
         showUImessage,
         debugDetails,
-        stackTrace,
+        dartStackTrace,
         severity,
         category,
         isRecoverable,
@@ -46,7 +49,8 @@ abstract class AppException extends Equatable implements Exception {
   @override
   String toString() {
     final timestamp = DateTime.now().toIso8601String();
-    final formattedStack = stackTrace != null ? stackTrace! : 'No stack trace available';
+    final dartStackTraceFormattedStack =
+        dartStackTrace != null ? dartStackTrace! : 'No stack trace available';
 
     return '''
 ----------------------------------------
@@ -56,29 +60,29 @@ Code: $errorCode
 Category: ${category.name}
 Severity: ${severity.name}
 Is Recoverable: ${isRecoverable ?? 'Unknown'}
-Message: ${showUImessage ?? 'No message provided'}
-Technical Details: ${debugDetails ?? 'None'}
+UI Message: ${showUImessage ?? 'No message provided'}
+Debug Details: ${debugDetails ?? 'None'}
 Debug Code: $debugCode
 Dart Error: $dartError
-Stack Trace:
-$formattedStack
+DartStackTrace:
+$dartStackTraceFormattedStack
 ----------------------------------------
 ''';
   }
 
   /// Creates a map representation of the exception
-  Map<String, dynamic> toJson() => {
-        'timestamp': DateTime.now().toIso8601String(),
-        'methodName': methodName,
-        'errorCode': errorCode.toString(),
-        'category': category.name,
-        'severity': severity.name,
-        'isRecoverable': isRecoverable,
-        'message': showUImessage,
-        'debugDetails': debugDetails,
-        'debugCode': debugCode.toString(),
-        'stackTrace': stackTrace?.toString(),
-      };
+  // Map<String, dynamic> toJson() => {
+  //       'timestamp': DateTime.now().toIso8601String(),
+  //       'methodName': methodName,
+  //       'errorCode': errorCode.toString(),
+  //       'category': category.name,
+  //       'severity': severity.name,
+  //       'isRecoverable': isRecoverable,
+  //       'message': showUImessage,
+  //       'debugDetails': debugDetails,
+  //       'debugCode': debugCode.toString(),
+  //       'stackTrace': dartStackTrace?.toString(),
+  //     };
 }
 
 class ServerException extends AppException {
@@ -86,6 +90,7 @@ class ServerException extends AppException {
     required ErrorCode errorCode,
     required dynamic debugCode,
     required String methodName,
+    required dynamic dartError,
     String? showUImessage,
     ErrorCategory errorCategory = ErrorCategory.unknown,
     String? debugDetails,
@@ -93,12 +98,13 @@ class ServerException extends AppException {
     ErrorSeverity severity = ErrorSeverity.low,
     bool? isRecoverable,
   }) : super(
+          dartError: dartError,
           debugCode: debugCode,
           methodName: methodName,
           errorCode: errorCode,
           showUImessage: showUImessage,
           debugDetails: debugDetails,
-          stackTrace: dartStackTrace,
+          dartStackTrace: dartStackTrace,
           severity: severity,
           category: errorCategory,
           isRecoverable: isRecoverable,
@@ -111,18 +117,20 @@ class CacheException extends AppException {
     required String debugCode,
     required String showUImessage,
     required String methodName,
+    required dynamic dartError,
     ErrorCategory errorCategory = ErrorCategory.sharedPreferences,
     String? debugDetails,
     StackTrace? stackTrace,
     ErrorSeverity severity = ErrorSeverity.medium,
     bool? isRecoverable,
   }) : super(
+          dartError: dartError,
           debugCode: debugCode,
           methodName: methodName,
           errorCode: errorCode,
           showUImessage: showUImessage,
           debugDetails: debugDetails,
-          stackTrace: stackTrace,
+          dartStackTrace: stackTrace,
           severity: severity,
           category: errorCategory,
           isRecoverable: isRecoverable,
@@ -131,16 +139,18 @@ class CacheException extends AppException {
 
 class StorageException extends AppException {
   const StorageException({
+    required dynamic dartError,
     required super.errorCode,
     required String super.debugCode,
     required String super.showUImessage,
     required super.methodName,
     ErrorCategory errorCategory = ErrorCategory.sharedPreferences,
     super.debugDetails,
-    super.stackTrace,
+    super.dartStackTrace,
     super.severity = ErrorSeverity.medium,
     super.isRecoverable,
   }) : super(
+          dartError: dartError,
           category: errorCategory,
         );
 }
@@ -155,13 +165,15 @@ class NetworkException extends AppException {
     StackTrace? stackTrace,
     ErrorSeverity severity = ErrorSeverity.medium,
     bool? isRecoverable,
+    dynamic dartError = '',
   }) : super(
+          dartError: dartError,
           errorCode: errorCode,
           debugCode: debugCode,
           methodName: methodName,
           showUImessage: showUImessage,
           debugDetails: debugDetails,
-          stackTrace: stackTrace,
+          dartStackTrace: stackTrace,
           severity: severity,
           category: ErrorCategory.network,
           isRecoverable: isRecoverable,
@@ -170,6 +182,7 @@ class NetworkException extends AppException {
 
 class NetworkTimeOutException extends AppException {
   const NetworkTimeOutException({
+    required dynamic dartError,
     required ErrorCode errorCode,
     required String debugCode,
     required String showUImessage,
@@ -180,12 +193,13 @@ class NetworkTimeOutException extends AppException {
     ErrorSeverity severity = ErrorSeverity.medium,
     bool? isRecoverable,
   }) : super(
+          dartError: dartError,
           errorCode: errorCode,
           debugCode: debugCode,
           methodName: methodName,
           showUImessage: showUImessage,
           debugDetails: debugDetails,
-          stackTrace: stackTrace,
+          dartStackTrace: stackTrace,
           severity: severity,
           category: errorCategory,
           isRecoverable: isRecoverable,
@@ -203,13 +217,15 @@ class ValidationException extends AppException {
     StackTrace? dartStackTrace,
     ErrorSeverity severity = ErrorSeverity.low,
     bool? isRecoverable,
+    dynamic dartError = '',
   }) : super(
+          dartError: dartError,
           debugCode: debugCode,
           methodName: methodName,
           errorCode: errorCode,
           showUImessage: showUImessage,
           debugDetails: debugDetails,
-          stackTrace: dartStackTrace,
+          dartStackTrace: dartStackTrace,
           severity: severity,
           category: errorCategory,
           isRecoverable: isRecoverable,
@@ -218,6 +234,7 @@ class ValidationException extends AppException {
 
 class UnknownException extends AppException {
   const UnknownException({
+    required dynamic dartError,
     required ErrorCode errorCode,
     required dynamic debugCode,
     required String methodName,
@@ -228,12 +245,13 @@ class UnknownException extends AppException {
     ErrorSeverity severity = ErrorSeverity.low,
     bool? isRecoverable,
   }) : super(
+          dartError: dartError,
           debugCode: debugCode,
           methodName: methodName,
           errorCode: errorCode,
           showUImessage: showUImessage,
           debugDetails: debugDetails,
-          stackTrace: dartStackTrace,
+          dartStackTrace: dartStackTrace,
           severity: severity,
           category: errorCategory,
           isRecoverable: isRecoverable,

@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
@@ -59,7 +60,8 @@ class ErrorDetails {
         'code': error.debugCode,
         'details': error.debugDetails,
         'isRecoverable': error.isRecoverable,
-        if (error.stackTrace != null) 'errorStackTrace': error.stackTrace.toString(),
+        if (error.dartStackTrace != null)
+          'errorStackTrace': error.dartStackTrace.toString(),
       },
     );
   }

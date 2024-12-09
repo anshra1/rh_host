@@ -15,11 +15,11 @@ class AppRouter {
       );
     },
     navigatorKey: _rootNavigatorKey,
-    initialLocation: RouteName.passcodePage,
+    initialLocation: PasscodePage.routeName,
     routes: [
       GoRoute(
-        path: RouteName.passcodePage,
-        name: RouteName.passcodePage,
+        path: PasscodePage.routeName,
+        name: PasscodePage.routeName,
         pageBuilder: (_, state) {
           return _buildTransition(
             child: BlocProvider(
@@ -31,11 +31,14 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: RouteName.resetPinPage,
-        name: RouteName.resetPinPage,
+        path: ResetPinPage.routeName,
+        name: ResetPinPage.routeName,
         pageBuilder: (_, state) {
           return _buildTransition(
-            child: const ResetPinPage(),
+            child: BlocProvider(
+              create: (BuildContext context) => sl<PasscodeCubit>(),
+              child: const ResetPinPage(),
+            ),
             state: state,
           );
         },

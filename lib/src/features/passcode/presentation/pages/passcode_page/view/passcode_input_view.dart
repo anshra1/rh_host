@@ -1,11 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/constants/colors.dart';
 
 class PasscodeInput extends StatelessWidget {
-  const PasscodeInput({
-    required String passcode,
-    super.key,
-  }) : _passcode = passcode;
+  const PasscodeInput({required String passcode, super.key}) : _passcode = passcode;
 
   final String _passcode;
 

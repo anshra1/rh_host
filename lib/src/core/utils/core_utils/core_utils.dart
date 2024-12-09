@@ -1,6 +1,13 @@
+// Dart imports:
 import 'dart:io';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:image_picker/image_picker.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/constants/colors.dart';
 
 class CoreUtils {

@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
@@ -13,7 +14,7 @@ class RemoteDataSourceHelper {
   static Future<T> executeRetryOperation<T>({
     required Future<T> Function() operation,
     required String methodName,
-    required NetworkCheckerSealed networkInfo,
+    required NetworkChecker networkInfo,
     required RetryPolicy retryPolicy,
     bool requiresNetwork = true,
     bool shouldRetry = true,
@@ -38,6 +39,7 @@ class RemoteDataSourceHelper {
     } catch (e, s) {
       if (requiresNetwork && !await networkInfo.isConnected) {
         throw NetworkException(
+        
           showUImessage: Strings.connectionLostDuringOperation,
           debugCode: 'Connection_lost',
           methodName: methodName,
@@ -45,7 +47,7 @@ class RemoteDataSourceHelper {
         );
       }
       throw ExceptionThrower.throwUnknownExceptionWithFirebase(
-        error: e,
+        dartError: e,
         stackTrace: s,
         methodName: methodName,
       );

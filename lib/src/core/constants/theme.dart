@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/constants/colors.dart';
 import 'package:rh_host/src/core/constants/font.dart';
 
@@ -11,7 +14,7 @@ class AppTheme {
     scaffoldBackgroundColor: AppColor.backgroundColor,
     primaryColor: AppColor.primaryColor,
     brightness: Brightness.light,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
       surfaceTintColor: Colors.transparent,

@@ -16,4 +16,8 @@ enum ErrorCategory {
   connectionLost,
   storage,
   auth,
+  firebaseMessaging,
+  firebaseAnalytics,
+  firebaseCrashlytics,
+  firebasePerformance,
 }

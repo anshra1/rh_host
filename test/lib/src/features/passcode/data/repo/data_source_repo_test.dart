@@ -1,8 +1,11 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation
 
+// Package imports:
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/error/errror_system/error_handler.dart';
 import 'package:rh_host/src/core/error/failures/failure.dart';
 import 'package:rh_host/src/features/passcode/data/repo/data_source_repo.dart';
