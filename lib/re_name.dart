@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:rh_host/src/core/config/keyboard.dart';
-import 'package:rh_host/src/core/constants/theme.dart';
-import 'package:rh_host/src/core/routes/import.dart';
+import 'package:rh_host/src/core/services/config/keyboard.dart';
+import 'package:rh_host/src/core/presentation/constants/theme.dart';
+import 'package:rh_host/src/core/services/routes/import.dart';
 
 class RootApp extends StatelessWidget {
   const RootApp({super.key});

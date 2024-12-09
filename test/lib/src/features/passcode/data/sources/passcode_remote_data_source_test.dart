@@ -6,7 +6,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 // Project imports:
-import 'package:rh_host/src/core/constants/string.dart';
+import 'package:rh_host/src/core/presentation/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';

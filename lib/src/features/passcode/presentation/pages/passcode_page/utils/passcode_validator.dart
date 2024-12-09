@@ -1,6 +1,6 @@
 // Project imports:
-import 'package:rh_host/src/core/constants/string.dart';
-import 'package:rh_host/src/core/utils/patter/pattern.dart';
+import 'package:rh_host/src/core/presentation/constants/string.dart';
+import 'package:rh_host/src/core/utils/pattern/pattern.dart';
 import 'package:rh_host/src/core/utils/validator/field_validator.dart';
 import 'package:rh_host/src/core/utils/validator/validation_result.dart';
 

@@ -10,8 +10,11 @@ class ResetPageView extends HookWidget {
 
   final bool isLoading;
   final bool shouldClearFields;
-  final Future<void> Function(int newPasscode, int confirmPasscode, int masterPasscode)
-      onSubmit;
+  final Future<void> Function(
+    int newPasscode,
+    int confirmPasscode,
+    int masterPasscode,
+  ) onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,6 @@ class ResetPageView extends HookWidget {
       final newPasscode = int.parse(newPasscodeController.text);
       final confirmPasscode = int.parse(confirmPasscodeController.text);
       final masterPasscode = int.parse(masterPasscodeController.text);
-
       await onSubmit(newPasscode, confirmPasscode, masterPasscode);
     }
 
@@ -73,7 +75,7 @@ class ResetPageView extends HookWidget {
                 newPasscodeController.text,
               ),
             ),
-            const Gap(16),
+            kGap10,
             TitledInputField(
               controller: masterPasscodeController,
               title: 'Master Passcode',

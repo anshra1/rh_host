@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:rh_host/src/core/constants/string.dart';
+import 'package:rh_host/src/core/presentation/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
