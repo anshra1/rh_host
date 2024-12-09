@@ -1,5 +1,5 @@
 import 'package:gap/gap.dart';
-import 'package:rh_host/src/core/presentation/constants/design_system/design_system.dart';
+import 'package:rh_host/src/core/presentation/constants/design_system.dart';
 
 class Spacing {
   const Spacing._();

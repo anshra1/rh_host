@@ -14,20 +14,20 @@ class PasscodeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        kGap50,
+        50.gap,
         Icon(
           isError ? Icons.error_outline : Icons.lock_outline,
           size: 50,
           color: isError ? AppColor.red100 : AppColor.primaryColor,
         ),
-        kGap20,
+        20.gap,
         Text(
           isError ? Strings.invalidPinCode : Strings.pleaseEnterPasscode,
           style: p18.bold.copyWith(
             color: isError ? AppColor.red100 : null,
           ),
         ),
-        kGap20,
+        20.gap,
         PasscodeInput(
           passcode: passcode,
           //  isError: isError,

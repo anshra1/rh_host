@@ -63,7 +63,7 @@ class ResetPageView extends HookWidget {
               inputFormatters: AppInputFormatters.passcode,
               validator: PasscodeValidator.validatePasscode,
             ),
-            const Gap(16),
+            Spacing.md,
             TitledInputField(
               controller: confirmPasscodeController,
               title: 'Confirm Passcode',
@@ -75,7 +75,7 @@ class ResetPageView extends HookWidget {
                 newPasscodeController.text,
               ),
             ),
-            kGap10,
+            Spacing.md,
             TitledInputField(
               controller: masterPasscodeController,
               title: 'Master Passcode',
@@ -84,7 +84,7 @@ class ResetPageView extends HookWidget {
               inputFormatters: AppInputFormatters.passcode,
               validator: PasscodeValidator.validateMasterPasscode,
             ),
-            const Gap(32),
+            Spacing.xxl,
             AppElevatedButton(
               label: 'Update Passcode',
               onPressed: submit,

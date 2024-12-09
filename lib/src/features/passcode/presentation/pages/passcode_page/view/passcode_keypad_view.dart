@@ -51,7 +51,7 @@ class PasscodeKeypad extends StatelessWidget {
             },
           ).pad(20),
         ),
-        kGap20,
+        20.gap,
       ],
     );
   }
