@@ -1,13 +1,12 @@
 // Package imports:
 import 'package:firebase_core/firebase_core.dart';
-
-// Project imports:
-import 'package:rh_host/src/core/presentation/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/exception_formatter/error_fomatter.dart';
 import 'package:rh_host/src/core/error/firebase_error/firebase_error_config.dart';
+// Project imports:
+import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_error_config.dart';
 

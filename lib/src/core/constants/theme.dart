@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'package:rh_host/src/core/presentation/constants/colors.dart';
-import 'package:rh_host/src/core/presentation/constants/font.dart';
+import 'package:rh_host/src/core/constants/colors.dart';
+import 'package:rh_host/src/core/constants/font.dart';
 
 class AppTheme {
   //

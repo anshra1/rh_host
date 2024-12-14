@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 // Project imports:
 import 'package:rh_host/src/core/error/error_mapper.dart';
 import 'package:rh_host/src/core/error/errror_system/error_handler.dart';
-import 'package:rh_host/src/core/other_/typedef/typedef.dart';
+import 'package:rh_host/src/core/other/typedef/typedef.dart';
 import 'package:rh_host/src/features/passcode/data/sources/passcode_remote_data_source.dart';
 import 'package:rh_host/src/features/passcode/domain/repositories/passcode_repo.dart';
 

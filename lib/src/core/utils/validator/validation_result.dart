@@ -24,7 +24,7 @@ class ValidationResult extends Equatable {
   String toString() {
     return error != null ? '${error?.message}' : '';
   }
-  
+
   @override
-  List<Object?> get props => [isValid,error];
+  List<Object?> get props => [isValid, error];
 }

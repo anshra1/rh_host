@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 // Project imports:
-import 'package:rh_host/src/core/presentation/constants/colors.dart';
+import 'package:rh_host/src/core/constants/colors.dart';
 
 class CoreUtils {
   const CoreUtils._();

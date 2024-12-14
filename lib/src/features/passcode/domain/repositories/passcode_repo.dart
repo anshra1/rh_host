@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:rh_host/src/core/other_/typedef/typedef.dart';
+import 'package:rh_host/src/core/other/typedef/typedef.dart';
 
 abstract class PasscodeRepo {
   ResultFuture<bool> setNewPasscode({

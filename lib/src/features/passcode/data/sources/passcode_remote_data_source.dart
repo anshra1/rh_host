@@ -2,13 +2,12 @@
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-// Project imports:
-import 'package:rh_host/src/core/presentation/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/exception/exception_thrower.dart';
+// Project imports:
+import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/system/clock/clock_provider.dart';
 import 'package:rh_host/src/core/system/network/network_info.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';

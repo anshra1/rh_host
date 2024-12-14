@@ -2,8 +2,8 @@
 import 'package:equatable/equatable.dart';
 
 // Project imports:
-import 'package:rh_host/src/core/other_/typedef/typedef.dart';
-import 'package:rh_host/src/core/other_/usecases/usecases.dart';
+import 'package:rh_host/src/core/other/typedef/typedef.dart';
+import 'package:rh_host/src/core/other/usecases/usecases.dart';
 import 'package:rh_host/src/features/passcode/domain/repositories/passcode_repo.dart';
 
 class SetNewPasscode extends FutureUseCaseWithParams<bool, SetNewPasscodeParams> {

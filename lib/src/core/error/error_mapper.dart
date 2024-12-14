@@ -1,10 +1,10 @@
 // Project imports:
-import 'package:rh_host/src/core/presentation/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/failures/failure.dart';
+import 'package:rh_host/src/core/constants/string.dart';
 
 class ErrorMapper {
   static Failure mapErrorToFailure(dynamic error) {

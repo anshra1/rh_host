@@ -1,12 +1,10 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:rh_host/src/core/constants/theme.dart';
 // Project imports:
 import 'package:rh_host/src/core/services/config/keyboard.dart';
-import 'package:rh_host/src/core/presentation/constants/theme.dart';
 import 'package:rh_host/src/core/services/routes/import.dart';
 
 class RootApp extends StatelessWidget {

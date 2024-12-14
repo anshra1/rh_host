@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin  _$AppDateTime {
+mixin _$AppDateTime {
   DateTime get dateTime => throw _privateConstructorUsedError;
 
   /// Create a copy of AppDateTime

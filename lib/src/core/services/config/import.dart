@@ -7,10 +7,10 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 // ignore: depend_on_referenced_packages
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-// Project imports:
-import 'package:rh_host/src/core/services/config/firebase_config.dart';
 import 'package:rh_host/src/core/error/errror_system/error_handler.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
+// Project imports:
+import 'package:rh_host/src/core/services/config/firebase_config.dart';
 import 'package:rh_host/src/core/system/clock/clock_provider.dart';
 import 'package:rh_host/src/core/system/clock/time_config.dart';
 import 'package:rh_host/src/core/system/network/network_info.dart';

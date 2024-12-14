@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Project imports:
-import 'package:rh_host/src/core/presentation/widgets/input/app_text_field.dart';
+import 'package:rh_host/src/core/widgets/input/app_text_field.dart';
 
 class TitledInputField extends StatelessWidget {
   const TitledInputField({
