@@ -1,10 +1,14 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 
-class AppIcons {
-  AppIcons._();
-
-  static const IconData home = IconData(0xe900);
+abstract class IconTokens {
+  static const IconData home = Icons.home;
+  static const IconData search = Icons.search;
+  static const IconData notifications = Icons.notifications;
+  static const IconData settings = Icons.settings;
+  static const IconData add = Icons.add;
+  static const IconData edit = Icons.edit;
+  static const IconData delete = Icons.delete;
+  //  static const IconData home = IconData(0xe900);
   static const IconData homeAlt = IconData(0xe901);
   static const IconData courses = IconData(0xe902);
   static const IconData coursesAlt = IconData(0xe903);
@@ -12,7 +16,7 @@ class AppIcons {
   static const IconData liveAlt = IconData(0xe905);
   static const IconData profile = IconData(0xe906);
   static const IconData profileAlt = IconData(0xe907);
-  static const IconData search = IconData(0xe908);
+  // static const IconData search = IconData(0xe908);
   static const IconData words = IconData(0xe909);
   static const IconData speak = IconData(0xe90a);
   static const IconData speed = IconData(0xe90b);
@@ -39,7 +43,7 @@ class AppIcons {
   static const IconData questionCircle = IconData(0xe920);
   static const IconData lightMode = IconData(0xe921);
   static const IconData setting = IconData(0xe922);
-  static const IconData delete = IconData(0xe923);
+ // static const IconData delete = IconData(0xe923);
   static const IconData lock = IconData(0xe924);
   static const IconData graduate = IconData(0xe925);
 }

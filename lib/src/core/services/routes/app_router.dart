@@ -43,6 +43,26 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+        path: StatusScreenSimple.routeName,
+        name: StatusScreenSimple.routeName,
+        pageBuilder: (_, state) {
+          return _buildTransition(
+            child: StatusScreenSimple(config: state.extra! as StatusScreenModel),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        path: StatusScreenWithTimer.routeName,
+        name: StatusScreenWithTimer.routeName,
+        pageBuilder: (_, state) {
+          return _buildTransition(
+            child: StatusScreenWithTimer(config: state.extra! as StatusScreenModel),
+            state: state,
+          );
+        },
+      ),
       ShellRoute(
         navigatorKey: mainMenuNavigatorKey,
         builder: (context, state, child) {

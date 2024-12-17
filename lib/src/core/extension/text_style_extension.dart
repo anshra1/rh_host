@@ -1,8 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:rh_host/src/core/constants/colors.dart';
+import 'package:rh_host/src/core/design_system/import.dart';
 
 extension TextStyleExtension on TextStyle {
   //Font Weight
@@ -24,10 +24,11 @@ extension TextStyleExtension on TextStyle {
 
   // Font Color
   TextStyle get primaryColor => copyWith(color: AppColor.primaryColor);
-  TextStyle get red => copyWith(color: AppColor.redColor);
+  TextStyle get red => copyWith(color: AppColor.error);
   TextStyle get white => copyWith(color: Colors.white);
-  TextStyle get black => copyWith(color: AppColor.black);
-  TextStyle get secondryText => copyWith(color: AppColor.secondryTextcolor);
+  TextStyle get black => copyWith(color: AppColor.neutral1000);
+  TextStyle get secondryTextColor => copyWith(color: AppColor.textSecondary);
+  TextStyle get primaryTextColor => copyWith(color: AppColor.textPrimary);
 
 //   TextStyle get yellow => copyWith(color: AppColor.f);
 //   TextStyle get lightyellow => copyWith(color: AppColor.lightyellow);

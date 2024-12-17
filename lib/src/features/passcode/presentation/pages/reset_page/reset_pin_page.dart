@@ -30,7 +30,16 @@ class ResetPinPage extends StatelessWidget {
 
           case NewPasscodeSetState(isSet: true):
             LoadingController.instance.hide(context);
-            context.go(PasscodePage.routeName);
+
+            final status = StatusFactory.success(
+              title: 'Passcode Reset',
+              message: 'Passcode reset successfully.',
+              buttonText: 'Continue',
+              nextRoute: PasscodePage.routeName,
+              showCloseButton: false,
+            );
+
+            StatusNavigation.moveTo(context: context, status: status);
 
           default:
             LoadingController.instance.hide(context);

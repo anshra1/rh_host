@@ -6,7 +6,7 @@ final Map<StatusType, StatusTheme> statusThemes = {
   StatusType.success: const StatusTheme(
     icon: Icons.check_circle_outline,
     color: Colors.green,
-    animationAsset: 'assets/animations/success.json',
+    animationAsset: 'assets/animation/success-animation.json',
   ),
   StatusType.error: const StatusTheme(
     icon: Icons.error_outline,

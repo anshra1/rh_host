@@ -44,7 +44,7 @@ class PasscodeKeypad extends StatelessWidget {
                 return _buildKey(
                   '⌫',
                   (_) => onDelete(),
-                  color: AppColor.red100,
+                  color: AppColor.error,
                 );
               }
               return _buildKey('${index + 1}', onDigitTap);
@@ -65,7 +65,7 @@ class PasscodeKeypad extends StatelessWidget {
       onTap: () => onTap(label),
       child: Ink(
         decoration: BoxDecoration(
-          color: color ?? AppColor.backgroundGrey200,
+          color: color ?? AppColor.neutral400,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(

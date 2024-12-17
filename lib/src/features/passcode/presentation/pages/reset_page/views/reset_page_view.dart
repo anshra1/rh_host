@@ -47,7 +47,7 @@ class ResetPageView extends HookWidget {
     return Scaffold(
       appBar: const AppBarWidget(
         title: 'Set New Passcode',
-        backgroundColor: AppColor.backgroundColor,
+        backgroundColor: AppColor.backgroundPrimary,
         elevation: 0,
       ),
       body: Form(
@@ -63,7 +63,7 @@ class ResetPageView extends HookWidget {
               inputFormatters: AppInputFormatters.passcode,
               validator: PasscodeValidator.validatePasscode,
             ),
-            Spacing.md,
+            Spacing.gapMD,
             TitledInputField(
               controller: confirmPasscodeController,
               title: 'Confirm Passcode',
@@ -75,7 +75,7 @@ class ResetPageView extends HookWidget {
                 newPasscodeController.text,
               ),
             ),
-            Spacing.md,
+            Spacing.gapMD,
             TitledInputField(
               controller: masterPasscodeController,
               title: 'Master Passcode',
@@ -84,7 +84,7 @@ class ResetPageView extends HookWidget {
               inputFormatters: AppInputFormatters.passcode,
               validator: PasscodeValidator.validateMasterPasscode,
             ),
-            Spacing.xxl,
+            Spacing.gapXXL,
             AppElevatedButton(
               label: 'Update Passcode',
               onPressed: submit,

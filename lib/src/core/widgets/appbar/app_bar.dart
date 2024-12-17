@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:rh_host/src/core/constants/colors.dart';
+import 'package:rh_host/src/core/design_system/import.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   const AppBarWidget({
@@ -41,7 +42,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: backgroundColor ?? AppColor.backgroundColor,
+      backgroundColor: backgroundColor ?? AppColor.backgroundPrimary,
       elevation: elevation ?? 0,
       centerTitle: centerTitle,
       automaticallyImplyLeading: showBackButton,
@@ -50,7 +51,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               icon: Icon(
                 leadingIcon ?? Icons.arrow_back_ios,
                 size: 20,
-                color: AppColor.textColor,
+                color: AppColor.textPrimary,
               ),
               onPressed: onLeadingPressed ?? () => Navigator.pop(context),
             )
@@ -60,7 +61,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               ? Text(
                   title!,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: AppColor.textColor,
+                        color: AppColor.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
                 )

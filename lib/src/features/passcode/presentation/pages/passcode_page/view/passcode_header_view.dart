@@ -18,13 +18,13 @@ class PasscodeHeader extends StatelessWidget {
         Icon(
           isError ? Icons.error_outline : Icons.lock_outline,
           size: 50,
-          color: isError ? AppColor.red100 : AppColor.primaryColor,
+          color: isError ? AppColor.error : AppColor.primaryColor,
         ),
         20.gap,
         Text(
           isError ? Strings.invalidPinCode : Strings.pleaseEnterPasscode,
           style: p18.bold.copyWith(
-            color: isError ? AppColor.red100 : null,
+            color: isError ? AppColor.error : null,
           ),
         ),
         20.gap,

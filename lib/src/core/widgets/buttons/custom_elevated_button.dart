@@ -1,8 +1,6 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 
-// Project imports:
-import 'package:rh_host/src/core/constants/colors.dart';
+import 'package:rh_host/src/core/design_system/import.dart';
 
 class AppElevatedButton extends StatelessWidget {
   const AppElevatedButton({
@@ -14,7 +12,7 @@ class AppElevatedButton extends StatelessWidget {
     this.disabledForegroundColor,
     this.textStyle,
     this.contentPadding = const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-    this.borderRadius = 12.0,
+    this.borderRadius = 8.0,
     this.elevation,
     this.width,
     this.height,

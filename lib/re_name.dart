@@ -1,9 +1,6 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-// Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rh_host/src/core/constants/theme.dart';
-// Project imports:
+import 'package:rh_host/src/core/design_system/app_theme.dart';
 import 'package:rh_host/src/core/services/config/keyboard.dart';
 import 'package:rh_host/src/core/services/routes/import.dart';
 
@@ -19,7 +16,7 @@ class RootApp extends StatelessWidget {
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'library-app',
-          theme: AppTheme.lightTheme,
+          theme: AppTheme.light,
           themeMode: ThemeMode.light,
           routerConfig: AppRouter.router,
           // App-wide configurations

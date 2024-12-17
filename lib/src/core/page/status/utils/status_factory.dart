@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/domain/status_action.dart';
@@ -15,6 +13,7 @@ class StatusFactory {
     bool showCloseButton = true,
     List<StatusAction>? additionalActions,
     Widget? customContent,
+    Duration timeout = const Duration(seconds: 3),
   }) {
     return StatusScreenModel(
       type: StatusType.success,
@@ -23,7 +22,7 @@ class StatusFactory {
       primaryButtonText: buttonText,
       nextRoute: nextRoute,
       nextRouteParams: nextRouteParams,
-      autoNavigateAfter: autoNavigateAfter,
+      autoNavigateAfter: timeout,
       showCloseButton: showCloseButton,
       additionalActions: additionalActions,
       customContent: customContent,

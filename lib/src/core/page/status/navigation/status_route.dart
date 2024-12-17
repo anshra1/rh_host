@@ -1,38 +1,36 @@
-part of '../../import.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rh_host/src/core/page/import.dart';
+import 'package:rh_host/src/core/page/status/presentation/status_screen_simple.dart';
 
-class StatusRoutes {
-  static const String name = 'status';
-  static const String path = '/status';
+class StatusNavigation {
+  const StatusNavigation();
 
-  static GoRoute route = GoRoute(
-    path: path,
-    name: name,
-    builder: (context, state) {
-      final config = state.extra is StatusScreenModel
-          ? state.extra! as StatusScreenModel
-          : throw Exception('Invalid status configuration provided');
-      return StatusView(config: config);
-    },
-  );
-
-  static Future<void> navigate(
-    BuildContext context,
-    StatusScreenModel config, {
-    bool replace = false,
+  static Future<void> moveTo({
+    required BuildContext context,
+    required StatusScreenModel status,
+    bool replace = true,
+    String statusTypeScreen = StatusScreenSimple.routeName,
   }) async {
     if (replace) {
-      return context.pushReplacementNamed(name, extra: config);
+      context.pushReplacementNamed(statusTypeScreen, extra: status);
+    } else {
+      await context.pushNamed(statusTypeScreen, extra: status);
     }
-    //return context.pushNamed(name, extra: config);
+  }
+
+  static Future<void> handleNavigation({
+    required BuildContext context,
+    required StatusScreenModel status,
+    String statusTypeScreen = StatusScreenSimple.routeName,
+  }) async {
+    if (status.nextRouteParams != null) {
+      await context.pushNamed(
+        status.nextRoute,
+        extra: status.nextRouteParams,
+      );
+    } else {
+      context.go(status.nextRoute);
+    }
   }
 }
-
-// lib/src/features/status/di/status_module.dart
-// class StatusModule {
-//   static Future<void> init(GetIt sl) async {
-//     // Register view model factory
-//     sl.registerFactory(StatusViewModel.new);
-//   }
-// }
-
-
