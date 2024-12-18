@@ -1,4 +1,4 @@
-part of 'import.dart';
+part of 'z_import.dart';
 
 class AppEdgeInsets {
   static const EdgeInsets zero = EdgeInsets.zero;

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rh_host/src/core/design_system/import.dart';
+import 'package:rh_host/src/core/design_system/z_import.dart';
 
 class CoreUtils {
   const CoreUtils._();

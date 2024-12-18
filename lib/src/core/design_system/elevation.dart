@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rh_host/src/core/design_system/import.dart';
+import 'package:rh_host/src/core/design_system/z_import.dart';
 
 /// Design tokens for elevation and shadow styles
 abstract class ElevationTokens {

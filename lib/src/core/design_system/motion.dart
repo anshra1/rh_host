@@ -1,7 +1,5 @@
-// lib/src/design/tokens/motion_tokens.dart
 import 'package:flutter/material.dart';
 
-/// Design tokens for animation and motion
 abstract class MotionTokens {
   // Durations
   static const Duration durationXS = Duration(milliseconds: 100);
@@ -19,35 +17,42 @@ abstract class MotionTokens {
   static const Curve emphasizedDecelerate = Curves.easeOutCubic;
 
   // Page transitions
-  // static  PageTransitionsBuilder slideTransition = 
-  //   (context, animation, secondaryAnimation, child) =>
-  //     SlideTransition(
-  //       position: Tween<Offset>(
-  //         begin: const Offset(1, 0),
-  //         end: Offset.zero,
-  //       ).animate(animation),
-  //       child: child,
-  //     );
+  static PageTransitionsTheme get pageTransitions => const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        },
+      );
 
-  // static const PageTransitionsBuilder fadeTransition = 
-  //   (context, animation, secondaryAnimation, child) =>
-  //     FadeTransition(
-  //       opacity: animation,
-  //       child: child,
-  //     );
+  // Common animation presets
+  static AnimationConfig get fadeIn => const AnimationConfig(
+        curve: standardDecelerate,
+        duration: durationMD,
+      );
 
-  // static const PageTransitionsBuilder scaleTransition = 
-  //   (context, animation, secondaryAnimation, child) =>
-  //     ScaleTransition(
-  //       scale: Tween<double>(
-  //         begin: 0.8,
-  //         end: 1,
-  //       ).animate(
-  //         CurvedAnimation(
-  //           parent: animation,
-  //           curve: Curves.easeOut,
-  //         ),
-  //       ),
-  //       child: child,
-  //     );
+  static AnimationConfig get fadeOut => const AnimationConfig(
+        curve: standardAccelerate,
+        duration: durationSM,
+      );
+
+  static AnimationConfig get slideIn => const AnimationConfig(
+        curve: emphasizedDecelerate,
+        duration: durationMD,
+      );
+
+  static AnimationConfig get slideOut => const AnimationConfig(
+        curve: emphasizedAccelerate,
+        duration: durationSM,
+      );
+}
+
+// New class for animation configuration
+class AnimationConfig {
+  const AnimationConfig({
+    required this.curve,
+    required this.duration,
+  });
+
+  final Curve curve;
+  final Duration duration;
 }

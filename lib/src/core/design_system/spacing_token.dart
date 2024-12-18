@@ -1,17 +1,17 @@
-part of 'import.dart';
+part of 'z_import.dart';
 
 /// Design tokens for spacing used throughout the app
 abstract class Spacing {
   // Base spacing units (based on 4pt grid)
-  static double get xxxs => 2.w; // 2dp
-  static double get xxs => 4.w; // 4dp
-  static double get xs => 8.w; // 8dp
-  static double get sm => 12.w; // 12dp
-  static double get md => 16.w; // 16dp
-  static double get lg => 24.w; // 24dp
-  static double get xl => 32.w; // 32dp
-  static double get xxl => 40.w; // 40dp
-  static double get xxxl => 48.w; // 48dp
+  static double get xxxs => 2; // 2dp
+  static double get xxs => 4; // 4dp
+  static double get xs => 8; // 8dp
+  static double get sm => 12; // 12dp
+  static double get md => 16; // 16dp
+  static double get lg => 24; // 24dp
+  static double get xl => 32; // 32dp
+  static double get xxl => 40; // 40dp
+  static double get xxxl => 48; // 48dp
 
   // Component specific spacing
   static double get buttonSpacing => sm;

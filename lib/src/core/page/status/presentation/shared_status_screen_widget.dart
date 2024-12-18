@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:rh_host/src/core/design_system/import.dart';
+import 'package:rh_host/src/core/design_system/z_import.dart';
 import 'package:rh_host/src/core/extension/context.dart';
 import 'package:rh_host/src/core/extension/text_style_extension.dart';
 import 'package:rh_host/src/core/page/import.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:rh_host/src/core/constants/colors.dart';
-import 'package:rh_host/src/core/design_system/import.dart';
+import 'package:rh_host/src/core/design_system/z_import.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   const AppBarWidget({

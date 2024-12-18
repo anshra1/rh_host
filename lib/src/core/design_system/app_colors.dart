@@ -1,4 +1,4 @@
-part of 'import.dart';
+part of 'z_import.dart';
 
 /// Design tokens for colors used throughout the app
 abstract class AppColor {
