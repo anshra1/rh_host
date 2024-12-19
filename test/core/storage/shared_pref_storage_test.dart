@@ -1,13 +1,15 @@
 // Flutter imports:
 import 'package:flutter/services.dart';
+
 // Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 // Project imports:
 import 'package:rh_host/src/core/enum/storage_type.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
@@ -32,7 +34,8 @@ void main() {
     });
 
     test('should throw exception when initialization fails', () async {
-      when(() => mockPrefs.reload()).thenThrow(PlatformException(code: 'E_INIT'));
+      when(() => mockPrefs.reload())
+          .thenThrow(PlatformException(code: 'E_INIT'));
 
       expect(() => storage.init(), throwsA(isA<Exception>()));
     });
@@ -115,7 +118,8 @@ void main() {
       const key = 'test_string';
       const value = 'test_value';
       when(() => mockPrefs.setString(key, value)).thenAnswer((_) async => true);
-      when(() => mockPrefs.setString('key', value)).thenAnswer((_) async => true);
+      when(() => mockPrefs.setString('key', value))
+          .thenAnswer((_) async => true);
 
       final result = await storage.write(key, value);
       //   final result2 = await storage.write('key', value);
@@ -138,7 +142,8 @@ void main() {
     test('should throw StateError when write fails', () async {
       const key = 'test_string';
       const value = 'test_value';
-      when(() => mockPrefs.setString(key, value)).thenAnswer((_) async => false);
+      when(() => mockPrefs.setString(key, value))
+          .thenAnswer((_) async => false);
 
       expect(
         () => storage.write(key, value),
@@ -158,8 +163,10 @@ void main() {
       when(() => mockPrefs.setString('string_key', 'value'))
           .thenAnswer((_) async => true);
       when(() => mockPrefs.setInt('int_key', 42)).thenAnswer((_) async => true);
-      when(() => mockPrefs.setBool('bool_key', true)).thenAnswer((_) async => true);
-      when(() => mockPrefs.setDouble('double_key', 3.14)).thenAnswer((_) async => true);
+      when(() => mockPrefs.setBool('bool_key', true))
+          .thenAnswer((_) async => true);
+      when(() => mockPrefs.setDouble('double_key', 3.14))
+          .thenAnswer((_) async => true);
       when(() => mockPrefs.setStringList('list_key', ['one', 'two']))
           .thenAnswer((_) async => true);
 
@@ -170,7 +177,8 @@ void main() {
       verify(() => mockPrefs.setInt('int_key', 42)).called(1);
       verify(() => mockPrefs.setBool('bool_key', true)).called(1);
       verify(() => mockPrefs.setDouble('double_key', 3.14)).called(1);
-      verify(() => mockPrefs.setStringList('list_key', ['one', 'two'])).called(1);
+      verify(() => mockPrefs.setStringList('list_key', ['one', 'two']))
+          .called(1);
     });
   });
 

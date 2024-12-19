@@ -1,17 +1,17 @@
 // Project imports:
+import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/failures/failure.dart';
-import 'package:rh_host/src/core/constants/string.dart';
 
 class ErrorMapper {
   static Failure mapErrorToFailure(dynamic error) {
     // Since exceptions already have proper messages and codes,
     // we just need to map them directly
 
-     if (error is AppException) {
+    if (error is AppException) {
       return ServerFailure(
         message: error.showUImessage ?? Strings.unknownError,
         code: error.errorCode,
@@ -20,7 +20,6 @@ class ErrorMapper {
         severity: error.severity,
       );
     }
-
 
     if (error is ServerException) {
       return ServerFailure(

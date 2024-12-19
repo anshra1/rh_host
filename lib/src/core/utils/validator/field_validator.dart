@@ -27,7 +27,8 @@ class FieldValidator {
     // Required check
     if (isRequired && (value == null || value.isEmpty)) {
       return ValidationResult.error(
-        ValidationError.required(fieldName: fieldName, message: requiredMessage),
+        ValidationError.required(
+            fieldName: fieldName, message: requiredMessage,),
       );
     }
 
@@ -97,7 +98,6 @@ class FieldValidator {
 
 // Usage with passcode:
 // lib/src/core/validators/passcode_validator.dart
-
 
 // Example usage:
 // class PasscodePage extends StatelessWidget {

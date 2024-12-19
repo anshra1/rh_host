@@ -13,7 +13,7 @@
 //   final _activeTraces = <String, Trace>{};
 //   final _lock = Lock();
 //   final _metrics = <String, List<double>>{};
-  
+
 //   Future<void> _initialize() async {
 //     await _performance.setPerformanceCollectionEnabled(!kDebugMode);
 //   }
@@ -21,7 +21,7 @@
 //   Future<void> startTrace(String name) async {
 //     await _lock.synchronized(() async {
 //       if (_activeTraces.containsKey(name)) return;
-      
+
 //       final trace = _performance.newTrace(name);
 //       await trace.start();
 //       _activeTraces[name] = trace;
@@ -40,7 +40,7 @@
 //   Future<void> addMetric(String name, double value) async {
 //     await _lock.synchronized(() async {
 //       _metrics.putIfAbsent(name, () => []).add(value);
-      
+
 //       // Calculate and record average if we have enough data
 //       if (_metrics[name]!.length >= 10) {
 //         final average = _metrics[name]!.reduce((a, b) => a + b) / _metrics[name]!.length;
@@ -61,7 +61,7 @@
 //     String? contentType,
 //   }) async {
 //     final metric = _performance.newHttpMetric(url, method);
-    
+
 //     await metric.start();
 //     try {
 //       metric..httpResponseCode = responseCode

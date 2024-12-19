@@ -60,7 +60,6 @@ class FailureManager {
       debugPrint('Error showing failure: $e\n$stackTrace');
       // ignore: use_build_context_synchronously
       _showFallbackError(context, failure);
-    
     }
   }
 

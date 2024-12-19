@@ -1,4 +1,4 @@
-
+// Package imports:
 import 'package:clock/clock.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -21,7 +21,8 @@ class AppDateTime with _$AppDateTime {
 
   /// Creates an instance from UTC microseconds
   factory AppDateTime.fromMicroseconds(int microseconds) => AppDateTime(
-        dateTime: DateTime.fromMicrosecondsSinceEpoch(microseconds, isUtc: true),
+        dateTime:
+            DateTime.fromMicrosecondsSinceEpoch(microseconds, isUtc: true),
       );
 
   /// Creates an instance from ISO8601 string
@@ -53,7 +54,8 @@ class AppDateTime with _$AppDateTime {
   Duration difference(AppDateTime other) => dateTime.difference(other.dateTime);
   bool isBefore(AppDateTime other) => dateTime.isBefore(other.dateTime);
   bool isAfter(AppDateTime other) => dateTime.isAfter(other.dateTime);
-  bool isAtSameMomentAs(AppDateTime other) => dateTime.isAtSameMomentAs(other.dateTime);
+  bool isAtSameMomentAs(AppDateTime other) =>
+      dateTime.isAtSameMomentAs(other.dateTime);
 
   AppDateTime copyWithed({
     int? year,
@@ -80,7 +82,8 @@ class AppDateTime with _$AppDateTime {
   }
 
   // Operations
-  AppDateTime add(Duration duration) => AppDateTime(dateTime: dateTime.add(duration));
+  AppDateTime add(Duration duration) =>
+      AppDateTime(dateTime: dateTime.add(duration));
 
   AppDateTime subtract(Duration duration) =>
       AppDateTime(dateTime: dateTime.subtract(duration));

@@ -58,7 +58,8 @@ Future<void> _initPasscode() async {
         timeProvider: const TimeProvider(config: TimeConfig()),
         retryPolicy: DefaultRetryPolicy(),
         prefs: SharedPrefsStorages(prefs: prefs),
-        networkCheckerImpl: NetworkCheckerImpl(InternetConnection.createInstance()),
+        networkCheckerImpl:
+            NetworkCheckerImpl(InternetConnection.createInstance()),
       ),
     )
     // Repository depends on Remote Data Source

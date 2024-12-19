@@ -1,12 +1,13 @@
 // Package imports:
 import 'package:firebase_core/firebase_core.dart';
+
+// Project imports:
+import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/exception_formatter/error_fomatter.dart';
 import 'package:rh_host/src/core/error/firebase_error/firebase_error_config.dart';
-// Project imports:
-import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_error_config.dart';
 
@@ -31,16 +32,11 @@ class ExceptionThrower {
       );
     }
 
-    
     throw unknownException(
       dartError: dartError,
       stackTrace: stackTrace,
       methodName: methodName,
     );
-
-    
-    
-    
   }
 
   static Never throwExceptionWithCatch({
@@ -68,7 +64,8 @@ class ExceptionThrower {
     final serverity = FirebaseErrorConfig.getSeverity(firebaseException);
     final errorCode = FirebaseErrorConfig.getErrorCode(firebaseException);
     final isRecoverable = FirebaseErrorConfig.isRecoverable(firebaseException);
-    final technicalMessage = FirebaseErrorConfig.technicalMessage(firebaseException);
+    final technicalMessage =
+        FirebaseErrorConfig.technicalMessage(firebaseException);
     final category = FirebaseErrorConfig.getCategory(firebaseException);
 
     final serverException = ServerException(
@@ -105,7 +102,8 @@ class ExceptionThrower {
       errorCode: ErrorCode.unknown,
       methodName: methodName,
     );
-    DebugLogger.instance.error(unknownExcetion.toString(), dartError, stackTrace);
+    DebugLogger.instance
+        .error(unknownExcetion.toString(), dartError, stackTrace);
     throw unknownExcetion;
   }
 
@@ -131,7 +129,8 @@ class ExceptionThrower {
     required String fallbackMessage,
     ErrorSeverity? errorSeverity,
   }) {
-    final storageDebugCode = SharedPrefErrorConfig.getStorageDebugCode(dartError);
+    final storageDebugCode =
+        SharedPrefErrorConfig.getStorageDebugCode(dartError);
     final severity = SharedPrefErrorConfig.getSeverity(storageDebugCode);
     final isRecoverable = SharedPrefErrorConfig.isRecoverable(storageDebugCode);
     final errorCode =

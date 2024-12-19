@@ -22,5 +22,3 @@ class FailureConfig {
   final int maxVisibleSnackBars;
   final Map<ErrorCode, FailureAction> actionMap;
 }
-
-

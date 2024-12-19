@@ -225,7 +225,8 @@ void main() {
     blocTest<PasscodeCubit, PasscodeState>(
       'emits [PasscodeLoading, PasscodeShowRequired(true)] when should show',
       build: () {
-        when(() => mockShouldShowPasscode()).thenAnswer((_) async => const Right(true));
+        when(() => mockShouldShowPasscode())
+            .thenAnswer((_) async => const Right(true));
         return cubit;
       },
       act: (cubit) => cubit.shouldShowPasscode(),
@@ -241,7 +242,8 @@ void main() {
     blocTest<PasscodeCubit, PasscodeState>(
       'emits [PasscodeLoading, PasscodeShowRequired(false)] when should not show',
       build: () {
-        when(() => mockShouldShowPasscode()).thenAnswer((_) async => const Right(false));
+        when(() => mockShouldShowPasscode())
+            .thenAnswer((_) async => const Right(false));
         return cubit;
       },
       act: (cubit) => cubit.shouldShowPasscode(),

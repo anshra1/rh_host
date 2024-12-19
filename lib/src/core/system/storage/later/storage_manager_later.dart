@@ -9,11 +9,11 @@
 //     required this.storage,
 //     this.config = const StorageConfig(),
 //   });
-  
+
 //   static StorageManager? _instance;
 //   final AppStorage storage;
 //   final StorageConfig config;
-  
+
 //   // static Future<StorageManager> getInstance() async {
 //   //   if (_instance == null) {
 //   //     final storage = await SharedPrefsStorage.getInstance();
@@ -31,7 +31,7 @@
 
 //   // Cache management
 //   final _cache = <String, _CacheEntry>{};
-  
+
 //   Future<void> initialize() async {
 //     await _runMigrations();
 //     await _cleanExpiredData();
@@ -45,7 +45,7 @@
 //     }
 
 //     final value = await storage.read<T>(key);
-    
+
 //     // Update cache
 //     if (config.enableCache && value != null) {
 //       _cache[key] = _CacheEntry(
@@ -59,7 +59,7 @@
 
 //   Future<bool> setValue<T>(String key, T value) async {
 //     final result = await storage.write(key, value);
-    
+
 //     if (result && config.enableCache) {
 //       _cache[key] = _CacheEntry(
 //         value: value,
@@ -72,7 +72,7 @@
 
 //   Future<void> _runMigrations() async {
 //     final version = await storage.read<int>(_versionKey) ?? 0;
-    
+
 //     if (version < currentVersion) {
 //       await _migrate(version);
 //       await storage.write(_versionKey, currentVersion);
@@ -131,7 +131,7 @@
 //   // Batch operations with cache support
 //   Future<bool> setValues(Map<String, dynamic> values) async {
 //     final result = await storage.writeBatch(values);
-    
+
 //     if (result && config.enableCache) {
 //       for (final entry in values.entries) {
 //         _cache[entry.key] = _CacheEntry(

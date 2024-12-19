@@ -1,11 +1,13 @@
 // ignore_for_file: unused_element
 
+// Flutter imports:
+import 'package:flutter/foundation.dart';
+
 // Package imports:
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-// Flutter imports:
-import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
 // Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
@@ -213,7 +215,8 @@ class ErrorHandler {
   }
 
   Future<void> _logError(ErrorDetails details, StackTrace? stackTrace) async {
-    DebugLogger.instance.info(details.message, details.originalError, stackTrace);
+    DebugLogger.instance
+        .info(details.message, details.originalError, stackTrace);
   }
 
   Future<void> _reportToCrashlytics(
@@ -232,7 +235,9 @@ class ErrorHandler {
     if (details.severity == ErrorSeverity.low) return false;
     if (details.category == ErrorCategory.validation) return false;
     if (details.category == ErrorCategory.network &&
-        details.severity != ErrorSeverity.fatal) return false;
+        details.severity != ErrorSeverity.fatal) {
+      return false;
+    }
     return true;
   }
 }

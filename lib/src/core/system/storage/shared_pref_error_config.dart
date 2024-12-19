@@ -206,7 +206,9 @@ class SharedPrefErrorConfig {
   static ErrorCode convertStorageErrorToErrorCode(SharedPrefCode storageCode) {
     return switch (storageCode) {
       // Storage Full - User needs to free up space
-      SharedPrefCode.diskError || SharedPrefCode.outOfMemory => ErrorCode.storageFull,
+      SharedPrefCode.diskError ||
+      SharedPrefCode.outOfMemory =>
+        ErrorCode.storageFull,
 
       // Permission Issues - User needs to grant permission
       SharedPrefCode.permissionError => ErrorCode.storagePermission,
@@ -259,7 +261,8 @@ class SharedPrefErrorConfig {
       ErrorCode.storagePermission =>
         'Please allow storage access in your device settings',
       ErrorCode.appRestart => 'Please restart the app and try again',
-      ErrorCode.appDataCorrupted => 'Please clear app data or reinstall the app',
+      ErrorCode.appDataCorrupted =>
+        'Please clear app data or reinstall the app',
       ErrorCode.localStorageError => 'An unexpected error occurred',
       _ => 'An unexpected error occurred'
     };
@@ -285,14 +288,18 @@ class SharedPrefErrorConfig {
         ),
 
       // Quick retry for transient errors
-      SharedPrefCode.concurrencyError || SharedPrefCode.stateError => const RetryStrategy(
+      SharedPrefCode.concurrencyError ||
+      SharedPrefCode.stateError =>
+        const RetryStrategy(
           shouldRetry: true,
           retryCount: 3,
           retryDelay: Duration(milliseconds: 100),
         ),
 
       // Slower retry for system errors
-      SharedPrefCode.fileSystemError || SharedPrefCode.initError => const RetryStrategy(
+      SharedPrefCode.fileSystemError ||
+      SharedPrefCode.initError =>
+        const RetryStrategy(
           shouldRetry: true,
           retryCount: 2,
           retryDelay: Duration(seconds: 1),

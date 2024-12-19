@@ -2,12 +2,13 @@
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Project imports:
+import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/exception/exception_thrower.dart';
-// Project imports:
-import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/system/clock/clock_provider.dart';
 import 'package:rh_host/src/core/system/network/network_info.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';
@@ -129,15 +130,18 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
   }
 
   // This operation needs network/retry as it interacts with Firebase
-  Future<void> _verifyAndSetPasscode(int masterPasscode, int newPasscode) async {
+  Future<void> _verifyAndSetPasscode(
+      int masterPasscode, int newPasscode) async {
     final docSnapshot = await _firestoreClient
         .collection(Strings.passcodeStoreCollection)
         .doc(Strings.passcodeStoreDocId)
         .get();
 
-    final storedMasterPasscode = docSnapshot.data()?[Strings.setMasterPasscode] as int?;
+    final storedMasterPasscode =
+        docSnapshot.data()?[Strings.setMasterPasscode] as int?;
 
-    if (storedMasterPasscode == null || storedMasterPasscode != masterPasscode) {
+    if (storedMasterPasscode == null ||
+        storedMasterPasscode != masterPasscode) {
       throw const ValidationException(
         showUImessage: Strings.invalidMasterPasscode,
         debugCode: 'ErrorCode.validation',
@@ -176,7 +180,8 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
       }
 
       // If not enabled, enable it and update timestamp
-      final result = await _prefs.write<bool>(StorageKeys.passcodeEnabledKey, true);
+      final result =
+          await _prefs.write<bool>(StorageKeys.passcodeEnabledKey, true);
       if (result) {
         await _prefs.write<String>(
           StorageKeys.lastLoginTimestampKey,
@@ -217,7 +222,8 @@ class PasscodeRemoteDataSourceImpl implements PasscodeRemoteDataSource {
       final lastLogin = DateTime.parse(lastLoginString);
 
       // Check if it's been more than 30 minutes since the last login
-      final timeSinceLastLogin = _timeProvider.currentTime.difference(lastLogin);
+      final timeSinceLastLogin =
+          _timeProvider.currentTime.difference(lastLogin);
       return timeSinceLastLogin.inSeconds > 1;
     } catch (e, s) {
       throw ExceptionThrower.throwUnknownExceptionWithFirebase(

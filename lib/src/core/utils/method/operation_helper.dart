@@ -1,9 +1,9 @@
 // Project imports:
+import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/error/exception/exception_thrower.dart';
-import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/system/network/network_info.dart';
 
 /// Helper functions for remote data source operations
@@ -39,7 +39,6 @@ class RemoteDataSourceHelper {
     } catch (e, s) {
       if (requiresNetwork && !await networkInfo.isConnected) {
         throw NetworkException(
-        
           showUImessage: Strings.connectionLostDuringOperation,
           debugCode: 'Connection_lost',
           methodName: methodName,
@@ -84,7 +83,7 @@ class RemoteDataSourceHelper {
 //       operation: () async {
 //         final docSnapshot = await _getPasscodeDocument();
 //         await _validatePasscodeDocument(docSnapshot);
-        
+
 //         if (!await _isPasscodeValid(passcode, docSnapshot)) {
 //           return false;
 //         }

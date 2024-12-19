@@ -35,6 +35,29 @@ class AppInputFormatters {
         FilteringTextInputFormatter.deny(RegExp(r'\s')), // No whitespace
         _EmailInputFormatter(),
       ];
+
+        static TextInputFormatter get phoneNumber {
+    return FilteringTextInputFormatter.allow(RegExp(r'[\d-+() ]'));
+  }
+
+  static TextInputFormatter get digitsOnly {
+    return FilteringTextInputFormatter.allow(RegExp(r'\d'));
+  }
+
+  static TextInputFormatter get noEmoji {
+    return FilteringTextInputFormatter.deny(
+      RegExp(r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'),
+    );
+  }
+
+  static TextInputFormatter maxLength(int length) {
+    return LengthLimitingTextInputFormatter(length);
+  }
+
+  static TextInputFormatter customPattern(Pattern pattern) {
+    return FilteringTextInputFormatter.allow(pattern);
+  }
+}
 }
 
 /// Custom formatter for passcode input

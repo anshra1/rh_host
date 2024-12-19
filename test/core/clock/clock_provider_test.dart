@@ -37,15 +37,17 @@ void main() {
   group('isTimeValid', () {
     test('should return true for time within discrepancy limit', () {
       withClock(Clock.fixed(DateTime(2024)), () {
-        final time =
-            AppDateTime(dateTime: DateTime(2024).add(const Duration(minutes: 4)));
+        final time = AppDateTime(
+            dateTime: DateTime(2024).add(const Duration(minutes: 4)));
 
         expect(timeProvider.isTimeValid(time), true);
         verifyNever(() => logger.warning(any<String>(), any<String>(), any()));
       });
     });
 
-    test('should return false and log warning for time outside discrepancy limit', () {
+    test(
+        'should return false and log warning for time outside discrepancy limit',
+        () {
       withClock(Clock.fixed(DateTime(2024)), () {
         final time = AppDateTime(
           dateTime: DateTime(2024).add(const Duration(minutes: 6)),
@@ -53,8 +55,8 @@ void main() {
 
         expect(timeProvider.isTimeValid(time), false);
 
-        verify(() => logger.warning('Time discrepancy detected', any<String>(), any()))
-            .called(1);
+        verify(() => logger.warning(
+            'Time discrepancy detected', any<String>(), any())).called(1);
       });
     });
   });
@@ -164,8 +166,9 @@ void main() {
       final startTime = DateTime.now();
 
       for (var i = 0; i < 10000; i++) {
-        timeProvider..now()
-        ..timeUntilNext(const Duration(hours: 1));
+        timeProvider
+          ..now()
+          ..timeUntilNext(const Duration(hours: 1));
       }
 
       final duration = DateTime.now().difference(startTime);

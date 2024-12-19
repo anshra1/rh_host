@@ -31,8 +31,9 @@ class ConnectivityService extends ChangeNotifier {
 
   bool get isOffline => !_hasConnection;
 
-  Duration? get offlineDuration =>
-      _lastOfflineTime != null ? DateTime.now().difference(_lastOfflineTime!) : null;
+  Duration? get offlineDuration => _lastOfflineTime != null
+      ? DateTime.now().difference(_lastOfflineTime!)
+      : null;
 
   Future<void> _initialize() async {
     // Listen to platform connectivity changes
@@ -92,13 +93,12 @@ class ConnectivityService extends ChangeNotifier {
 
 // Simple widget wrapper
 
-
 // Simple banner
 
 // Usage
 // void main() {
 //   GetIt.I.registerLazySingleton(() => ConnectivityService());
-  
+
 //   runApp(
 //     ChangeNotifierProvider(
 //       create: (_) => GetIt.I<ConnectivityService>(),

@@ -1,4 +1,3 @@
-
 // class SharedPrefsStorage implements AppStorage {
 //   SharedPrefsStorage._();
 //   static SharedPrefsStorage? _instance;

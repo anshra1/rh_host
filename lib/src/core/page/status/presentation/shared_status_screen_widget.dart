@@ -1,13 +1,18 @@
 // status_screen_content.dart
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:rh_host/src/core/design_system/z_import.dart';
-import 'package:rh_host/src/core/extension/context.dart';
+
+// Project imports:
+import 'package:rh_host/src/core/design_system/base/import.dart';
+import 'package:rh_host/src/core/design_system/widget/buttons/import.dart';
 import 'package:rh_host/src/core/extension/text_style_extension.dart';
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/themes/status_theme.dart';
-import 'package:rh_host/src/core/widgets/buttons/custom_elevated_button.dart';
 
 class StatusScreenContent extends StatelessWidget {
   const StatusScreenContent({required this.config, super.key});
@@ -98,7 +103,7 @@ class StatusScreenContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppElevatedButton(
+        PrimaryButton(
           onPressed: () {
             //  StatusAnalytics.logStatusAction('primary_button', config);
             _handleNavigation(context);
@@ -141,7 +146,8 @@ class StatusScreenContent extends StatelessWidget {
 
   void _handleNavigation(BuildContext context) {
     if (config.nextRouteParams != null) {
-      context.pushReplacementNamed(config.nextRoute, extra: config.nextRouteParams);
+      context.pushReplacementNamed(config.nextRoute,
+          extra: config.nextRouteParams,);
     } else {
       context.pushReplacementNamed(config.nextRoute);
     }

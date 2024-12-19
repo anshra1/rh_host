@@ -47,7 +47,7 @@ class ResetPageView extends HookWidget {
     return Scaffold(
       appBar: const AppBarWidget(
         title: 'Set New Passcode',
-        backgroundColor: AppColor.backgroundPrimary,
+        backgroundColor: AppColors.backgroundPrimary,
         elevation: 0,
       ),
       body: Form(
@@ -85,10 +85,9 @@ class ResetPageView extends HookWidget {
               validator: PasscodeValidator.validateMasterPasscode,
             ),
             Spacing.gapXXL,
-            AppElevatedButton(
+            PrimaryButton(
               label: 'Update Passcode',
               onPressed: submit,
-              isLoading: isLoading,
             ),
           ],
         ),

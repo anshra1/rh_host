@@ -22,7 +22,11 @@ abstract class AppStorage {
 /// Mixin for validating storage operations
 mixin StorageValidation {
   bool isValidType<T>() {
-    return T == String || T == int || T == double || T == bool || T == List<String>;
+    return T == String ||
+        T == int ||
+        T == double ||
+        T == bool ||
+        T == List<String>;
   }
 
   StorageType getStorageType<T>() {

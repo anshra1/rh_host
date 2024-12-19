@@ -102,7 +102,8 @@ class ErrorHandler {
   }
 
   Future<void> _logError(ErrorDetails details, StackTrace? stackTrace) async {
-    DebugLogger.instance.error(details.message, details.originalError, stackTrace);
+    DebugLogger.instance
+        .error(details.message, details.originalError, stackTrace);
   }
 
   Future<void> _reportToCrashlytics(
@@ -121,7 +122,9 @@ class ErrorHandler {
     if (details.severity == ErrorSeverity.low) return false;
     if (details.category == ErrorCategory.validation) return false;
     if (details.category == ErrorCategory.network &&
-        details.severity != ErrorSeverity.fatal) return false;
+        details.severity != ErrorSeverity.fatal) {
+      return false;
+    }
     return true;
   }
 }

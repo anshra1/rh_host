@@ -68,7 +68,7 @@
 //       // Initially no filled dots
 //       expect(
 //         find.byWidgetPredicate(
-//           (widget) => widget is Container && 
+//           (widget) => widget is Container &&
 //                       widget.color == AppColor.primaryColor,
 //         ),
 //         findsNothing,
@@ -87,7 +87,7 @@
 //       // Verify 4 filled dots
 //       expect(
 //         find.byWidgetPredicate(
-//           (widget) => widget is Container && 
+//           (widget) => widget is Container &&
 //                       widget.color == AppColor.primaryColor,
 //         ),
 //         findsNWidgets(4),
@@ -109,7 +109,7 @@
 //       // Initially 2 filled dots
 //       expect(
 //         find.byWidgetPredicate(
-//           (widget) => widget is Container && 
+//           (widget) => widget is Container &&
 //                       widget.color == AppColor.primaryColor,
 //         ),
 //         findsNWidgets(2),
@@ -122,7 +122,7 @@
 //       // Verify now only 1 filled dot
 //       expect(
 //         find.byWidgetPredicate(
-//           (widget) => widget is Container && 
+//           (widget) => widget is Container &&
 //                       widget.color == AppColor.primaryColor,
 //         ),
 //         findsNWidgets(1),
@@ -132,7 +132,7 @@
 //     testWidgets('shows error state correctly', (tester) async {
 //       when(() => mockPasscodeCubit.state)
 //           .thenReturn(const PasscodeInvalid());
-      
+
 //       await tester.pumpWidget(createWidgetUnderTest());
 
 //       // Verify error icon and message
@@ -155,7 +155,7 @@
 //       // Simulate loading state
 //       when(() => mockPasscodeCubit.state)
 //           .thenReturn(const PasscodeLoading());
-      
+
 //       // Enter complete passcode to trigger loading
 //       await tester.tap(find.text('1'));
 //       await tester.tap(find.text('2'));
@@ -174,7 +174,7 @@
 //       // Simulate verified state
 //       when(() => mockPasscodeCubit.state)
 //           .thenReturn(const PasscodeVerified());
-      
+
 //       await tester.pump();
 
 //       verify(() => mockGoRouter.go(HomePage.routeName)).called(1);

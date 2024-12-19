@@ -1,7 +1,12 @@
+// Dart imports:
 import 'dart:io';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+// Package imports:
 import 'package:image_picker/image_picker.dart';
-import 'package:rh_host/src/core/design_system/z_import.dart';
+// Project imports:
+import 'package:rh_host/src/core/design_system/base/import.dart';
 
 class CoreUtils {
   const CoreUtils._();
@@ -22,7 +27,7 @@ class CoreUtils {
             ),
           ),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: AppColor.primaryColor,
+          backgroundColor: AppColors.primaryColorColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

@@ -1,3 +1,4 @@
+// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 /// Core design system constants and metrics
@@ -9,7 +10,7 @@ abstract class DS {
 
   /// Spacing and layout measurements
   static const layout = _Layout._();
-  
+
   /// Border radius and shapes
   static const radius = _Radius._();
 }
@@ -51,13 +52,13 @@ class _Layout {
   // Common layout spacing
   double get gutter => md;
   double get section => xl;
-  
+
   // Screen padding
   EdgeInsets get screenPadding => EdgeInsets.all(md);
   EdgeInsets get buttonPadding => EdgeInsets.symmetric(
-    horizontal: md,
-    vertical: sm,
-  );
+        horizontal: md,
+        vertical: sm,
+      );
 }
 
 class _Radius {

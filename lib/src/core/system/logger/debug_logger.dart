@@ -26,7 +26,7 @@ class DebugLogger {
     );
   }
 
-  static  DebugLogger instance = DebugLogger._internal();
+  static DebugLogger instance = DebugLogger._internal();
 
   late final Logger _logger;
 
@@ -51,19 +51,19 @@ class DebugLogger {
   // Warning level for potentially harmful situations
   void warning(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     if (!kDebugMode) return;
-    _logger.w(message );
+    _logger.w(message);
   }
 
   // Error level for errors that need attention
   void error(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     if (!kDebugMode) return;
-    _logger.e(message );
+    _logger.e(message);
   }
 
   // Fatal level for severe errors that might cause application crash
   void fatal(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     if (!kDebugMode) return;
-    _logger.f(message );
+    _logger.f(message);
   }
 
   // Performance logs
@@ -72,16 +72,19 @@ class DebugLogger {
     _logger.d('⚡ Performance: $operation took ${milliseconds}ms');
   } // Navigation logs
 
-  void logNavigation(String from, String to, {Map<String, dynamic>? arguments}) {
+  void logNavigation(String from, String to,
+      {Map<String, dynamic>? arguments,}) {
     if (!kDebugMode) return;
     _logger.i(
-        '🔀 Navigation: $from ➡️ $to${arguments != null ? '\nArguments: $arguments' : ''}',);
+      '🔀 Navigation: $from ➡️ $to${arguments != null ? '\nArguments: $arguments' : ''}',
+    );
   } // State management logs
 
   void logState(String message, {String? from, Map<String, dynamic>? data}) {
     if (!kDebugMode) return;
     final source = from != null ? '[$from]' : '';
-    _logger.i('🔄 State $source: $message ${data != null ? '\nData: $data' : ''}');
+    _logger
+        .i('🔄 State $source: $message ${data != null ? '\nData: $data' : ''}');
   }
 
   void logResponse(String url, int statusCode, dynamic body) {

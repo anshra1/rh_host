@@ -1,4 +1,3 @@
-
 class TimeConfig {
   const TimeConfig({
     this.maxTimeDiscrepancy = const Duration(minutes: 5),

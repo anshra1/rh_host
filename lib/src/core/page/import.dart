@@ -1,6 +1,12 @@
-import 'package:equatable/equatable.dart';
+// Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+// Package imports:
+import 'package:equatable/equatable.dart';
+
+// Project imports:
 import 'package:rh_host/src/core/page/status/domain/status_action.dart';
 
 part 'status/domain/status_screen_model.dart';

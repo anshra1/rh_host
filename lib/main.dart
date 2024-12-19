@@ -1,11 +1,13 @@
 // ignore_for_file: avoid_redundant_argument_values
 
-// Package imports:
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 // Project imports:
 import 'package:rh_host/re_name.dart';
 import 'package:rh_host/src/core/services/config/import.dart';

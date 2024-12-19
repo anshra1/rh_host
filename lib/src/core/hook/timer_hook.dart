@@ -1,19 +1,25 @@
+// Dart imports:
 import 'dart:async';
+
+// Flutter imports:
 import 'package:flutter/widgets.dart';
+
+// Package imports:
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 Timer useTimer(Duration duration, [VoidCallback? onCompletedTimer]) {
-  return use(_TimerHook(duration: duration, onCompletedTimer: onCompletedTimer));
+  return use(
+      _TimerHook(duration: duration, onCompletedTimer: onCompletedTimer),);
 }
 
 class _TimerHook extends Hook<Timer> {
   const _TimerHook({
     required this.duration,
-    this.onCompletedTimer,  // Made optional
+    this.onCompletedTimer, // Made optional
   });
 
   final Duration duration;
-  final VoidCallback? onCompletedTimer;  // Made nullable
+  final VoidCallback? onCompletedTimer; // Made nullable
 
   @override
   _TimerHookState createState() =>
@@ -23,7 +29,7 @@ class _TimerHook extends Hook<Timer> {
 class _TimerHookState extends HookState<Timer, _TimerHook> {
   _TimerHookState({
     required this.duration,
-    this.onCompletedTimer,  // Made optional
+    this.onCompletedTimer, // Made optional
   });
 
   final Duration duration;
@@ -34,7 +40,7 @@ class _TimerHookState extends HookState<Timer, _TimerHook> {
   void initHook() {
     super.initHook();
     _timer = Timer(duration, () {
-      onCompletedTimer?.call();  // Safe call using ?. operator
+      onCompletedTimer?.call(); // Safe call using ?. operator
     });
   }
 

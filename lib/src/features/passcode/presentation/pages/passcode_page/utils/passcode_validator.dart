@@ -5,7 +5,6 @@ import 'package:rh_host/src/core/utils/validator/field_validator.dart';
 import 'package:rh_host/src/core/utils/validator/validation_result.dart';
 
 class PasscodeValidator {
-
   // Private constructor to prevent instantiation
   const PasscodeValidator._();
   static const int _passcodeLength = 4;
@@ -46,7 +45,9 @@ class PasscodeValidator {
 
     if (baseValidation != null) return baseValidation;
 
-    return confirmPasscode != newPasscode ? Strings.newAndConfirmPasscodeNoMatch : null;
+    return confirmPasscode != newPasscode
+        ? Strings.newAndConfirmPasscodeNoMatch
+        : null;
   }
 
   static String? validateMasterPasscode(String? value) {

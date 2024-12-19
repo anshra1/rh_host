@@ -11,7 +11,9 @@ import 'package:rh_host/src/core/error/failures/failure.dart';
 import 'package:rh_host/src/features/passcode/data/repo/data_source_repo.dart';
 import 'package:rh_host/src/features/passcode/data/sources/passcode_remote_data_source.dart';
 
-class MockPasscodeRemoteDataSource extends Mock implements PasscodeRemoteDataSource {}
+class MockPasscodeRemoteDataSource extends Mock
+    implements PasscodeRemoteDataSource {}
+
 class MockErrorHandler extends Mock implements ErrorHandler {}
 
 void main() {
