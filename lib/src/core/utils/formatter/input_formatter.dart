@@ -36,9 +36,9 @@ class AppInputFormatters {
         _EmailInputFormatter(),
       ];
 
-        static TextInputFormatter get phoneNumber {
-    return FilteringTextInputFormatter.allow(RegExp(r'[\d-+() ]'));
-  }
+  //       static TextInputFormatter get phoneNumber {
+  //   return FilteringTextInputFormatter.allow(RegExp(r'[\d-+() ]'));
+  // }
 
   static TextInputFormatter get digitsOnly {
     return FilteringTextInputFormatter.allow(RegExp(r'\d'));
@@ -58,7 +58,7 @@ class AppInputFormatters {
     return FilteringTextInputFormatter.allow(pattern);
   }
 }
-}
+
 
 /// Custom formatter for passcode input
 class _PasscodeInputFormatter extends TextInputFormatter {

@@ -18,7 +18,7 @@ class PasscodeHeader extends StatelessWidget {
         Icon(
           isError ? Icons.error_outline : Icons.lock_outline,
           size: 50,
-          color: isError ? AppColors.error : AppColors.primaryColorColor,
+          color: isError ? AppColors.error : AppColors.primaryColor,
         ),
         20.gap,
         Text(

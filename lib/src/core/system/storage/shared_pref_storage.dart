@@ -3,15 +3,14 @@
 // Dart imports:
 import 'dart:async';
 
-// Package imports:
-import 'package:shared_preferences/shared_preferences.dart';
-
 // Project imports:
 import 'package:rh_host/src/core/enum/storage_type.dart';
 import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 import 'package:rh_host/src/core/system/storage/app_storage.dart';
 import 'package:rh_host/src/core/system/storage/storage_context.dart';
 import 'package:rh_host/src/core/system/storage/storage_retry_manager.dart';
+// Package imports:
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsStorages implements AppStorage {
   SharedPrefsStorages({required SharedPreferences prefs}) : _prefs = prefs;

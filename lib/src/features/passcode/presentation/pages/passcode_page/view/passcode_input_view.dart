@@ -21,7 +21,7 @@ class PasscodeInput extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: index < _passcode.length
-                ? AppColors.primaryColorColor
+                ? AppColors.primaryColor
                 : AppColors.backgroundSecondary,
           ),
         ),

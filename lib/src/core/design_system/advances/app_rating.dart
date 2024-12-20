@@ -1,10 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:rh_host/src/core/design_system/base/import.dart';
+
 class AppRating extends StatefulWidget {
   const AppRating({
     required this.value,
     required this.onChanged,
     this.itemCount = 5,
     this.itemSize = 24.0,
-    this.itemPadding = const EdgeInsets.symmetric(horizontal: 4.0),
+    this.itemPadding = const EdgeInsets.symmetric(horizontal: 4),
     this.disabled = false,
     super.key,
   });

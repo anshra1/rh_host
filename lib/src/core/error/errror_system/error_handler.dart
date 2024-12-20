@@ -1,13 +1,11 @@
 // ignore_for_file: unused_element
 
-// Flutter imports:
-import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 // Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';

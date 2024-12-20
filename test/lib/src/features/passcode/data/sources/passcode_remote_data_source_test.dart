@@ -5,8 +5,6 @@ import 'package:clock/clock.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 // Project imports:
 import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
@@ -19,6 +17,7 @@ import 'package:rh_host/src/core/system/network/network_info.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';
 import 'package:rh_host/src/core/system/storage/storage_keys.dart';
 import 'package:rh_host/src/features/passcode/data/sources/passcode_remote_data_source.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
@@ -135,9 +134,9 @@ void main() {
               (e) => e.showUImessage == Strings.invalidMasterPasscode,
             ),
             predicate<ValidationException>(
-                (e) => e.errorCode == ErrorCode.validation),
+                (e) => e.errorCode == ErrorCode.validation,),
             predicate<ValidationException>(
-                (e) => e.severity == ErrorSeverity.low),
+                (e) => e.severity == ErrorSeverity.low,),
           ]),
         ),
       );

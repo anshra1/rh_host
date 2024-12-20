@@ -1,11 +1,9 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:equatable/equatable.dart';
-
+// Flutter imports:
+import 'package:flutter/material.dart';
 // Project imports:
 import 'package:rh_host/src/core/page/status/domain/status_action.dart';
 

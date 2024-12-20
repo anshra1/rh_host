@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:rh_host/src/core/design_system/base/app_font.dart';
+import 'package:rh_host/src/core/design_system/base/import.dart';
+import 'package:rh_host/src/core/design_system/base/size.dart';
+
 class AppOTPInput extends StatefulWidget {
   const AppOTPInput({
     required this.length,
@@ -86,7 +91,7 @@ class _AppOTPInputState extends State<AppOTPInput> {
           }),
         ),
         if (widget.error != null) ...[
-          SizedBox(height: SpacingTokens.xxs),
+          SizedBox(height: Spacing.xxs),
           Text(
             widget.error!,
             style: AppFonts.labelSmall.copyWith(

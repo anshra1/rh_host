@@ -22,7 +22,7 @@ extension TextStyleExtension on TextStyle {
   TextStyle get lineThrough => copyWith(decoration: TextDecoration.lineThrough);
 
   // Font Color
-  TextStyle get primaryColor => copyWith(color: AppColors.primaryColorColor);
+  TextStyle get primaryColor => copyWith(color: AppColors.primaryColor);
   TextStyle get red => copyWith(color: AppColors.error);
   TextStyle get white => copyWith(color: Colors.white);
   TextStyle get black => copyWith(color: AppColors.neutral1000);

@@ -13,6 +13,8 @@ extension ContextExtension on BuildContext {
   double get height => mediaQuery.size.height;
   double get width => mediaQuery.size.width;
 
+  TextTheme get textStyle => theme.textTheme;
+
   //
   EdgeInsets get padding => mediaQuery.padding;
   EdgeInsets get viewInsets => mediaQuery.viewInsets;

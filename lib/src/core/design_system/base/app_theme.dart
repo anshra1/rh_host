@@ -10,8 +10,8 @@ class AppTheme {
   static ThemeData get light => ThemeData(
         useMaterial3: true,
         colorScheme: const ColorScheme.light(
-          primary: AppColors.primaryColorColor,
-          primaryContainer: AppColors.primaryColorLight,
+          primary: AppColors.primaryColor,
+          primaryContainer: AppColors.primaryLight,
           secondary: AppColors.secondary,
           secondaryContainer: AppColors.secondaryLight,
           error: AppColors.error,

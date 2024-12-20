@@ -12,9 +12,9 @@ abstract class SemanticTokens {
   static const warning = AppColors.warning;
 
   // Interactive
-  static const interactive = AppColors.primaryColorColor;
-  static const interactiveHover = AppColors.primaryColorLight;
-  static const interactivePressed = AppColors.primaryColorDark;
+  static const interactive = AppColors.primaryColor;
+  static const interactiveHover = AppColors.primaryLight;
+  static const interactivePressed = AppColors.primaryDark;
   static const interactiveDisabled = AppColors.neutral400;
 
   // Feedback

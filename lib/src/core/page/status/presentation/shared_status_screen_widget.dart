@@ -9,7 +9,8 @@ import 'package:lottie/lottie.dart';
 
 // Project imports:
 import 'package:rh_host/src/core/design_system/base/import.dart';
-import 'package:rh_host/src/core/design_system/widget/buttons/import.dart';
+import 'package:rh_host/src/core/widget/buttons/import.dart';
+import 'package:rh_host/src/core/extension/context.dart';
 import 'package:rh_host/src/core/extension/text_style_extension.dart';
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/themes/status_theme.dart';
@@ -59,7 +60,7 @@ class StatusScreenContent extends StatelessWidget {
                       Spacing.gapXS,
                       Text(
                         config.message,
-                        style: context.displayLarge.primaryTextColor,
+                        style: context.textStyle.displayLarge,
                         textAlign: TextAlign.center,
                       ),
                       if (config.customContent != null) ...[
@@ -146,8 +147,10 @@ class StatusScreenContent extends StatelessWidget {
 
   void _handleNavigation(BuildContext context) {
     if (config.nextRouteParams != null) {
-      context.pushReplacementNamed(config.nextRoute,
-          extra: config.nextRouteParams,);
+      context.pushReplacementNamed(
+        config.nextRoute,
+        extra: config.nextRouteParams,
+      );
     } else {
       context.pushReplacementNamed(config.nextRoute);
     }

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 extension WidgetExtensions on Widget {
   Widget center() => Center(child: this);
 
@@ -64,18 +66,18 @@ extension WidgetExtensions on Widget {
         child: this,
       );
 
-  Widget shimmer({bool enabled = true}) => AppShimmer(
-        enabled: enabled,
-        child: this,
-      );
+  // Widget shimmer({bool enabled = true}) => AppShimmer(
+  //       enabled: enabled,
+  //       child: this,
+  //     );
 
-  Widget animate({
-    Duration? duration,
-    Curve? curve,
-  }) =>
-      AppAnimationController(
-        duration: duration ?? MotionTokens.durationMD,
-        curve: curve ?? MotionTokens.standard,
-        child: this,
-      );
+  // Widget animate({
+  //   Duration? duration,
+  //   Curve? curve,
+  // }) =>
+  //     AppAnimationController(
+  //       duration: duration ?? MotionTokens.durationMD,
+  //       curve: curve ?? MotionTokens.standard,
+  //       child: this,
+  //     );
 }

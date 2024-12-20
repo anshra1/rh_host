@@ -16,7 +16,7 @@ abstract class AccessibilityTokens {
 
   // Focus indicators
   static const double focusRingWidth = 2;
-  static const Color focusRingColor = AppColors.primaryColorColor;
+  static const Color focusRingColor = AppColors.primaryColor;
 
   // Animation settings
   static const bool reduceMotion = false;

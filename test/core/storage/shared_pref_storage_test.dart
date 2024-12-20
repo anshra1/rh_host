@@ -1,15 +1,13 @@
 // Flutter imports:
 import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 // Project imports:
 import 'package:rh_host/src/core/enum/storage_type.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
