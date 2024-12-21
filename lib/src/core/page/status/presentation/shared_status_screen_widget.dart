@@ -14,6 +14,8 @@ import 'package:rh_host/src/core/extension/context.dart';
 import 'package:rh_host/src/core/extension/text_style_extension.dart';
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/themes/status_theme.dart';
+import 'package:rh_host/src/core/widget/conditional/conditional_content.dart';
+import 'package:rh_host/src/core/widget/text/text.dart';
 
 class StatusScreenContent extends StatelessWidget {
   const StatusScreenContent({required this.config, super.key});
@@ -48,25 +50,19 @@ class StatusScreenContent extends StatelessWidget {
                     children: [
                       _buildStatusIcon(),
                       Spacing.gapSM,
-                      Text(
-                        config.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium
-                            ?.semiBold
-                            .primaryTextColor,
-                        textAlign: TextAlign.center,
-                      ),
+                      AppText.headlineMedium(config.title),
                       Spacing.gapXS,
-                      Text(
-                        config.message,
-                        style: context.textStyle.displayLarge,
-                        textAlign: TextAlign.center,
+                      AppText.displayLarge(config.message),
+                      ConditionalContent(
+                        show: config.customContent != null,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Spacing.gapLG,
+                            config.customContent!,
+                          ],
+                        ),
                       ),
-                      if (config.customContent != null) ...[
-                        Spacing.gapLG,
-                        config.customContent!,
-                      ],
                     ],
                   ),
                 ),

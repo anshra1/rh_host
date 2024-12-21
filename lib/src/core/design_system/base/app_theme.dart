@@ -8,6 +8,7 @@ import 'package:rh_host/src/core/design_system/base/size.dart';
 
 class AppTheme {
   static ThemeData get light => ThemeData(
+        scaffoldBackgroundColor: AppColors.backgroundPrimary,
         useMaterial3: true,
         colorScheme: const ColorScheme.light(
           primary: AppColors.primaryColor,

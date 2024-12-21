@@ -1,12 +1,9 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/widget/input/app_text_field.dart';
 
-class TitledInputField extends StatelessWidget {
-  const TitledInputField({
+class LabelTextField extends StatelessWidget {
+  const LabelTextField({
     required this.controller,
     required this.title,
     this.required = true,
@@ -19,6 +16,10 @@ class TitledInputField extends StatelessWidget {
     this.validator,
     this.fieldRequirement = FieldRequirement.none,
     this.inputFormatters,
+    this.focusNode,
+    this.onFieldSubmitted,
+    this.textInputAction,
+    this.autofocus = false,
     super.key,
   });
 
@@ -34,6 +35,10 @@ class TitledInputField extends StatelessWidget {
   final TextStyle? errorStyle;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final FocusNode? focusNode;
+  final ValueChanged<String>? onFieldSubmitted;
+  final TextInputAction? textInputAction;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +48,17 @@ class TitledInputField extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            RichText(
-              text: TextSpan(
-                text: title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black, // Replace with your text color
+            Expanded(
+              child: RichText(
+                text: TextSpan(
+                  text: title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black87,
+                  ),
+                  children: [fieldRequirement.marker],
                 ),
-                children: [fieldRequirement.marker],
               ),
             ),
             if (suffixIcon != null) suffixIcon!,
@@ -60,13 +67,25 @@ class TitledInputField extends StatelessWidget {
         const SizedBox(height: 10),
         AppTextField(
           inputFormatters: inputFormatters,
+          focusNode: focusNode,
           controller: controller,
-          hintText: hintText ?? 'Enter $title',
-          style: hintStyle,
+          hint: hintText ?? '',
+          hintStyle: hintStyle,
+          filled: false,
           keyboardType: keyboardType,
           maxLength: maxLength,
           errorStyle: errorStyle,
           overrideValidator: true,
+          autofocus: autofocus,
+          textInputAction: textInputAction,
+          onSubmitted: onFieldSubmitted,
+          onEditingComplete: () {
+            if (textInputAction == TextInputAction.next) {
+              FocusScope.of(context).nextFocus();
+            } else if (textInputAction == TextInputAction.done) {
+              FocusScope.of(context).unfocus();
+            }
+          },
           validator: validator ??
               (value) {
                 if (!required) return null;
@@ -81,29 +100,28 @@ class TitledInputField extends StatelessWidget {
   }
 }
 
+// Enhanced field requirement enum with more semantic naming
 enum FieldRequirement {
-  required,
-  optional,
-  none;
+  required('*', Colors.red),
+  optional('(Optional)', Colors.grey),
+  none('', Colors.transparent);
+
+  const FieldRequirement(this.symbol, this.color);
+
+  final String symbol;
+  final Color color;
 
   TextSpan get marker {
-    switch (this) {
-      case FieldRequirement.required:
-        return const TextSpan(
-          text: ' *',
-          style: TextStyle(color: Colors.red),
-        );
-      case FieldRequirement.optional:
-        return const TextSpan(
-          text: ' (Optional)',
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 14,
-            fontWeight: FontWeight.normal,
-          ),
-        );
-      case FieldRequirement.none:
-        return const TextSpan();
-    }
+    if (this == FieldRequirement.none) return const TextSpan();
+
+    return TextSpan(
+      text: ' $symbol',
+      style: TextStyle(
+        color: color,
+        fontSize: this == FieldRequirement.optional ? 14 : 16,
+        fontWeight:
+            this == FieldRequirement.optional ? FontWeight.normal : FontWeight.w400,
+      ),
+    );
   }
 }

@@ -70,8 +70,8 @@ class BaseButton extends StatelessWidget {
     }
 
     if (isDisabled) {
-      bgColor = bgColor.withOpacity(0.6);
-      textColor = textColor.withOpacity(0.6);
+      bgColor = bgColor.withAlpha((0.6 * 255).toInt());
+      textColor = textColor.withAlpha((0.6 * 255).toInt());
     }
 
     final defaultTextStyle = AppFonts.titleMedium.copyWith(

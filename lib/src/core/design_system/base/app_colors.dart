@@ -11,7 +11,7 @@ abstract class AppColors {
   static const Color secondary = Color(0xFF26A69A);
   static const Color secondaryLight = Color(0xFF4DB6AC);
   static const Color secondaryDark = Color(0xFF00897B);
-
+ 
   // Semantic Colors
   static const Color success = Color(0xFF43A047);
   static const Color warning = Color(0xFFFFA000);

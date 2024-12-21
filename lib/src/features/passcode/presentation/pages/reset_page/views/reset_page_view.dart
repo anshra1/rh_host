@@ -18,11 +18,19 @@ class ResetPageView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Controllers
     final newPasscodeController = useTextEditingController();
     final confirmPasscodeController = useTextEditingController();
     final masterPasscodeController = useTextEditingController();
+
+    // Focus nodes
+    final newPasscodeFocus = useFocusNode();
+    final confirmPasscodeFocus = useFocusNode();
+    final masterPasscodeFocus = useFocusNode();
+
     final formKey = useMemoized(GlobalKey<FormState>.new);
 
+    // Clear fields effect
     useEffect(
       () {
         if (shouldClearFields) {
@@ -41,48 +49,58 @@ class ResetPageView extends HookWidget {
       final newPasscode = int.parse(newPasscodeController.text);
       final confirmPasscode = int.parse(confirmPasscodeController.text);
       final masterPasscode = int.parse(masterPasscodeController.text);
+
       await onSubmit(newPasscode, confirmPasscode, masterPasscode);
     }
 
-    return Scaffold(
-      appBar: const AppBarWidget(
+    return BaseScaffold.scrollable(
+      padding: const EdgeInsets.all(32),
+      appBar: const PrimaryAppBarWidget(
         title: 'Set New Passcode',
         backgroundColor: AppColors.backgroundPrimary,
-        elevation: 0,
+        elevation: 1,
       ),
       body: Form(
         key: formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TitledInputField(
+            LabelTextField(
               controller: newPasscodeController,
+              focusNode: newPasscodeFocus,
               title: 'New Passcode',
               keyboardType: TextInputType.number,
-              maxLength: 4,
               inputFormatters: AppInputFormatters.passcode,
               validator: PasscodeValidator.validatePasscode,
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(confirmPasscodeFocus),
+              textInputAction: TextInputAction.next,
             ),
-            Spacing.gapMD,
-            TitledInputField(
+            Spacing.gapLG,
+            LabelTextField(
               controller: confirmPasscodeController,
+              focusNode: confirmPasscodeFocus,
               title: 'Confirm Passcode',
               keyboardType: TextInputType.number,
-              maxLength: 4,
               inputFormatters: AppInputFormatters.passcode,
               validator: (value) => PasscodeValidator.validateConfirmPasscode(
                 value,
                 newPasscodeController.text,
               ),
+              onFieldSubmitted: (_) =>
+                  FocusScope.of(context).requestFocus(masterPasscodeFocus),
+              textInputAction: TextInputAction.next,
             ),
-            Spacing.gapMD,
-            TitledInputField(
+            Spacing.gapLG,
+            LabelTextField(
               controller: masterPasscodeController,
+              focusNode: masterPasscodeFocus,
               title: 'Master Passcode',
               keyboardType: TextInputType.number,
-              maxLength: 4,
               inputFormatters: AppInputFormatters.passcode,
               validator: PasscodeValidator.validateMasterPasscode,
+              onFieldSubmitted: (_) => submit(),
+              textInputAction: TextInputAction.done,
             ),
             Spacing.gapXXL,
             PrimaryButton(
