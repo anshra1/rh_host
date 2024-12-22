@@ -4,8 +4,8 @@ class AppElevatedButton extends StatelessWidget {
   const AppElevatedButton({
     required this.label,
     required this.onPressed,
-    this.backgroundColor = AppColors.primaryColor,
-    this.foregroundColor = AppColors.textInverse,
+    this.backgroundColor = LightColorsToken.primaryLight,
+    this.foregroundColor = LightColorsToken.textInverse,
     this.disabledBackgroundColor,
     this.disabledForegroundColor,
     this.textStyle,
@@ -60,7 +60,7 @@ class AppElevatedButton extends StatelessWidget {
       children: [
         if (leadingIcon != null) ...[
           leadingIcon!,
-          SizedBox(width: Spacing.xs),
+          const SizedBox(width: Spacing.xs8),
         ],
         Text(
           label,
@@ -71,7 +71,7 @@ class AppElevatedButton extends StatelessWidget {
                   ),
         ),
         if (trailingIcon != null) ...[
-          SizedBox(width: Spacing.xs),
+          const SizedBox(width: Spacing.xs8),
           trailingIcon!,
         ],
       ],

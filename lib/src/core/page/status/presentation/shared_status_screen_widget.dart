@@ -1,20 +1,16 @@
 // status_screen_content.dart
 
-// Flutter imports:
 import 'package:flutter/material.dart';
-
-// Package imports:
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/import.dart';
-import 'package:rh_host/src/core/widget/buttons/import.dart';
 import 'package:rh_host/src/core/extension/context.dart';
-import 'package:rh_host/src/core/extension/text_style_extension.dart';
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/themes/status_theme.dart';
+import 'package:rh_host/src/core/system/logger/debug_logger.dart';
+import 'package:rh_host/src/core/widget/buttons/import.dart';
 import 'package:rh_host/src/core/widget/conditional/conditional_content.dart';
+import 'package:rh_host/src/core/widget/scaffold/base_scaffold.dart';
 import 'package:rh_host/src/core/widget/text/text.dart';
 
 class StatusScreenContent extends StatelessWidget {
@@ -24,55 +20,35 @@ class StatusScreenContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
+    DebugLogger.instance.info(context.textSecondary);
+    DebugLogger.instance.info(context.textPrimary);
+    return BaseScaffold(
+      padding: const EdgeInsets.all(16),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // if (config.showCloseButton)
-                //   Align(
-                //     alignment: Alignment.topRight,
-                //     child: IconButton(
-                //       icon: const Icon(Icons.close),
-                //       onPressed: () {
-                //         // StatusAnalytics.logStatusAction('close_button', config);
-                //         context.pop();
-                //       },
-                //     ),
-                //   ),
-
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildStatusIcon(),
-                      Spacing.gapSM,
-                      AppText.headlineMedium(config.title),
-                      Spacing.gapXS,
-                      AppText.displayLarge(config.message),
-                      ConditionalContent(
-                        show: config.customContent != null,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Spacing.gapLG,
-                            config.customContent!,
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                _buildStatusIcon(),
+                Spacing.gap8SM,
+                AppText.titleLarge(
+                  config.title,
+                  color: context.textPrimary,
                 ),
-
-                _buildActions(context),
-                Spacing.gapLG,
+                Spacing.gap4XS,
+                AppText.bodyLarge(
+                  config.message,
+                  color: context.textSecondary,
+                ),
+                Condition(config: config),
               ],
             ),
           ),
-        ),
+          _buildActions(context),
+          Spacing.gap24LG,
+        ],
       ),
     );
   }
@@ -103,7 +79,14 @@ class StatusScreenContent extends StatelessWidget {
         PrimaryButton(
           onPressed: () {
             //  StatusAnalytics.logStatusAction('primary_button', config);
-            _handleNavigation(context);
+            if (config.nextRouteParams != null) {
+              context.pushReplacementNamed(
+                config.nextRoute,
+                extra: config.nextRouteParams,
+              );
+            } else {
+              context.pushReplacementNamed(config.nextRoute);
+            }
           },
           label: config.primaryButtonText,
         ),
@@ -140,15 +123,27 @@ class StatusScreenContent extends StatelessWidget {
       );
     }).toList();
   }
+}
 
-  void _handleNavigation(BuildContext context) {
-    if (config.nextRouteParams != null) {
-      context.pushReplacementNamed(
-        config.nextRoute,
-        extra: config.nextRouteParams,
-      );
-    } else {
-      context.pushReplacementNamed(config.nextRoute);
-    }
+class Condition extends StatelessWidget {
+  const Condition({
+    required this.config,
+    super.key,
+  });
+
+  final StatusScreenModel config;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConditionalContent(
+      show: config.customContent != null,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Spacing.gap24LG,
+          config.customContent ?? const SizedBox.shrink(),
+        ],
+      ),
+    );
   }
 }

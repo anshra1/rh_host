@@ -1,7 +1,5 @@
 // Package imports:
 import 'package:equatable/equatable.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/error/failures/failure.dart';
 
 sealed class PasscodeState extends Equatable {

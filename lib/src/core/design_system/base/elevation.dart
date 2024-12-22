@@ -1,7 +1,4 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/import.dart';
 
 /// Design tokens for elevation and shadow styles
@@ -15,43 +12,43 @@ abstract class ElevationTokens {
   static const double level5 = 8;
 
   // Shadow styles
-  static List<BoxShadow> get shadow1 => [
-        const BoxShadow(
-          color: AppColors.shadowLight,
-          blurRadius: 3,
-          offset: Offset(0, 1),
-        ),
-      ];
+  static const List<BoxShadow> shadow1 = [
+    BoxShadow(
+      color: LightColorsToken.shadowLight,
+      blurRadius: 3,
+      offset: Offset(0, 1),
+    ),
+  ];
 
-  static List<BoxShadow> get shadow2 => [
-        const BoxShadow(
-          color: AppColors.shadowLight,
-          blurRadius: 6,
-          offset: Offset(0, 2),
-        ),
-      ];
+  static const List<BoxShadow> shadow2 = [
+    BoxShadow(
+      color: LightColorsToken.shadowLight,
+      blurRadius: 6,
+      offset: Offset(0, 2),
+    ),
+  ];
 
-  static List<BoxShadow> get shadow3 => [
-        const BoxShadow(
-          color: AppColors.shadowLight,
-          blurRadius: 8,
-          offset: Offset(0, 4),
-        ),
-      ];
+  static const List<BoxShadow> shadow3 = [
+    BoxShadow(
+      color: LightColorsToken.shadowLight,
+      blurRadius: 8,
+      offset: Offset(0, 4),
+    ),
+  ];
 
-  static List<BoxShadow> get shadow4 => [
-        const BoxShadow(
-          color: AppColors.shadowLight,
-          blurRadius: 12,
-          offset: Offset(0, 6),
-        ),
-      ];
+  static const List<BoxShadow> shadow4 = [
+    BoxShadow(
+      color: LightColorsToken.shadowLight,
+      blurRadius: 12,
+      offset: Offset(0, 6),
+    ),
+  ];
 
-  static List<BoxShadow> get shadow5 => [
-        const BoxShadow(
-          color: AppColors.shadowLight,
-          blurRadius: 16,
-          offset: Offset(0, 8),
-        ),
-      ];
+  static const List<BoxShadow> shadow5 = [
+    BoxShadow(
+      color: LightColorsToken.shadowLight,
+      blurRadius: 16,
+      offset: Offset(0, 8),
+    ),
+  ];
 }

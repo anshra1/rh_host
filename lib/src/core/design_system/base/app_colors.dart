@@ -1,71 +1,107 @@
-part of 'import.dart';
+import 'package:flutter/material.dart';
+import 'package:rh_host/src/core/extension/context.dart';
 
-/// Design tokens for colors used throughout the app
 abstract class AppColors {
-  // Primary Brand Colors
-  static const Color primaryColor = Color(0xFF1976D2);
-  static const Color primaryLight = Color(0xFF42A5F5);
-  static const Color primaryDark = Color(0xFF1565C0);
-
-  // Secondary Brand Colors
-  static const Color secondary = Color(0xFF26A69A);
-  static const Color secondaryLight = Color(0xFF4DB6AC);
-  static const Color secondaryDark = Color(0xFF00897B);
- 
-  // Semantic Colors
-  static const Color success = Color(0xFF43A047);
-  static const Color warning = Color(0xFFFFA000);
-  static const Color error = Color(0xFFD32F2F);
-  static const Color info = Color(0xFF1976D2);
-
-  // Neutral Colors
-  static const Color neutral0 = Color(0xFFFFFFFF); // White
-  static const Color neutral50 = Color(0xFFFAFAFA);
-  static const Color neutral100 = Color(0xFFF5F5F5);
-  static const Color neutral200 = Color(0xFFEEEEEE);
-  static const Color neutral300 = Color(0xFFE0E0E0);
-  static const Color neutral400 = Color(0xFFBDBDBD);
-  static const Color neutral500 = Color(0xFF9E9E9E);
-  static const Color neutral600 = Color(0xFF757575);
-  static const Color neutral700 = Color(0xFF616161);
-  static const Color neutral800 = Color(0xFF424242);
-  static const Color neutral900 = Color(0xFF212121);
-  static const Color neutral1000 = Color(0xFF000000); // Black
-
   // Text Colors
-  static const Color textPrimary = neutral900;
-  static const Color textSecondary = neutral600;
-  static const Color textDisabled = neutral400;
-  static const Color textInverse = neutral0;
+  static Color textPrimary(BuildContext context) => context.theme.colorScheme.onSurface;
+  static Color textSecondary(BuildContext context) =>
+      context.theme.colorScheme.onSurfaceVariant;
+  static Color textDisabled(BuildContext context) =>
+      context.theme.colorScheme.onSurface.withAlpha((0.38 * 255).toInt());
+  static Color textError(BuildContext context) => context.theme.colorScheme.error;
+  static Color textLink(BuildContext context) => context.theme.colorScheme.primary;
+  static Color textInverse(BuildContext context) => context.theme.colorScheme.onPrimary;
 
   // Background Colors
-  static const Color backgroundPrimary = neutral0;
-  static const Color backgroundSecondary = neutral50;
-  static const Color backgroundTertiary = neutral100;
+  static Color backgroundMain(BuildContext context) => context.theme.colorScheme.surface;
+  static Color backgroundSecondary(BuildContext context) =>
+      context.theme.colorScheme.surfaceContainerHighest;
+  static Color backgroundCard(BuildContext context) => context.theme.colorScheme.surface;
+  static Color backgroundModal(BuildContext context) => context.theme.colorScheme.surface;
+  static Color backgroundElevated(BuildContext context) =>
+      context.theme.colorScheme.surface;
 
-  // Surface Colors
-  static const Color surface = neutral0;
-  static const Color surfaceHighlight = neutral50;
-  static const Color surfaceOverlay = Color(0x80000000);
+  // Button Colors
+  static Color buttonPrimaryBg(BuildContext context) => context.theme.colorScheme.primary;
+  static Color buttonPrimaryText(BuildContext context) =>
+      context.theme.colorScheme.onPrimary;
+  static Color buttonSecondaryBg(BuildContext context) =>
+      context.theme.colorScheme.secondary;
+  static Color buttonSecondaryText(BuildContext context) =>
+      context.theme.colorScheme.onSecondary;
+  static Color buttonOutlineBorder(BuildContext context) =>
+      context.theme.colorScheme.outline;
+  static Color buttonDisabled(BuildContext context) =>
+      context.theme.colorScheme.onSurface.withAlpha((0.12 * 255).toInt());
 
-  // Border Colors
-  static const Color border = neutral300;
-  static const Color borderFocus = primaryColor;
-  static const Color borderError = error;
+  // Icon Colors
+  static Color iconPrimary(BuildContext context) => context.theme.colorScheme.onSurface;
+  static Color iconSecondary(BuildContext context) =>
+      context.theme.colorScheme.onSurfaceVariant;
+  static Color iconInteractive(BuildContext context) => context.theme.colorScheme.primary;
+  static Color iconDisabled(BuildContext context) =>
+      context.theme.colorScheme.onSurface.withAlpha((0.38 * 255).toInt());
+  static Color iconError(BuildContext context) => context.theme.colorScheme.error;
 
-  // Shadow Colors
-  static const Color shadowLight = Color(0x1F000000);
-  static const Color shadowDark = Color(0x3D000000);
+  // Border & Divider Colors
+  static Color borderDefault(BuildContext context) => context.theme.colorScheme.outline;
+  static Color borderFocus(BuildContext context) => context.theme.colorScheme.primary;
+  static Color borderError(BuildContext context) => context.theme.colorScheme.error;
+  static Color divider(BuildContext context) => context.theme.colorScheme.outlineVariant;
+
+  // Input Field Colors
+  static Color inputLabel(BuildContext context) =>
+      context.theme.colorScheme.onSurfaceVariant;
+  static Color inputText(BuildContext context) => context.theme.colorScheme.onSurface;
+  static Color inputHelper(BuildContext context) =>
+      context.theme.colorScheme.onSurfaceVariant;
+  static Color inputError(BuildContext context) => context.theme.colorScheme.error;
+  static Color inputFilled(BuildContext context) =>
+      context.theme.colorScheme.surfaceContainerHighest;
+
+  // State Colors
+  static Color stateError(BuildContext context) => context.theme.colorScheme.error;
+  static Color stateSuccess(BuildContext context) => context.theme.colorScheme.primary;
+  static Color stateWarning(BuildContext context) => context.theme.colorScheme.secondary;
+  static Color stateInfo(BuildContext context) => context.theme.colorScheme.tertiary;
+
+  // Navigation Colors
+  static Color navSelected(BuildContext context) => context.theme.colorScheme.primary;
+  static Color navUnselected(BuildContext context) =>
+      context.theme.colorScheme.onSurfaceVariant;
+  static Color navBackground(BuildContext context) => context.theme.colorScheme.surface;
+
+  // Chip Colors
+  static Color chipBackground(BuildContext context) =>
+      context.theme.colorScheme.surfaceContainerHighest;
+  static Color chipSelectedBg(BuildContext context) =>
+      context.theme.colorScheme.secondaryContainer;
+  static Color chipText(BuildContext context) =>
+      context.theme.colorScheme.onSurfaceVariant;
+  static Color chipSelectedText(BuildContext context) =>
+      context.theme.colorScheme.onSecondaryContainer;
 
   // Overlay Colors
-  static const Color overlay = Color(0x80000000);
-  static const Color overlayLight = Color(0x1F000000);
-  static const Color overlayDark = Color(0xB3000000);
+  static Color overlayModal(BuildContext context) => context.theme.colorScheme.scrim;
+  static Color overlayDisabled(BuildContext context) =>
+      context.theme.colorScheme.onSurface.withAlpha((0.12 * 255).toInt());
+  static Color overlayPressed(BuildContext context) =>
+      context.theme.colorScheme.primary.withAlpha((0.12 * 255).toInt());
+  static Color overlayHover(BuildContext context) =>
+      context.theme.colorScheme.primary.withAlpha((0.08 * 255).toInt());
+  static Color overlayFocus(BuildContext context) =>
+      context.theme.colorScheme.primary.withAlpha((0.12 * 255).toInt());
 
-  // Interactive States
-  static const Color hoverOverlay = Color(0x0A000000);
-  static const Color focusOverlay = Color(0x1F000000);
-  static const Color pressedOverlay = Color(0x14000000);
-  static const Color selectedOverlay = Color(0x0F000000);
-  static const Color draggedOverlay = Color(0x0A000000);
+  // System Bar Colors
+  static Color statusBar(BuildContext context) => context.theme.colorScheme.primary;
+  static Color navigationBar(BuildContext context) => context.theme.colorScheme.surface;
+
+  // Opacity Constants
+  static const double opacityDisabled = 0.38;
+  static const double opacitySecondaryText = 0.6;
+  static const double opacityHintText = 0.38;
+  static const double opacityDividers = 0.12;
+  static const double opacityHover = 0.08;
+  static const double opacityFocus = 0.12;
+  static const double opacityPressed = 0.12;
 }

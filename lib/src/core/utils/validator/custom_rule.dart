@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/core/utils/validator/validation_error.dart';
 import 'package:rh_host/src/core/utils/validator/validation_result.dart';
 
@@ -11,12 +10,10 @@ abstract class ValidationRule {
 class PasswordStrengthRule extends ValidationRule {
   @override
   ValidationResult validate(String value) {
-    if (!RegExp(r'^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$&*~]).{8,}$')
-        .hasMatch(value)) {
+    if (!RegExp(r'^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$&*~]).{8,}$').hasMatch(value)) {
       return ValidationResult.error(
         const ValidationError(
-          message:
-              'Password must contain uppercase, number, and special character',
+          message: 'Password must contain uppercase, number, and special character',
           code: 'weak_password',
         ),
       );

@@ -1,4 +1,3 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:rh_host/src/core/design_system/base/motion.dart';
 

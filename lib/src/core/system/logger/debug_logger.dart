@@ -1,12 +1,8 @@
 // ignore_for_file: avoid_redundant_argument_values, prefer_final_in_for_each
 
-// Flutter imports:
 import 'package:flutter/foundation.dart';
-
 // Package imports:
 import 'package:logger/logger.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/system/logger/logger.dart';
 
 class DebugLogger {
@@ -72,8 +68,11 @@ class DebugLogger {
     _logger.d('⚡ Performance: $operation took ${milliseconds}ms');
   } // Navigation logs
 
-  void logNavigation(String from, String to,
-      {Map<String, dynamic>? arguments,}) {
+  void logNavigation(
+    String from,
+    String to, {
+    Map<String, dynamic>? arguments,
+  }) {
     if (!kDebugMode) return;
     _logger.i(
       '🔀 Navigation: $from ➡️ $to${arguments != null ? '\nArguments: $arguments' : ''}',
@@ -83,8 +82,7 @@ class DebugLogger {
   void logState(String message, {String? from, Map<String, dynamic>? data}) {
     if (!kDebugMode) return;
     final source = from != null ? '[$from]' : '';
-    _logger
-        .i('🔄 State $source: $message ${data != null ? '\nData: $data' : ''}');
+    _logger.i('🔄 State $source: $message ${data != null ? '\nData: $data' : ''}');
   }
 
   void logResponse(String url, int statusCode, dynamic body) {

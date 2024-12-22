@@ -1,10 +1,6 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:provider/provider.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/system/network/connectivity.dart';
 
 class ConnectivityWidget extends StatelessWidget {

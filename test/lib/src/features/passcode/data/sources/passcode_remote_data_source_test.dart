@@ -5,7 +5,6 @@ import 'package:clock/clock.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-// Project imports:
 import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
@@ -68,12 +67,10 @@ void main() {
         Strings.setMasterPasscode: masterPasscode,
       });
 
-      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey))
-          .thenReturn(false);
+      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(false);
       when(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true))
           .thenAnswer((_) async => true);
-      when(() => mockPrefs.setString(any(), any()))
-          .thenAnswer((_) async => true);
+      when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async => true);
 
       // Act
       final result = await passcodeRepoImpl.setNewPasscode(
@@ -89,12 +86,10 @@ void main() {
           .doc(Strings.passcodeStoreDocId)
           .get();
       expect(docSnapshot.data()?[Strings.appPasscode], newPasscode);
-      verify(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true))
-          .called(1);
+      verify(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true)).called(1);
     });
 
-    test('should return false when SharedPreferences operations fail',
-        () async {
+    test('should return false when SharedPreferences operations fail', () async {
       // Arrange
       await firestoreClient
           .collection(Strings.passcodeStoreCollection)
@@ -103,8 +98,7 @@ void main() {
         Strings.setMasterPasscode: masterPasscode,
       });
 
-      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey))
-          .thenReturn(false);
+      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(false);
       when(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true))
           .thenAnswer((_) async => false);
 
@@ -134,9 +128,11 @@ void main() {
               (e) => e.showUImessage == Strings.invalidMasterPasscode,
             ),
             predicate<ValidationException>(
-                (e) => e.errorCode == ErrorCode.validation,),
+              (e) => e.errorCode == ErrorCode.validation,
+            ),
             predicate<ValidationException>(
-                (e) => e.severity == ErrorSeverity.low,),
+              (e) => e.severity == ErrorSeverity.low,
+            ),
           ]),
         ),
       );
@@ -157,8 +153,7 @@ void main() {
           Strings.appPasscode: correctPasscode,
         });
 
-        when(() => mockPrefs.setString(any(), any()))
-            .thenAnswer((_) async => true);
+        when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async => true);
 
         // Act
         final result = await passcodeRepoImpl.verifyPasscode(correctPasscode);
@@ -191,27 +186,22 @@ void main() {
     test('should return true when enabling passcode', () async {
       await withClock(Clock.fixed(DateTime(2024)), () async {
         // Arrange
-        when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey))
-            .thenReturn(false);
-        when(() => mockPrefs.setBool(any(), any()))
-            .thenAnswer((_) async => true);
-        when(() => mockPrefs.setString(any(), any()))
-            .thenAnswer((_) async => true);
+        when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(false);
+        when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async => true);
+        when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async => true);
 
         // Act
         final result = await passcodeRepoImpl.enableDisablePasscode();
 
         // Assert
         expect(result, true);
-        verify(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true))
-            .called(1);
+        verify(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, true)).called(1);
       });
     });
 
     test('should return false when disabling passcode', () async {
       // Arrange
-      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey))
-          .thenReturn(true);
+      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(true);
       when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async => true);
       when(() => mockPrefs.remove(any())).thenAnswer((_) async => true);
 
@@ -220,18 +210,15 @@ void main() {
 
       // Assert
       expect(result, false);
-      verify(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, false))
-          .called(1);
-      verify(() => mockPrefs.remove(StorageKeys.lastLoginTimestampKey))
-          .called(1);
+      verify(() => mockPrefs.setBool(StorageKeys.passcodeEnabledKey, false)).called(1);
+      verify(() => mockPrefs.remove(StorageKeys.lastLoginTimestampKey)).called(1);
     });
   });
 
   group('shouldShowPasscode', () {
     test('should return false when passcode is disabled', () async {
       // Arrange
-      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey))
-          .thenReturn(false);
+      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(false);
 
       // Act
       final result = await passcodeRepoImpl.shouldShowPasscode();
@@ -240,15 +227,12 @@ void main() {
       expect(result, false);
     });
 
-    test('should return true when last login was more than 30 minutes ago',
-        () async {
+    test('should return true when last login was more than 30 minutes ago', () async {
       // Arrange
-      final oldTimestamp = DateTime.now()
-          .subtract(const Duration(minutes: 31))
-          .toIso8601String();
+      final oldTimestamp =
+          DateTime.now().subtract(const Duration(minutes: 31)).toIso8601String();
 
-      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey))
-          .thenReturn(true);
+      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(true);
       when(() => mockPrefs.getString(StorageKeys.lastLoginTimestampKey))
           .thenReturn(oldTimestamp);
 
@@ -259,15 +243,12 @@ void main() {
       expect(result, true);
     });
 
-    test('should return false when last login was less than 30 minutes ago',
-        () async {
+    test('should return false when last login was less than 30 minutes ago', () async {
       // Arrange
-      final recentTimestamp = DateTime.now()
-          .subtract(const Duration(minutes: 29))
-          .toIso8601String();
+      final recentTimestamp =
+          DateTime.now().subtract(const Duration(minutes: 29)).toIso8601String();
 
-      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey))
-          .thenReturn(true);
+      when(() => mockPrefs.getBool(StorageKeys.passcodeEnabledKey)).thenReturn(true);
       when(() => mockPrefs.getString(StorageKeys.lastLoginTimestampKey))
           .thenReturn(recentTimestamp);
 

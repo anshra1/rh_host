@@ -24,8 +24,8 @@ class AppRadio<T> extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          height: AppSize.buttonSM,
-          width: AppSize.buttonSM,
+          height: AppSize.buttonSM32,
+          width: AppSize.buttonSM32,
           child: Radio<T>(
             value: value,
             groupValue: groupValue,
@@ -34,12 +34,12 @@ class AppRadio<T> extends StatelessWidget {
           ),
         ),
         if (label != null) ...[
-          SizedBox(width: Spacing.sm),
+          const SizedBox(width: Spacing.sm12),
           Expanded(
             child: Text(
               label!,
               style: AppFonts.bodyMedium.copyWith(
-                color: disabled ? AppColors.textDisabled : null,
+                color: disabled ? LightColorsToken.textDisabled : null,
               ),
             ),
           ),

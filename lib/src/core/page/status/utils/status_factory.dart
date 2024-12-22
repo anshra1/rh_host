@@ -1,7 +1,4 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/domain/status_action.dart';
 

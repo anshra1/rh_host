@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/core/system/clock/app_time.dart';
 import 'package:rh_host/src/core/system/clock/time_config.dart';
 import 'package:rh_host/src/core/system/logger/debug_logger.dart';
@@ -35,8 +34,7 @@ class TimeProvider {
     final now = AppDateTime.now();
     final start = startFrom ?? now;
     final timeSinceStart = now.difference(start);
-    final intervals =
-        (timeSinceStart.inMicroseconds / interval.inMicroseconds).ceil();
+    final intervals = (timeSinceStart.inMicroseconds / interval.inMicroseconds).ceil();
     final nextInterval = start.dateTime.add(interval * intervals);
     return nextInterval.difference(now.dateTime);
   }

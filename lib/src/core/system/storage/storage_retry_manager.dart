@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/core/error/exception/exception_thrower.dart';
 import 'package:rh_host/src/core/system/storage/shared_pref_error_config.dart';
 import 'package:rh_host/src/core/system/storage/storage_context.dart';
@@ -19,10 +18,8 @@ class StorageRetryManager {
       try {
         return await operation();
       } catch (error, stackTrace) {
-        final storageErrorCode =
-            SharedPrefErrorConfig.getStorageDebugCode(error);
-        final retryStrategy =
-            SharedPrefErrorConfig.getRetryStrategy(storageErrorCode);
+        final storageErrorCode = SharedPrefErrorConfig.getStorageDebugCode(error);
+        final retryStrategy = SharedPrefErrorConfig.getRetryStrategy(storageErrorCode);
 
         if (!retryStrategy.shouldRetry || currentAttempt >= maxRetries) {
           throw ExceptionThrower.sharedPrefanceException(

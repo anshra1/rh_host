@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rh_host/src/core/design_system/base/import.dart';
+import 'package:rh_host/src/core/extension/context.dart';
 
 class PrimaryAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   const PrimaryAppBarWidget({
@@ -37,8 +37,11 @@ class PrimaryAppBarWidget extends StatelessWidget implements PreferredSizeWidget
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return AppBar(
-      backgroundColor: backgroundColor ?? AppColors.backgroundPrimary,
+      backgroundColor: backgroundColor ?? colorScheme.surface,
       elevation: elevation ?? 0,
       centerTitle: centerTitle,
       automaticallyImplyLeading: showBackButton,
@@ -47,7 +50,7 @@ class PrimaryAppBarWidget extends StatelessWidget implements PreferredSizeWidget
               icon: Icon(
                 leadingIcon ?? Icons.arrow_back_ios,
                 size: 20,
-                color: AppColors.textPrimary,
+                color: context.iconPrimary,
               ),
               onPressed: onLeadingPressed ?? () => Navigator.pop(context),
             )
@@ -56,12 +59,15 @@ class PrimaryAppBarWidget extends StatelessWidget implements PreferredSizeWidget
           (title != null
               ? Text(
                   title!,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
                 )
               : null),
+      foregroundColor: colorScheme.onSurface,
+      iconTheme: IconThemeData(color: colorScheme.onSurface),
+      actionsIconTheme: IconThemeData(color: colorScheme.onSurface),
       actions: actions,
       bottom: bottom,
     );

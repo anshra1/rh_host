@@ -55,11 +55,7 @@ class ResetPageView extends HookWidget {
 
     return BaseScaffold.scrollable(
       padding: const EdgeInsets.all(32),
-      appBar: const PrimaryAppBarWidget(
-        title: 'Set New Passcode',
-        backgroundColor: AppColors.backgroundPrimary,
-        elevation: 1,
-      ),
+      appBar: const PrimaryAppBarWidget(title: 'Set New Passcode'),
       body: Form(
         key: formKey,
         child: Column(
@@ -76,7 +72,7 @@ class ResetPageView extends HookWidget {
                   FocusScope.of(context).requestFocus(confirmPasscodeFocus),
               textInputAction: TextInputAction.next,
             ),
-            Spacing.gapLG,
+            Spacing.gap24LG,
             LabelTextField(
               controller: confirmPasscodeController,
               focusNode: confirmPasscodeFocus,
@@ -91,7 +87,7 @@ class ResetPageView extends HookWidget {
                   FocusScope.of(context).requestFocus(masterPasscodeFocus),
               textInputAction: TextInputAction.next,
             ),
-            Spacing.gapLG,
+            Spacing.gap24LG,
             LabelTextField(
               controller: masterPasscodeController,
               focusNode: masterPasscodeFocus,
@@ -102,7 +98,7 @@ class ResetPageView extends HookWidget {
               onFieldSubmitted: (_) => submit(),
               textInputAction: TextInputAction.done,
             ),
-            Spacing.gapXXL,
+            Spacing.gap48XXL,
             PrimaryButton(
               label: 'Update Passcode',
               onPressed: submit,

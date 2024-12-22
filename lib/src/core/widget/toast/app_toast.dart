@@ -44,13 +44,13 @@ class _ToastOverlay extends StatelessWidget {
   Color get _backgroundColor {
     switch (type) {
       case AppToastType.info:
-        return AppColors.info;
+        return LightColorsToken.info;
       case AppToastType.success:
-        return AppColors.success;
+        return LightColorsToken.success;
       case AppToastType.warning:
-        return AppColors.warning;
+        return LightColorsToken.warning;
       case AppToastType.error:
-        return AppColors.error;
+        return LightColorsToken.error;
     }
   }
 
@@ -70,9 +70,9 @@ class _ToastOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: Spacing.xl,
-      left: Spacing.md,
-      right: Spacing.md,
+      bottom: Spacing.xl32,
+      left: Spacing.md16,
+      right: Spacing.md16,
       child: Material(
         color: Colors.transparent,
         child: TweenAnimationBuilder<double>(
@@ -91,30 +91,30 @@ class _ToastOverlay extends StatelessWidget {
           child: SafeArea(
             child: InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(AppSize.radiusMD),
+              borderRadius: BorderRadius.circular(AppSize.radiusMD8),
               child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.md,
-                  vertical: Spacing.sm,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Spacing.md16,
+                  vertical: Spacing.sm12,
                 ),
                 decoration: BoxDecoration(
                   color: _backgroundColor,
-                  borderRadius: BorderRadius.circular(AppSize.radiusMD),
+                  borderRadius: BorderRadius.circular(AppSize.radiusMD8),
                   boxShadow: ElevationTokens.shadow2,
                 ),
                 child: Row(
                   children: [
                     Icon(
                       _icon,
-                      color: AppColors.textInverse,
-                      size: AppSize.iconMD,
+                      color: LightColorsToken.textInverse,
+                      size: AppSize.iconMD24,
                     ),
-                    SizedBox(width: Spacing.sm),
+                    const SizedBox(width: Spacing.sm12),
                     Expanded(
                       child: Text(
                         message,
                         style: AppFonts.bodyMedium.copyWith(
-                          color: AppColors.textInverse,
+                          color: LightColorsToken.textInverse,
                         ),
                       ),
                     ),

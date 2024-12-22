@@ -2,11 +2,9 @@
 
 // Package imports:
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-// Project imports:
 import 'package:rh_host/re_name.dart';
 import 'package:rh_host/src/core/services/config/import.dart';
 import 'package:rh_host/src/core/system/alert_system/alert_config.dart';

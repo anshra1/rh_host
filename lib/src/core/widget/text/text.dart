@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
+import 'package:rh_host/src/core/design_system/base/app_font.dart';
 
 /// A comprehensive typography system following modern design principles and industry standards.
 /// Usage:
@@ -10,6 +11,18 @@ import 'package:flutter/material.dart';
 /// - AppText.body(): For regular content text
 /// - AppText.label(): For smaller text like captions or auxiliary information
 class AppText extends StatelessWidget {
+  const AppText(
+    this.text, {
+    required this.style,
+    this.maxLines,
+    this.overflow,
+    this.textAlign,
+    this.color,
+    this.decoration,
+    this.softWrap,
+    this.height,
+    super.key,
+  });
   factory AppText.labelLarge(
     String text, {
     Color? color,
@@ -17,9 +30,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: labelLargeStyle,
+      style: AppFonts.labelLarge,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -34,9 +47,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: displayLargeStyle,
+      style: AppFonts.displayLarge,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -51,9 +64,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: displayMediumStyle,
+      style: AppFonts.displayMedium,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -68,9 +81,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: displaySmallStyle,
+      style: AppFonts.displaySmall,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -85,9 +98,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: headlineLargeStyle,
+      style: AppFonts.headlineLarge,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -102,9 +115,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: headlineMediumStyle,
+      style: AppFonts.headlineMedium,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -119,9 +132,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: headlineSmallStyle,
+      style: AppFonts.headlineSmall,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -136,9 +149,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: titleLargeStyle,
+      style: AppFonts.titleLarge,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -153,9 +166,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: titleMediumStyle,
+      style: AppFonts.titleMedium,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -170,9 +183,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: titleSmallStyle,
+      style: AppFonts.titleSmall,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -187,9 +200,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: bodyLargeStyle,
+      style: AppFonts.bodyLarge,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -204,9 +217,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: bodyMediumStyle,
+      style: AppFonts.bodyMedium,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -221,9 +234,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: bodySmallStyle,
+      style: AppFonts.bodySmall,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -238,9 +251,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: labelMediumStyle,
+      style: AppFonts.labelMedium,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -255,9 +268,9 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextOverflow? overflow,
   }) {
-    return AppText._(
+    return AppText(
       text,
-      style: labelSmallStyle,
+      style: AppFonts.labelSmall,
       color: color,
       textAlign: textAlign,
       maxLines: maxLines,
@@ -265,22 +278,10 @@ class AppText extends StatelessWidget {
     );
   }
 
-  const AppText._(
-    this.text, {
-    required this.style,
-    this.maxLines,
-    this.overflow,
-    this.textAlign,
-    this.color,
-    this.decoration,
-    this.softWrap,
-    this.height,
-    super.key,
-  });
-
   @override
   Widget build(BuildContext context) {
     final defaultStyle = DefaultTextStyle.of(context).style;
+
     var finalStyle = style.copyWith(
       color: color,
       decoration: decoration,
@@ -300,116 +301,6 @@ class AppText extends StatelessWidget {
     );
   }
 
-  // Display styles - For hero text and large numbers
-  static TextStyle displayLargeStyle = const TextStyle(
-    fontSize: 57,
-    height: 1.12,
-    letterSpacing: -0.25,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle displayMediumStyle = const TextStyle(
-    fontSize: 45,
-    height: 1.16,
-    letterSpacing: 0,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle displaySmallStyle = const TextStyle(
-    fontSize: 36,
-    height: 1.22,
-    letterSpacing: 0,
-    fontWeight: FontWeight.w400,
-  );
-
-  // Headline styles - For section headers and key content
-  static TextStyle headlineLargeStyle = const TextStyle(
-    fontSize: 32,
-    height: 1.25,
-    letterSpacing: 0,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle headlineMediumStyle = const TextStyle(
-    fontSize: 28,
-    height: 1.29,
-    letterSpacing: 0,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle headlineSmallStyle = const TextStyle(
-    fontSize: 24,
-    height: 1.33,
-    letterSpacing: 0,
-    fontWeight: FontWeight.w400,
-  );
-
-  // Title styles - For card titles and medium emphasis headers
-  static TextStyle titleLargeStyle = const TextStyle(
-    fontSize: 22,
-    height: 1.27,
-    letterSpacing: 0,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle titleMediumStyle = const TextStyle(
-    fontSize: 16,
-    height: 1.5,
-    letterSpacing: 0.15,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle titleSmallStyle = const TextStyle(
-    fontSize: 14,
-    height: 1.43,
-    letterSpacing: 0.1,
-    fontWeight: FontWeight.w500,
-  );
-
-  // Body styles - For main content and readable text
-  static TextStyle bodyLargeStyle = const TextStyle(
-    fontSize: 16,
-    height: 1.5,
-    letterSpacing: 0.5,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle bodyMediumStyle = const TextStyle(
-    fontSize: 14,
-    height: 1.43,
-    letterSpacing: 0.25,
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle bodySmallStyle = const TextStyle(
-    fontSize: 12,
-    height: 1.33,
-    letterSpacing: 0.4,
-    fontWeight: FontWeight.w400,
-  );
-
-  // Label styles - For auxiliary information and UI elements
-  static TextStyle labelLargeStyle = const TextStyle(
-    fontSize: 14,
-    height: 1.43,
-    letterSpacing: 0.1,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle labelMediumStyle = const TextStyle(
-    fontSize: 12,
-    height: 1.33,
-    letterSpacing: 0.5,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle labelSmallStyle = const TextStyle(
-    fontSize: 11,
-    height: 1.45,
-    letterSpacing: 0.5,
-    fontWeight: FontWeight.w500,
-  );
-
   final String text;
   final TextStyle style;
   final int? maxLines;
@@ -420,3 +311,129 @@ class AppText extends StatelessWidget {
   final bool? softWrap;
   final double? height;
 }
+
+void main() {
+  const AppText(
+    '',
+    style: TextStyle(),
+  );
+  AppText.displayLarge('text');
+}
+
+
+// Display (Large 57, Medium 45, Small 36)
+
+// Splash screens
+// Hero sections
+// Very large numbers/stats
+// Welcome screens headers
+
+// Headline (Large 32, Medium 28, Small 24)
+
+// App bar titles in main screens
+// Section headers
+// Modal/Dialog headers
+// Feature introductions
+
+// Title (Large 22, Medium 16, Small 14)
+
+// Card titles
+// List headers
+// Settings section headers
+// Navigation drawer headers
+// Dropdown headers
+
+// Label (Large 14, Medium 12, Small 11)
+
+// Button text
+// Tab labels
+// Input field labels
+// Menu items
+// Chip text
+// Navigation items
+// Form field labels
+
+// Body (Large 16, Medium 14, Small 12)
+
+// Primary content text
+// List item text
+// Description text
+// Dialog content
+// Card content
+// Form input text
+// Menu item descriptions
+// Secondary information
+
+// Common Component Examples:
+
+// AppBar
+
+
+// Title: Headline Small (24)
+// Subtitle: Title Medium (16)
+// Action buttons: Label Large (14)
+
+
+// Buttons
+
+
+// Primary/Secondary: Label Large (14)
+// Text buttons: Label Large (14)
+// Button with icon: Label Large (14)
+
+
+// Cards
+
+
+// Card title: Title Medium (16)
+// Card content: Body Medium (14)
+// Card actions: Label Large (14)
+
+
+// Forms
+
+
+// Input labels: Label Medium (12)
+// Input text: Body Large (16)
+// Helper text: Body Small (12)
+// Error text: Label Small (11)
+
+
+// Dialogs
+
+
+// Dialog title: Headline Small (24)
+// Dialog content: Body Medium (14)
+// Dialog buttons: Label Large (14)
+
+
+// Bottom Navigation
+
+
+// Labels: Label Medium (12)
+
+
+// Lists
+
+
+// List title: Title Large (22)
+// List item text: Body Large (16)
+// List item secondary: Body Medium (14)
+
+
+// Tabs
+
+
+// Tab labels: Label Large (14)
+
+
+// Chips
+
+
+// Chip text: Label Large (14)
+
+
+// Tooltips
+
+
+// Tooltip text: Label Small (11)

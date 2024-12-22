@@ -32,7 +32,7 @@ class AppSlider extends StatelessWidget {
             label!,
             style: AppFonts.labelMedium,
           ),
-          SizedBox(height: Spacing.xxs),
+          const SizedBox(height: Spacing.xxs4),
         ],
         SliderTheme(
           data: const SliderThemeData(

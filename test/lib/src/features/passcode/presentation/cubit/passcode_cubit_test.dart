@@ -3,8 +3,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
@@ -225,8 +223,7 @@ void main() {
     blocTest<PasscodeCubit, PasscodeState>(
       'emits [PasscodeLoading, PasscodeShowRequired(true)] when should show',
       build: () {
-        when(() => mockShouldShowPasscode())
-            .thenAnswer((_) async => const Right(true));
+        when(() => mockShouldShowPasscode()).thenAnswer((_) async => const Right(true));
         return cubit;
       },
       act: (cubit) => cubit.shouldShowPasscode(),
@@ -242,8 +239,7 @@ void main() {
     blocTest<PasscodeCubit, PasscodeState>(
       'emits [PasscodeLoading, PasscodeShowRequired(false)] when should not show',
       build: () {
-        when(() => mockShouldShowPasscode())
-            .thenAnswer((_) async => const Right(false));
+        when(() => mockShouldShowPasscode()).thenAnswer((_) async => const Right(false));
         return cubit;
       },
       act: (cubit) => cubit.shouldShowPasscode(),

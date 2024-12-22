@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';

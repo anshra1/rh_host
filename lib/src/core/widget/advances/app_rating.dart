@@ -78,12 +78,12 @@ class _AppRatingState extends State<AppRating> {
 
   Color _getColor(int value) {
     if (widget.disabled) {
-      return AppColors.textDisabled;
+      return LightColorsToken.textDisabled;
     }
     final threshold = _isHovering ? _hoverValue : widget.value;
     if (value <= threshold) {
-      return AppColors.warning;
+      return LightColorsToken.warning;
     }
-    return AppColors.textSecondary;
+    return LightColorsToken.textSecondary;
   }
 }

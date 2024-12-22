@@ -22,17 +22,19 @@ class AppDrawerItem extends StatelessWidget {
       leading: icon != null
           ? Icon(
               icon,
-              color: selected ? AppColors.primaryColor : AppColors.textSecondary,
+              color: selected
+                  ? LightColorsToken.primaryLight
+                  : LightColorsToken.textSecondary,
             )
           : null,
       title: Text(
         title,
         style: AppFonts.bodyMedium.copyWith(
-          color: selected ? AppColors.primaryColor : AppColors.textPrimary,
+          color: selected ? LightColorsToken.primaryLight : LightColorsToken.textPrimary,
         ),
       ),
       selected: selected,
-      selectedTileColor: AppColors.selectedOverlay,
+      selectedTileColor: LightColorsToken.selectedOverlay,
       onTap: onTap,
     );
   }

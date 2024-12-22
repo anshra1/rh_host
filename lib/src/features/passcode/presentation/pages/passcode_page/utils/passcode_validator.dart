@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/core/constants/string.dart';
 import 'package:rh_host/src/core/utils/pattern/pattern.dart';
 import 'package:rh_host/src/core/utils/validator/field_validator.dart';
@@ -45,9 +44,7 @@ class PasscodeValidator {
 
     if (baseValidation != null) return baseValidation;
 
-    return confirmPasscode != newPasscode
-        ? Strings.newAndConfirmPasscodeNoMatch
-        : null;
+    return confirmPasscode != newPasscode ? Strings.newAndConfirmPasscodeNoMatch : null;
   }
 
   static String? validateMasterPasscode(String? value) {

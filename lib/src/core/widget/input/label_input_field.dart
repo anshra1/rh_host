@@ -42,6 +42,9 @@ class LabelTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -52,12 +55,13 @@ class LabelTextField extends StatelessWidget {
               child: RichText(
                 text: TextSpan(
                   text: title,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: colorScheme.onSurface,
                     fontWeight: FontWeight.w400,
-                    color: Colors.black87,
                   ),
-                  children: [fieldRequirement.marker],
+                  children: [
+                    _buildRequirementMarker(colorScheme),
+                  ],
                 ),
               ),
             ),
@@ -98,30 +102,35 @@ class LabelTextField extends StatelessWidget {
       ],
     );
   }
+
+  TextSpan _buildRequirementMarker(ColorScheme colorScheme) {
+    switch (fieldRequirement) {
+      case FieldRequirement.required:
+        return TextSpan(
+          text: ' *',
+          style: TextStyle(
+            color: colorScheme.error,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+        );
+      case FieldRequirement.optional:
+        return TextSpan(
+          text: ' (Optional)',
+          style: TextStyle(
+            color: colorScheme.onSurfaceVariant,
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+          ),
+        );
+      case FieldRequirement.none:
+        return const TextSpan();
+    }
+  }
 }
 
-// Enhanced field requirement enum with more semantic naming
 enum FieldRequirement {
-  required('*', Colors.red),
-  optional('(Optional)', Colors.grey),
-  none('', Colors.transparent);
-
-  const FieldRequirement(this.symbol, this.color);
-
-  final String symbol;
-  final Color color;
-
-  TextSpan get marker {
-    if (this == FieldRequirement.none) return const TextSpan();
-
-    return TextSpan(
-      text: ' $symbol',
-      style: TextStyle(
-        color: color,
-        fontSize: this == FieldRequirement.optional ? 14 : 16,
-        fontWeight:
-            this == FieldRequirement.optional ? FontWeight.normal : FontWeight.w400,
-      ),
-    );
-  }
+  required,
+  optional,
+  none;
 }

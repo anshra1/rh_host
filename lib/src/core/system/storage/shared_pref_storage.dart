@@ -3,7 +3,6 @@
 // Dart imports:
 import 'dart:async';
 
-// Project imports:
 import 'package:rh_host/src/core/enum/storage_type.dart';
 import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 import 'package:rh_host/src/core/system/storage/app_storage.dart';
@@ -256,8 +255,7 @@ class SharedPrefsStorages implements AppStorage {
             double() => StorageType.double,
             bool() => StorageType.boolean,
             List<String>() => StorageType.stringList,
-            _ =>
-              throw UnsupportedError('Unsupported type: ${value.runtimeType}')
+            _ => throw UnsupportedError('Unsupported type: ${value.runtimeType}')
           };
         } catch (e) {
           rethrow; // Preserve raw error

@@ -36,11 +36,11 @@ class AppAvatar extends StatelessWidget {
     } else {
       avatar = CircleAvatar(
         radius: size / 2,
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: LightColorsToken.primaryLight,
         child: Text(
           initials,
           style: AppFonts.labelMedium.copyWith(
-            color: AppColors.textInverse,
+            color: LightColorsToken.textInverse,
           ),
         ),
       );

@@ -102,6 +102,8 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
@@ -122,10 +124,11 @@ class AppTextField extends StatelessWidget {
       autofocus: autofocus,
       autocorrect: autocorrect,
       showCursor: showCursor,
-      cursorColor: cursorColor ?? theme.primaryColor,
+      cursorColor: cursorColor ?? colorScheme.primary,
       textAlign: textAlign,
       textCapitalization: textCapitalization,
-      style: textStyle ?? theme.textTheme.bodyLarge,
+      style:
+          textStyle ?? theme.textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface),
       decoration: _buildDecoration(context),
       onEditingComplete: onEditingComplete,
     );
@@ -143,27 +146,25 @@ class AppTextField extends StatelessWidget {
 
   InputDecoration _buildDecoration(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return InputDecoration(
       border: _buildBorder(),
       enabledBorder: _buildBorder(
-        color: borderColor ?? theme.inputDecorationTheme.enabledBorder?.borderSide.color,
+        color: borderColor ?? colorScheme.outline,
       ),
       focusedBorder: _buildBorder(
-        color: focusedBorderColor ??
-            theme.inputDecorationTheme.focusedBorder?.borderSide.color ??
-            theme.primaryColor,
+        color: focusedBorderColor ?? colorScheme.primary,
+        width: 2,
       ),
       errorBorder: _buildBorder(
-        color: errorBorderColor ??
-            theme.inputDecorationTheme.errorBorder?.borderSide.color ??
-            Colors.red,
+        color: errorBorderColor ?? colorScheme.error,
       ),
       disabledBorder: _buildBorder(
-        color: theme.inputDecorationTheme.disabledBorder?.borderSide.color ??
-            Colors.grey.withAlpha((0.5 * 255).toInt()),
+        color: colorScheme.onSurface.withAlpha((0.38 * 255).toInt()),
       ),
       filled: filled,
-      fillColor: fillColor ?? theme.inputDecorationTheme.fillColor,
+      fillColor: fillColor ?? colorScheme.surfaceContainerHighest,
       contentPadding: padding,
       prefix: prefix,
       suffix: suffix,
@@ -182,34 +183,41 @@ class AppTextField extends StatelessWidget {
       labelText: label,
       hintText: hint,
       counterText: showCounter ? null : '',
-      labelStyle:
-          labelStyle ?? theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
-      hintStyle:
-          hintStyle ?? theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade500),
+      labelStyle: labelStyle ??
+          theme.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+      hintStyle: hintStyle ??
+          theme.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant.withAlpha((0.75 * 255).toInt()),
+          ),
       errorStyle: errorStyle ??
-          TextStyle(color: errorBorderColor ?? Colors.red, fontSize: 12, height: 1),
+          TextStyle(
+            color: colorScheme.error,
+            fontSize: 12,
+            height: 1,
+          ),
       isDense: true,
     );
   }
 
-  InputBorder _buildBorder({Color? color}) {
+  InputBorder _buildBorder({Color? color, double width = 1.0}) {
     if (customBorder != null) return customBorder!;
+
+    final borderSide = BorderSide(
+      color: color ?? Colors.transparent,
+      width: width,
+    );
 
     switch (variant) {
       case TextFieldVariant.outlined:
         return OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
-          borderSide: BorderSide(
-            color: color ?? Colors.grey.shade500,
-            width: borderWidth,
-          ),
+          borderSide: borderSide,
         );
       case TextFieldVariant.underlined:
         return UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: color ?? Colors.grey.shade300,
-            width: borderWidth,
-          ),
+          borderSide: borderSide,
         );
       case TextFieldVariant.none:
         return InputBorder.none;

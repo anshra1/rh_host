@@ -1,7 +1,6 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -9,7 +8,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 Timer useTimer(Duration duration, [VoidCallback? onCompletedTimer]) {
   return use(
-      _TimerHook(duration: duration, onCompletedTimer: onCompletedTimer),);
+    _TimerHook(duration: duration, onCompletedTimer: onCompletedTimer),
+  );
 }
 
 class _TimerHook extends Hook<Timer> {

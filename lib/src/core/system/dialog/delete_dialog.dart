@@ -1,8 +1,5 @@
-// Flutter imports:
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/system/dialog/alert_dialog_model.dart';
 
 @immutable

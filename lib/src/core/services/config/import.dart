@@ -6,7 +6,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-// Project imports:
 import 'package:rh_host/src/core/error/errror_system/error_handler.dart';
 import 'package:rh_host/src/core/error/errror_system/retry_policy.dart';
 import 'package:rh_host/src/core/services/config/firebase_config.dart';

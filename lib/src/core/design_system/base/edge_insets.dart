@@ -14,10 +14,8 @@ class AppEdgeInsets {
   static const EdgeInsets xxxLarge = EdgeInsets.all(32);
 
   static const EdgeInsets horizontalSmall = EdgeInsets.symmetric(horizontal: 8);
-  static const EdgeInsets horizontalMedium =
-      EdgeInsets.symmetric(horizontal: 12);
-  static const EdgeInsets horizontalLarge =
-      EdgeInsets.symmetric(horizontal: 16);
+  static const EdgeInsets horizontalMedium = EdgeInsets.symmetric(horizontal: 12);
+  static const EdgeInsets horizontalLarge = EdgeInsets.symmetric(horizontal: 16);
 
   static const EdgeInsets verticalSmall = EdgeInsets.symmetric(vertical: 8);
   static const EdgeInsets verticalMedium = EdgeInsets.symmetric(vertical: 12);

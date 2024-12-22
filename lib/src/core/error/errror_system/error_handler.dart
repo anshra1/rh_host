@@ -3,10 +3,8 @@
 // Package imports:
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/errror_system/error_details.dart';
@@ -213,8 +211,7 @@ class ErrorHandler {
   }
 
   Future<void> _logError(ErrorDetails details, StackTrace? stackTrace) async {
-    DebugLogger.instance
-        .info(details.message, details.originalError, stackTrace);
+    DebugLogger.instance.info(details.message, details.originalError, stackTrace);
   }
 
   Future<void> _reportToCrashlytics(

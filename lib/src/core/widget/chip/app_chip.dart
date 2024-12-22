@@ -30,14 +30,14 @@ class AppChip extends StatelessWidget {
       onDeleted: disabled ? null : onDeleted,
       labelStyle: AppFonts.labelMedium.copyWith(
         color: disabled
-            ? AppColors.textDisabled
+            ? LightColorsToken.textDisabled
             : selected
-                ? AppColors.textInverse
-                : AppColors.textPrimary,
+                ? LightColorsToken.textInverse
+                : LightColorsToken.textPrimary,
       ),
-      backgroundColor: AppColors.surfaceHighlight,
-      selectedColor: AppColors.primaryColor,
-      disabledColor: AppColors.neutral200,
+      backgroundColor: LightColorsToken.surfaceHighlight,
+      selectedColor: LightColorsToken.primaryLight,
+      disabledColor: LightColorsToken.neutral200,
     );
   }
 }

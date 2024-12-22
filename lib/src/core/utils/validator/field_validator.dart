@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/core/utils/validator/custom_rule.dart';
 import 'package:rh_host/src/core/utils/validator/validation_error.dart';
 import 'package:rh_host/src/core/utils/validator/validation_result.dart';
@@ -28,7 +27,9 @@ class FieldValidator {
     if (isRequired && (value == null || value.isEmpty)) {
       return ValidationResult.error(
         ValidationError.required(
-            fieldName: fieldName, message: requiredMessage,),
+          fieldName: fieldName,
+          message: requiredMessage,
+        ),
       );
     }
 

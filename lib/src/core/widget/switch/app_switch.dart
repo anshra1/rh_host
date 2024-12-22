@@ -25,12 +25,12 @@ class AppSwitch extends StatelessWidget {
           onChanged: disabled ? null : onChanged,
         ),
         if (label != null) ...[
-          SizedBox(width: Spacing.sm),
+          const SizedBox(width: Spacing.sm12),
           Expanded(
             child: Text(
               label!,
               style: AppFonts.bodyMedium.copyWith(
-                color: disabled ? AppColors.textDisabled : null,
+                color: disabled ? LightColorsToken.textDisabled : null,
               ),
             ),
           ),

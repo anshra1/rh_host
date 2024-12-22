@@ -1,4 +1,3 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:rh_host/src/core/design_system/base/app_font.dart';
 import 'package:rh_host/src/core/design_system/base/import.dart';
@@ -16,16 +15,16 @@ class AppSnackBar {
         content: Text(
           message,
           style: AppFonts.bodyMedium.copyWith(
-            color: AppColors.textInverse,
+            color: LightColorsToken.textInverse,
           ),
         ),
         action: action,
         duration: duration ?? const Duration(seconds: 4),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSize.radiusMD),
+          borderRadius: BorderRadius.circular(AppSize.radiusMD8),
         ),
-        margin: EdgeInsets.all(Spacing.md),
+        margin: const EdgeInsets.all(Spacing.md16),
       ),
     );
   }
@@ -41,17 +40,17 @@ class AppSnackBar {
         content: Text(
           message,
           style: AppFonts.bodyMedium.copyWith(
-            color: AppColors.textInverse,
+            color: LightColorsToken.textInverse,
           ),
         ),
         action: action,
         duration: duration ?? const Duration(seconds: 4),
-        backgroundColor: AppColors.success,
+        backgroundColor: LightColorsToken.success,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSize.radiusMD),
+          borderRadius: BorderRadius.circular(AppSize.radiusMD8),
         ),
-        margin: EdgeInsets.all(Spacing.md),
+        margin: const EdgeInsets.all(Spacing.md16),
       ),
     );
   }
@@ -67,17 +66,17 @@ class AppSnackBar {
         content: Text(
           message,
           style: AppFonts.bodyMedium.copyWith(
-            color: AppColors.textInverse,
+            color: LightColorsToken.textInverse,
           ),
         ),
         action: action,
         duration: duration ?? const Duration(seconds: 4),
-        backgroundColor: AppColors.error,
+        backgroundColor: LightColorsToken.error,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSize.radiusMD),
+          borderRadius: BorderRadius.circular(AppSize.radiusMD8),
         ),
-        margin: EdgeInsets.all(Spacing.md),
+        margin: const EdgeInsets.all(Spacing.md16),
       ),
     );
   }

@@ -1,7 +1,5 @@
 // Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-// Project imports:
 import 'package:rh_host/src/features/passcode/domain/usecases/passcode_usecase.dart';
 import 'package:rh_host/src/features/passcode/presentation/bloc/passcode_state.dart';
 

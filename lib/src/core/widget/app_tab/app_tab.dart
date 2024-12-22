@@ -21,27 +21,26 @@ class AppTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSize.tabBar,
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+      height: AppSize.tabBar48,
+      decoration: const BoxDecoration(
+        color: LightColorsToken.surface,
         border: Border(
           bottom: BorderSide(
-            color: AppColors.border,
-            width: AppSize.borderThin,
+            color: LightColorsToken.border,
           ),
         ),
       ),
       child: TabBar(
         tabs: tabs,
         isScrollable: isScrollable,
-        labelColor: AppColors.primaryColor,
-        unselectedLabelColor: AppColors.textSecondary,
+        labelColor: LightColorsToken.primaryLight,
+        unselectedLabelColor: LightColorsToken.textSecondary,
         labelStyle: AppFonts.labelMedium,
         unselectedLabelStyle: AppFonts.labelMedium,
-        indicator: UnderlineTabIndicator(
+        indicator: const UnderlineTabIndicator(
           borderSide: BorderSide(
-            color: AppColors.primaryColor,
-            width: AppSize.borderMedium,
+            color: LightColorsToken.primaryLight,
+            width: AppSize.borderMedium2,
           ),
         ),
         onTap: onTap,

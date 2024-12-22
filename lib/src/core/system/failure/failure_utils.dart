@@ -1,7 +1,4 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/failures/failure.dart';
@@ -35,9 +32,7 @@ class FailureUtils {
       ErrorCode.notFound || ErrorCode.notFoundPasscode => Icons.search_off,
 
       // Validation
-      ErrorCode.weakPassword ||
-      ErrorCode.emailInUse =>
-        Icons.warning_amber_rounded,
+      ErrorCode.weakPassword || ErrorCode.emailInUse => Icons.warning_amber_rounded,
 
       // Default
       _ => Icons.error_outline,
@@ -72,9 +67,7 @@ class FailureUtils {
   static String getTitle(Failure failure) {
     return switch (failure.code) {
       // Network related
-      ErrorCode.noInternet ||
-      ErrorCode.connectionLost =>
-        'No Internet Connection',
+      ErrorCode.noInternet || ErrorCode.connectionLost => 'No Internet Connection',
       ErrorCode.timeOut => 'Connection Timeout',
       ErrorCode.networkError => 'Network Error',
 

@@ -3,35 +3,35 @@ part of 'import.dart';
 /// Design tokens for spacing used throughout the app
 abstract class Spacing {
   // Base spacing units (based on 4pt grid)
-  static double get xxxs => 2; // 2dp
-  static double get xxs => 4; // 4dp
-  static double get xs => 8; // 8dp
-  static double get sm => 12; // 12dp
-  static double get md => 16; // 16dp
-  static double get lg => 24; // 24dp
-  static double get xl => 32; // 32dp
-  static double get xxl => 40; // 40dp
-  static double get xxxl => 48; // 48dp
+  static const double xxxs2 = 2; // 2dp
+  static const double xxs4 = 4; // 4dp
+  static const double xs8 = 8; // 8dp
+  static const double sm12 = 12; // 12dp
+  static const double md16 = 16; // 16dp
+  static const double lg24 = 24; // 24dp
+  static const double xl32 = 32; // 32dp
+  static const double xxl40 = 40; // 40dp
+  static const double xxxl48 = 48; // 48dp
 
   // Component specific spacing
-  static double get buttonSpacing => sm;
-  static double get cardPadding => md;
-  static double get listItemSpacing => xs;
-  static double get sectionSpacing => xl;
-  static double get screenMargin => md;
+  static const double buttonSpacing = sm12;
+  static const double cardPadding = md16;
+  static const double listItemSpacing = xs8;
+  static const double sectionSpacing = xl32;
+  static const double screenMargin = md16;
 
   // Layout spacing
-  static EdgeInsets get screenPadding => EdgeInsets.all(screenMargin);
-  static EdgeInsets get contentPadding => EdgeInsets.all(md);
-  static EdgeInsets get cardInnerPadding => EdgeInsets.all(cardPadding);
+  static const EdgeInsets screenPadding = EdgeInsets.all(screenMargin);
+  static const EdgeInsets contentPadding = EdgeInsets.all(md16);
+  static const EdgeInsets cardInnerPadding = EdgeInsets.all(cardPadding);
 
   // Gaps
-  static Gap get gapXS => Gap(xs);
-  static Gap get gapSM => Gap(sm);
-  static Gap get gapMD => Gap(md);
-  static Gap get gapLG => Gap(lg);
-  static Gap get gapXL => Gap(xl);
-  static Gap get gapXXL => Gap(xxl);
+  static const Gap gap4XS = Gap(xs8);
+  static const Gap gap8SM = Gap(sm12);
+  static const Gap gap16MD = Gap(md16);
+  static const Gap gap24LG = Gap(lg24);
+  static const Gap gap32XL = Gap(xl32);
+  static const Gap gap48XXL = Gap(xxl40);
 
   // Custom gaps
   static Gap height(double height) => Gap(height);

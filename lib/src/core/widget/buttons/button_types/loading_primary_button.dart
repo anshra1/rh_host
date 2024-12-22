@@ -38,7 +38,7 @@ class LoadingPrimaryButton extends HookWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('An error occurred: $e'),
-                      backgroundColor: AppColors.error,
+                      backgroundColor: LightColorsToken.error,
                     ),
                   );
                 }

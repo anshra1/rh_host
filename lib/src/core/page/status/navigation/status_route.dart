@@ -1,10 +1,6 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:go_router/go_router.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/presentation/status_screen_simple.dart';
 

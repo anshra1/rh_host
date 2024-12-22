@@ -2,10 +2,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-// Flutter imports:
 import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/enum/alert_type.dart';
 import 'package:rh_host/src/core/system/alert_system/alert.dart';
 import 'package:rh_host/src/core/system/alert_system/alert_action.dart';
@@ -181,8 +178,7 @@ class AlertManager {
               ? SnackBarAction(
                   label: alert.action!.label,
                   onPressed: alert.action!.onPressed,
-                  textColor:
-                      alert.action!.textColor ?? theme.colorScheme.onError,
+                  textColor: alert.action!.textColor ?? theme.colorScheme.onError,
                 )
               : null,
         ),

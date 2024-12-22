@@ -1,4 +1,3 @@
-// Flutter imports:
 import 'package:flutter/services.dart';
 
 class AppInputFormatters {
@@ -46,7 +45,8 @@ class AppInputFormatters {
 
   static TextInputFormatter get noEmoji {
     return FilteringTextInputFormatter.deny(
-      RegExp(r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'),
+      RegExp(
+          r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'),
     );
   }
 
@@ -58,7 +58,6 @@ class AppInputFormatters {
     return FilteringTextInputFormatter.allow(pattern);
   }
 }
-
 
 /// Custom formatter for passcode input
 class _PasscodeInputFormatter extends TextInputFormatter {

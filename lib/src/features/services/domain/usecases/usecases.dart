@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/features/services/domain/repositories/repositories.dart';
 
 class GetServicesUseCase {

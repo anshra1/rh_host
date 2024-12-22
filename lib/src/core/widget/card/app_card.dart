@@ -1,7 +1,4 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/elevation.dart';
 import 'package:rh_host/src/core/design_system/base/import.dart';
 import 'package:rh_host/src/core/design_system/base/size.dart';
@@ -30,16 +27,16 @@ class AppCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: elevation ?? ElevationTokens.level1,
-      margin: margin ?? EdgeInsets.all(Spacing.sm),
+      margin: margin ?? const EdgeInsets.all(Spacing.sm12),
       shape: RoundedRectangleBorder(
-        borderRadius: borderRadius ?? BorderRadius.circular(AppSize.radiusLG),
+        borderRadius: borderRadius ?? BorderRadius.circular(AppSize.radiusLG16),
       ),
-      color: backgroundColor ?? AppColors.surface,
+      color: backgroundColor ?? LightColorsToken.surface,
       child: InkWell(
         onTap: onTap,
-        borderRadius: borderRadius ?? BorderRadius.circular(AppSize.radiusLG),
+        borderRadius: borderRadius ?? BorderRadius.circular(AppSize.radiusLG16),
         child: Padding(
-          padding: padding ?? EdgeInsets.all(Spacing.md),
+          padding: padding ?? const EdgeInsets.all(Spacing.md16),
           child: child,
         ),
       ),

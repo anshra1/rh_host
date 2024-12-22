@@ -144,7 +144,7 @@
 //                         color: barColor ?? AppColors.primaryColor,
 //                         width: 16,
 //                         borderRadius: BorderRadius.vertical(
-//                           top: Radius.circular(AppSize.radiusSM),
+//                           top: Radius.circular(AppSize.radiusSM4),
 //                         ),
 //                       ),
 //                     ],

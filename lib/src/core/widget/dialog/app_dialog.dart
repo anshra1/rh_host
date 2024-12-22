@@ -1,7 +1,4 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/app_font.dart';
 import 'package:rh_host/src/core/design_system/base/import.dart';
 import 'package:rh_host/src/core/design_system/base/size.dart';
@@ -43,15 +40,15 @@ class AppDialog extends StatelessWidget {
       ),
       content: content,
       actions: actions,
-      titlePadding: EdgeInsets.only(
-        left: Spacing.md,
-        right: Spacing.md,
-        top: Spacing.md,
+      titlePadding: const EdgeInsets.only(
+        left: Spacing.md16,
+        right: Spacing.md16,
+        top: Spacing.md16,
       ),
-      contentPadding: EdgeInsets.all(Spacing.md),
-      actionsPadding: EdgeInsets.all(Spacing.sm),
+      contentPadding: const EdgeInsets.all(Spacing.md16),
+      actionsPadding: const EdgeInsets.all(Spacing.sm12),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSize.radiusLG),
+        borderRadius: BorderRadius.circular(AppSize.radiusLG16),
       ),
     );
   }

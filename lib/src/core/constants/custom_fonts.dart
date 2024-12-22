@@ -1,4 +1,3 @@
-// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 const p8 = TextStyle(fontSize: 8, height: 1.2);

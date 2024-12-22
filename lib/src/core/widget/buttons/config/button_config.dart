@@ -13,23 +13,23 @@ class ButtonConfig {
     switch (size) {
       case ButtonSize.small:
         return ButtonConfig(
-          height: AppSize.buttonSM,
-          padding: EdgeInsets.symmetric(horizontal: Spacing.sm),
-          borderRadius: AppSize.radiusSM,
+          height: AppSize.buttonSM32,
+          padding: const EdgeInsets.symmetric(horizontal: Spacing.sm12),
+          borderRadius: AppSize.radiusSM4,
           fontSize: 14,
         );
       case ButtonSize.medium:
         return ButtonConfig(
-          height: AppSize.buttonMD,
-          padding: EdgeInsets.symmetric(horizontal: Spacing.md),
-          borderRadius: AppSize.radiusMD,
+          height: AppSize.buttonMD40,
+          padding: const EdgeInsets.symmetric(horizontal: Spacing.md16),
+          borderRadius: AppSize.radiusMD8,
           fontSize: 16,
         );
       case ButtonSize.large:
         return ButtonConfig(
-          height: AppSize.buttonLG,
-          padding: EdgeInsets.symmetric(horizontal: Spacing.lg),
-          borderRadius: AppSize.radiusLG,
+          height: AppSize.buttonLG48,
+          padding: const EdgeInsets.symmetric(horizontal: Spacing.lg24),
+          borderRadius: AppSize.radiusLG16,
           fontSize: 18,
         );
     }

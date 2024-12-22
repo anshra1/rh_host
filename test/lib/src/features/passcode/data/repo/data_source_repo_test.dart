@@ -4,15 +4,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/error/errror_system/error_handler.dart';
 import 'package:rh_host/src/core/error/failures/failure.dart';
 import 'package:rh_host/src/features/passcode/data/repo/data_source_repo.dart';
 import 'package:rh_host/src/features/passcode/data/sources/passcode_remote_data_source.dart';
 
-class MockPasscodeRemoteDataSource extends Mock
-    implements PasscodeRemoteDataSource {}
+class MockPasscodeRemoteDataSource extends Mock implements PasscodeRemoteDataSource {}
 
 class MockErrorHandler extends Mock implements ErrorHandler {}
 
@@ -183,8 +180,7 @@ void main() {
       () async {
         // Arrange
         final tException = Exception('Test error');
-        when(() => mockRemoteDataSource.verifyPasscode(any()))
-            .thenThrow(tException);
+        when(() => mockRemoteDataSource.verifyPasscode(any())).thenThrow(tException);
 
         when(
           () => mockErrorHandler.handleError(
@@ -251,8 +247,7 @@ void main() {
       () async {
         // Arrange
         final tException = Exception('Test error');
-        when(() => mockRemoteDataSource.enableDisablePasscode())
-            .thenThrow(tException);
+        when(() => mockRemoteDataSource.enableDisablePasscode()).thenThrow(tException);
 
         when(
           () => mockErrorHandler.handleError(
@@ -317,8 +312,7 @@ void main() {
       () async {
         // Arrange
         final tException = Exception('Test error');
-        when(() => mockRemoteDataSource.shouldShowPasscode())
-            .thenThrow(tException);
+        when(() => mockRemoteDataSource.shouldShowPasscode()).thenThrow(tException);
 
         when(
           () => mockErrorHandler.handleError(

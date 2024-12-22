@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/core/enum/error_codes.dart';
 
 extension ErrorCodeX on ErrorCode {

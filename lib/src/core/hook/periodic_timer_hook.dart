@@ -1,7 +1,6 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -21,8 +20,7 @@ class _TimerHook extends Hook<Timer> {
   final VoidCallback onTick;
 
   @override
-  _TimerHookState createState() =>
-      _TimerHookState(duration: duration, onTick: onTick);
+  _TimerHookState createState() => _TimerHookState(duration: duration, onTick: onTick);
 }
 
 class _TimerHookState extends HookState<Timer, _TimerHook> {

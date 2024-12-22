@@ -20,8 +20,8 @@ class AppBottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+      decoration: const BoxDecoration(
+        color: LightColorsToken.surface,
         boxShadow: ElevationTokens.shadow1,
       ),
       child: SafeArea(
@@ -32,8 +32,8 @@ class AppBottomNavigation extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: showLabels,
           showUnselectedLabels: showLabels,
-          selectedItemColor: AppColors.primaryColor,
-          unselectedItemColor: AppColors.textSecondary,
+          selectedItemColor: LightColorsToken.primaryLight,
+          unselectedItemColor: LightColorsToken.textSecondary,
           selectedLabelStyle: AppFonts.labelSmall,
           unselectedLabelStyle: AppFonts.labelSmall,
         ),

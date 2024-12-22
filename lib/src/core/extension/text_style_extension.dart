@@ -1,6 +1,4 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/import.dart';
 
 extension TextStyleExtension on TextStyle {
@@ -22,12 +20,12 @@ extension TextStyleExtension on TextStyle {
   TextStyle get lineThrough => copyWith(decoration: TextDecoration.lineThrough);
 
   // Font Color
-  TextStyle get primaryColor => copyWith(color: AppColors.primaryColor);
-  TextStyle get red => copyWith(color: AppColors.error);
+  TextStyle get primaryColor => copyWith(color: LightColorsToken.primaryLight);
+  TextStyle get red => copyWith(color: LightColorsToken.error);
   TextStyle get white => copyWith(color: Colors.white);
-  TextStyle get black => copyWith(color: AppColors.neutral1000);
-  TextStyle get secondryTextColor => copyWith(color: AppColors.textSecondary);
-  TextStyle get primaryTextColor => copyWith(color: AppColors.textPrimary);
+  TextStyle get black => copyWith(color: LightColorsToken.neutral1000);
+  TextStyle get secondryTextColor => copyWith(color: LightColorsToken.textSecondary);
+  TextStyle get primaryTextColor => copyWith(color: LightColorsToken.textPrimary);
 
 //   TextStyle get yellow => copyWith(color: AppColor.f);
 //   TextStyle get lightyellow => copyWith(color: AppColor.lightyellow);

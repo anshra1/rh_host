@@ -1,4 +1,3 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 
 abstract class MotionTokens {
@@ -18,36 +17,36 @@ abstract class MotionTokens {
   static const Curve emphasizedDecelerate = Curves.easeOutCubic;
 
   // Page transitions
-  static PageTransitionsTheme get pageTransitions => const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-        },
-      );
+  static const pageTransitions = PageTransitionsTheme(
+    builders: {
+      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+    },
+  );
 
-  // Common animation presets
-  static AnimationConfig get fadeIn => const AnimationConfig(
-        curve: standardDecelerate,
-        duration: durationMD,
-      );
+  // Common animation presets - these need to stay as getters since they create new instances
+  static const fadeIn = AnimationConfig(
+    curve: standardDecelerate,
+    duration: durationMD,
+  );
 
-  static AnimationConfig get fadeOut => const AnimationConfig(
-        curve: standardAccelerate,
-        duration: durationSM,
-      );
+  static const fadeOut = AnimationConfig(
+    curve: standardAccelerate,
+    duration: durationSM,
+  );
 
-  static AnimationConfig get slideIn => const AnimationConfig(
-        curve: emphasizedDecelerate,
-        duration: durationMD,
-      );
+  static const slideIn = AnimationConfig(
+    curve: emphasizedDecelerate,
+    duration: durationMD,
+  );
 
-  static AnimationConfig get slideOut => const AnimationConfig(
-        curve: emphasizedAccelerate,
-        duration: durationSM,
-      );
+  static const slideOut = AnimationConfig(
+    curve: emphasizedAccelerate,
+    duration: durationSM,
+  );
 }
 
-// New class for animation configuration
+/// Configuration class for animations
 class AnimationConfig {
   const AnimationConfig({
     required this.curve,
@@ -56,4 +55,14 @@ class AnimationConfig {
 
   final Curve curve;
   final Duration duration;
+
+  AnimationConfig copyWith({
+    Curve? curve,
+    Duration? duration,
+  }) {
+    return AnimationConfig(
+      curve: curve ?? this.curve,
+      duration: duration ?? this.duration,
+    );
+  }
 }

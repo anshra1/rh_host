@@ -1,6 +1,4 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/import.dart';
 
 class PasscodeInput extends StatelessWidget {
@@ -21,8 +19,8 @@ class PasscodeInput extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: index < _passcode.length
-                ? AppColors.primaryColor
-                : AppColors.backgroundSecondary,
+                ? LightColorsToken.primaryLight
+                : LightColorsToken.backgroundSecondary,
           ),
         ),
       ),

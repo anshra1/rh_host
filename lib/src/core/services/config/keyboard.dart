@@ -1,6 +1,5 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-// Flutter imports:
 import 'package:flutter/material.dart';
 
 class DismissKeyboard extends StatelessWidget {
@@ -12,8 +11,7 @@ class DismissKeyboard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         final currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus &&
-            currentFocus.focusedChild != null) {
+        if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
           FocusManager.instance.primaryFocus!.unfocus();
         }
       },

@@ -32,7 +32,7 @@ class AppDropdown<T> extends StatelessWidget {
             label!,
             style: AppFonts.labelMedium,
           ),
-          SizedBox(height: Spacing.xxs),
+          const SizedBox(height: Spacing.xxs4),
         ],
         DropdownButtonFormField<T>(
           value: value,
@@ -41,13 +41,13 @@ class AppDropdown<T> extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             errorText: error,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: Spacing.md,
-              vertical: Spacing.sm,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: Spacing.md16,
+              vertical: Spacing.sm12,
             ),
           ),
           style: AppFonts.bodyMedium.copyWith(
-            color: disabled ? AppColors.textDisabled : null,
+            color: disabled ? LightColorsToken.textDisabled : null,
           ),
         ),
       ],

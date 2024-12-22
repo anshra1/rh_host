@@ -1,13 +1,10 @@
 // Package imports:
 import 'package:equatable/equatable.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/other/typedef/typedef.dart';
 import 'package:rh_host/src/core/other/usecases/usecases.dart';
 import 'package:rh_host/src/features/passcode/domain/repositories/passcode_repo.dart';
 
-class SetNewPasscode
-    extends FutureUseCaseWithParams<bool, SetNewPasscodeParams> {
+class SetNewPasscode extends FutureUseCaseWithParams<bool, SetNewPasscodeParams> {
   const SetNewPasscode({required this.passcodeRepo});
 
   final PasscodeRepo passcodeRepo;
@@ -22,8 +19,7 @@ class SetNewPasscode
   }
 }
 
-class VerifyPasscode
-    extends FutureUseCaseWithParams<bool, VerifyPasscodeParams> {
+class VerifyPasscode extends FutureUseCaseWithParams<bool, VerifyPasscodeParams> {
   const VerifyPasscode({required this.passcodeRepo});
 
   final PasscodeRepo passcodeRepo;

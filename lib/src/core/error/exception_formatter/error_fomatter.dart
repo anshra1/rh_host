@@ -1,10 +1,7 @@
 // import 'package:rh_host/src/core/error/exception/exception.dart';
 // import 'package:rh_host/src/core/error/exception_formatter/stack_trace_parser.dart';
 
-// Flutter imports:
 import 'package:flutter/foundation.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';
 import 'package:rh_host/src/core/error/exception/exception.dart';
@@ -48,7 +45,9 @@ $formattedStack
 
   // For production logging/analytics
   static Map<String, dynamic> toJson(
-      AppException error, StackTrace stackTrace,) {
+    AppException error,
+    StackTrace stackTrace,
+  ) {
     return {
       'timestamp': DateTime.now().toIso8601String(),
       'method': error.methodName,
@@ -59,8 +58,7 @@ $formattedStack
       'message': error.showUImessage,
       'debug_code': error.debugCode,
       'details': error.debugDetails,
-      'location':
-          StackTraceParser.formatStackTrace(stackTrace).split('\n').first,
+      'location': StackTraceParser.formatStackTrace(stackTrace).split('\n').first,
     };
   }
 
@@ -75,7 +73,11 @@ $formattedStack
       return _formatAppException(error, stackTrace);
     }
     return _formatGenericError(
-        error, stackTrace, methodName, additionalContext,);
+      error,
+      stackTrace,
+      methodName,
+      additionalContext,
+    );
   }
 
   static String _formatAppException(AppException error, StackTrace stackTrace) {
@@ -161,8 +163,7 @@ ${_getGenericFixes(error, rootCause)}
       }
 
       if (line.contains('package:') || line.contains('/lib/')) {
-        final match =
-            RegExp(r'#\d+\s+(.+)\s+\((.+):(\d+):(\d+)\)').firstMatch(line);
+        final match = RegExp(r'#\d+\s+(.+)\s+\((.+):(\d+):(\d+)\)').firstMatch(line);
         if (match != null) {
           final method = match.group(1)?.trim();
           final file = match.group(2)?.split('/').last;
@@ -201,8 +202,7 @@ ${_getGenericFixes(error, rootCause)}
         final match = RegExp(r'#\d+\s+(.+)\s+\((.+)\)').firstMatch(line);
         if (match != null) {
           final method = match.group(1)?.trim();
-          final location =
-              match.group(2)?.split('/').last.replaceAll('.dart', '');
+          final location = match.group(2)?.split('/').last.replaceAll('.dart', '');
           impactedPaths.add('  → $method in $location');
         }
       }
@@ -230,8 +230,7 @@ ${_getGenericFixes(error, rootCause)}
     }
 
     // Add severity-based recommendations
-    if (error.severity == ErrorSeverity.high ||
-        error.severity == ErrorSeverity.fatal) {
+    if (error.severity == ErrorSeverity.high || error.severity == ErrorSeverity.fatal) {
       fixes.add('• Consider implementing error boundary or fallback mechanism');
     }
 
@@ -290,8 +289,7 @@ ${_getGenericFixes(error, rootCause)}
   }
 
   static String _getAttemptInfo(String methodName) {
-    final attemptMatch =
-        RegExp(r'Attempt (\d+) of (\d+)').firstMatch(methodName);
+    final attemptMatch = RegExp(r'Attempt (\d+) of (\d+)').firstMatch(methodName);
     if (attemptMatch != null) {
       return '(Attempt ${attemptMatch.group(1)} of ${attemptMatch.group(2)})';
     }

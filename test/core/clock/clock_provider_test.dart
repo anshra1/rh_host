@@ -4,8 +4,6 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/system/clock/app_time.dart';
 import 'package:rh_host/src/core/system/clock/clock_provider.dart';
 import 'package:rh_host/src/core/system/clock/time_config.dart';
@@ -38,16 +36,15 @@ void main() {
     test('should return true for time within discrepancy limit', () {
       withClock(Clock.fixed(DateTime(2024)), () {
         final time = AppDateTime(
-            dateTime: DateTime(2024).add(const Duration(minutes: 4)),);
+          dateTime: DateTime(2024).add(const Duration(minutes: 4)),
+        );
 
         expect(timeProvider.isTimeValid(time), true);
         verifyNever(() => logger.warning(any<String>(), any<String>(), any()));
       });
     });
 
-    test(
-        'should return false and log warning for time outside discrepancy limit',
-        () {
+    test('should return false and log warning for time outside discrepancy limit', () {
       withClock(Clock.fixed(DateTime(2024)), () {
         final time = AppDateTime(
           dateTime: DateTime(2024).add(const Duration(minutes: 6)),
@@ -55,8 +52,13 @@ void main() {
 
         expect(timeProvider.isTimeValid(time), false);
 
-        verify(() => logger.warning(
-            'Time discrepancy detected', any<String>(), any(),),).called(1);
+        verify(
+          () => logger.warning(
+            'Time discrepancy detected',
+            any<String>(),
+            any(),
+          ),
+        ).called(1);
       });
     });
   });

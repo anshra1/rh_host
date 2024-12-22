@@ -27,8 +27,8 @@ class AppCheckbox extends StatelessWidget {
         Row(
           children: [
             SizedBox(
-              height: AppSize.buttonSM,
-              width: AppSize.buttonSM,
+              height: AppSize.buttonSM32,
+              width: AppSize.buttonSM32,
               child: Checkbox(
                 value: value,
                 onChanged: disabled ? null : (value) => onChanged?.call(value!),
@@ -36,12 +36,12 @@ class AppCheckbox extends StatelessWidget {
               ),
             ),
             if (label != null) ...[
-              SizedBox(width: Spacing.sm),
+              const SizedBox(width: Spacing.sm12),
               Expanded(
                 child: Text(
                   label!,
                   style: AppFonts.bodyMedium.copyWith(
-                    color: disabled ? AppColors.textDisabled : null,
+                    color: disabled ? LightColorsToken.textDisabled : null,
                   ),
                 ),
               ),
@@ -49,11 +49,11 @@ class AppCheckbox extends StatelessWidget {
           ],
         ),
         if (error != null) ...[
-          SizedBox(height: Spacing.xxs),
+          const SizedBox(height: Spacing.xxs4),
           Text(
             error!,
             style: AppFonts.labelSmall.copyWith(
-              color: AppColors.error,
+              color: LightColorsToken.error,
             ),
           ),
         ],

@@ -1,10 +1,6 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/app_font.dart';
 import 'package:rh_host/src/core/design_system/base/import.dart';
 import 'package:rh_host/src/core/design_system/base/size.dart';
@@ -43,9 +39,9 @@ class AppBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: LightColorsToken.surface,
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSize.radiusLG),
+          top: Radius.circular(AppSize.radiusLG16),
         ),
       ),
       child: SafeArea(
@@ -54,7 +50,7 @@ class AppBottomSheet extends StatelessWidget {
           children: [
             _DragHandle(),
             Padding(
-              padding: EdgeInsets.all(Spacing.md),
+              padding: const EdgeInsets.all(Spacing.md16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -62,10 +58,10 @@ class AppBottomSheet extends StatelessWidget {
                     title,
                     style: AppFonts.headlineSmall,
                   ),
-                  SizedBox(height: Spacing.md),
+                  const SizedBox(height: Spacing.md16),
                   content,
                   if (actions != null) ...[
-                    SizedBox(height: Spacing.md),
+                    const SizedBox(height: Spacing.md16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: actions!,
@@ -86,11 +82,11 @@ class _DragHandle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: Spacing.sm),
+        margin: const EdgeInsets.symmetric(vertical: Spacing.sm12),
         width: 32.w,
         height: 4.h,
         decoration: BoxDecoration(
-          color: AppColors.neutral400,
+          color: LightColorsToken.neutral400,
           borderRadius: BorderRadius.circular(AppSize.radiusCircle),
         ),
       ),

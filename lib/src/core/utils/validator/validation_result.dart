@@ -1,7 +1,5 @@
 // Package imports:
 import 'package:equatable/equatable.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/utils/validator/validation_error.dart';
 
 class ValidationResult extends Equatable {

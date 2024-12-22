@@ -1,14 +1,10 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/system/network/network_info.dart';
 
 class ConnectivityService extends ChangeNotifier {
@@ -31,9 +27,8 @@ class ConnectivityService extends ChangeNotifier {
 
   bool get isOffline => !_hasConnection;
 
-  Duration? get offlineDuration => _lastOfflineTime != null
-      ? DateTime.now().difference(_lastOfflineTime!)
-      : null;
+  Duration? get offlineDuration =>
+      _lastOfflineTime != null ? DateTime.now().difference(_lastOfflineTime!) : null;
 
   Future<void> _initialize() async {
     // Listen to platform connectivity changes

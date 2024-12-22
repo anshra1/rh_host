@@ -2,8 +2,6 @@
 
 // Package imports:
 import 'package:firebase_core/firebase_core.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/enum/error_catogory.dart';
 import 'package:rh_host/src/core/enum/error_codes.dart';
 import 'package:rh_host/src/core/enum/error_severity.dart';

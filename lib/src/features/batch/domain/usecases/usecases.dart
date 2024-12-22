@@ -1,4 +1,3 @@
-// Project imports:
 import 'package:rh_host/src/features/batch/domain/repositories/repositories.dart';
 
 class GetBatchUseCase {

@@ -82,7 +82,7 @@ class _AppOTPInputState extends State<AppOTPInput> {
                 decoration: InputDecoration(
                   counterText: '',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppSize.radiusSM),
+                    borderRadius: BorderRadius.circular(AppSize.radiusSM4),
                   ),
                 ),
                 onChanged: (value) => _onChanged(value, index),
@@ -91,11 +91,11 @@ class _AppOTPInputState extends State<AppOTPInput> {
           }),
         ),
         if (widget.error != null) ...[
-          SizedBox(height: Spacing.xxs),
+          const SizedBox(height: Spacing.xxs4),
           Text(
             widget.error!,
             style: AppFonts.labelSmall.copyWith(
-              color: AppColors.error,
+              color: LightColorsToken.error,
             ),
           ),
         ],

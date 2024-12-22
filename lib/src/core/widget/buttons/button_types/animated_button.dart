@@ -1,10 +1,7 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/motion.dart';
-import 'package:rh_host/src/core/widget/buttons/import.dart';
 import 'package:rh_host/src/core/enum/button_enum.dart';
+import 'package:rh_host/src/core/widget/buttons/import.dart';
 
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({

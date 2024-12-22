@@ -1,11 +1,8 @@
 // Dart imports:
 import 'dart:math';
 
-// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-// Project imports:
 import 'package:rh_host/src/core/extension/context.dart';
 
 extension ButtonContentExtension on AdvancedButtonContent {

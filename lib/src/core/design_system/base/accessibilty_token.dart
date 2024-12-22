@@ -1,8 +1,6 @@
 // lib/src/design/tokens/accessibility_tokens.dart
 
-// Flutter imports:
 import 'package:flutter/material.dart';
-// Project imports:
 import 'package:rh_host/src/core/design_system/base/import.dart';
 
 abstract class AccessibilityTokens {
@@ -16,7 +14,7 @@ abstract class AccessibilityTokens {
 
   // Focus indicators
   static const double focusRingWidth = 2;
-  static const Color focusRingColor = AppColors.primaryColor;
+  static const Color focusRingColor = LightColorsToken.primaryLight;
 
   // Animation settings
   static const bool reduceMotion = false;

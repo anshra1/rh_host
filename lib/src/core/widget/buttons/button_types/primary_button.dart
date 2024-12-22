@@ -26,6 +26,7 @@ class PrimaryButton extends StatelessWidget {
       text: label,
       onPressed: onPressed,
       size: size,
+      shape: ButtonShape.rounded,
       variant: ButtonVariant.primary,
       isDisabled: isDisabled,
       icon: icon,
