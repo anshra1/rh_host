@@ -26,14 +26,14 @@ abstract class Spacing {
   static const EdgeInsets cardInnerPadding = EdgeInsets.all(cardPadding);
 
   // Gaps
-  static const Gap gap4XS = Gap(xs8);
+  static const Gap gap2XXS = Gap(2);
+  static const Gap gap4XS = Gap(xxs4);
   static const Gap gap8SM = Gap(sm12);
   static const Gap gap16MD = Gap(md16);
   static const Gap gap24LG = Gap(lg24);
   static const Gap gap32XL = Gap(xl32);
   static const Gap gap48XXL = Gap(xxl40);
 
-  // Custom gaps
-  static Gap height(double height) => Gap(height);
-  static Gap width(double width) => Gap(width);
+  
+  
 }

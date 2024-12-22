@@ -14,6 +14,9 @@ class StatusFactory {
     List<StatusAction>? additionalActions,
     Widget? customContent,
     Duration timeout = const Duration(seconds: 3),
+    String? secondaryButtonText,
+    
+    
   }) {
     return StatusScreenModel(
       type: StatusType.success,
@@ -26,6 +29,8 @@ class StatusFactory {
       showCloseButton: showCloseButton,
       additionalActions: additionalActions,
       customContent: customContent,
+      secondaryButtonText: secondaryButtonText,
+      
     );
   }
 

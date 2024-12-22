@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 extension WidgetExtensions on Widget {
+ 
+
+  //
   Widget center() => Center(child: this);
 
   Widget padding(EdgeInsetsGeometry padding) => Padding(

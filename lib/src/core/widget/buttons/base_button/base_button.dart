@@ -30,6 +30,8 @@ class BaseButton extends StatelessWidget {
     this.backgroundColor,
     this.tooltip,
     this.elevation,
+    this.customTextColor,
+    this.customBackgroundColor,
     super.key,
   });
 
@@ -47,6 +49,8 @@ class BaseButton extends StatelessWidget {
   final String? tooltip;
   final double? elevation;
   final TextStyle? textStyle;
+  final Color? customTextColor;
+  final Color? customBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -55,37 +59,37 @@ class BaseButton extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // Determine colors based on variant and theme
-    Color bgColor;
-    Color textColor;
+    var bgColor = customBackgroundColor ?? backgroundColor ?? colorScheme.primary;
+    var textColor = customTextColor ?? colorScheme.onPrimary;
     var borderSide = BorderSide.none;
-    double? buttonElevation;
+    double? buttonElevation = elevation ?? 2;
 
     switch (variant) {
       case ButtonVariant.primary:
-        bgColor = backgroundColor ?? colorScheme.primary;
-        textColor = colorScheme.onPrimary;
+        bgColor = customBackgroundColor ?? backgroundColor ?? colorScheme.primary;
+        textColor = customTextColor ?? colorScheme.onPrimary;
         buttonElevation = elevation ?? 2;
 
       case ButtonVariant.secondary:
-        bgColor = backgroundColor ?? colorScheme.secondary;
-        textColor = colorScheme.onSecondary;
+        bgColor = customBackgroundColor ?? backgroundColor ?? colorScheme.secondary;
+        textColor = customTextColor ?? colorScheme.onSecondary;
         buttonElevation = elevation ?? 2;
 
       case ButtonVariant.outline:
         bgColor = Colors.transparent;
-        textColor = colorScheme.primary;
+        textColor = customTextColor ?? colorScheme.primary;
         borderSide = BorderSide(color: colorScheme.outline);
         buttonElevation = elevation ?? 0;
 
       case ButtonVariant.text:
         bgColor = Colors.transparent;
-        textColor = colorScheme.primary;
+        textColor = customTextColor ?? colorScheme.primary;
         buttonElevation = elevation ?? 0;
     }
 
     if (isDisabled) {
       bgColor = theme.disabledColor;
-      textColor = theme.colorScheme.onSurface.withOpacity(0.38);
+      textColor = theme.colorScheme.onSurface.withAlpha((0.38 * 255).toInt());
       borderSide = borderSide.copyWith(color: theme.disabledColor);
     }
 
@@ -131,7 +135,7 @@ class BaseButton extends StatelessWidget {
               padding: shape == ButtonShape.circle ? EdgeInsets.zero : config.padding,
               shape: buttonShape,
               disabledBackgroundColor: theme.disabledColor,
-              disabledForegroundColor: theme.colorScheme.onSurface.withOpacity(0.38),
+              disabledForegroundColor: theme.colorScheme.onSurface.withAlpha((0.38 * 255).toInt()),
             ),
             child: isLoading
                 ? _buildLoadingIndicator(textColor)

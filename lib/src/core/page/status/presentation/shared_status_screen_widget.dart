@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:rh_host/src/core/design_system/base/app_font.dart';
 import 'package:rh_host/src/core/design_system/base/import.dart';
+import 'package:rh_host/src/core/enum/button_enum.dart';
 import 'package:rh_host/src/core/extension/context.dart';
+import 'package:rh_host/src/core/extension/text_style_extension.dart';
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/themes/status_theme.dart';
 import 'package:rh_host/src/core/system/logger/debug_logger.dart';
@@ -33,7 +36,8 @@ class StatusScreenContent extends StatelessWidget {
               children: [
                 _buildStatusIcon(),
                 Spacing.gap8SM,
-                AppText.titleLarge(
+                AppText(
+                  style: AppFonts.headlineLarge.medium,
                   config.title,
                   color: context.textPrimary,
                 ),
@@ -42,11 +46,11 @@ class StatusScreenContent extends StatelessWidget {
                   config.message,
                   color: context.textSecondary,
                 ),
-                Condition(config: config),
+                CustomContentWidget(config: config),
               ],
             ),
           ),
-          _buildActions(context),
+          StatusActionsWidget(config: config),
           Spacing.gap24LG,
         ],
       ),
@@ -70,15 +74,24 @@ class StatusScreenContent extends StatelessWidget {
       color: theme.color,
     );
   }
+}
 
-  Widget _buildActions(BuildContext context) {
+class StatusActionsWidget extends StatelessWidget {
+  const StatusActionsWidget({
+    required this.config,
+    super.key,
+  });
+
+  final StatusScreenModel config;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PrimaryButton(
           onPressed: () {
-            //  StatusAnalytics.logStatusAction('primary_button', config);
             if (config.nextRouteParams != null) {
               context.pushReplacementNamed(
                 config.nextRoute,
@@ -90,43 +103,42 @@ class StatusScreenContent extends StatelessWidget {
           },
           label: config.primaryButtonText,
         ),
-        if (config.secondaryButtonText != null) ...[
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: () {
-              //  StatusAnalytics.logStatusAction('secondary_button', config);
-              context.pop();
-            },
-            child: Text(config.secondaryButtonText!),
+        ConditionalContent(
+          show: config.secondaryButtonText != null,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Spacing.gap16MD,
+              OutlineButton(
+                onPressed: () => context.pop(),
+                text: config.secondaryButtonText!,
+              ),
+            ],
           ),
-        ],
-        if (config.additionalActions != null) ...[
-          const SizedBox(height: 16),
-          ..._buildAdditionalActions(context),
-        ],
+        ),
+        ConditionalContent(
+          show: config.additionalActions != null,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Spacing.gap16MD,
+              ...config.additionalActions!.map((action) {
+                return BaseButton(
+                  variant: ButtonVariant.secondary,
+                  onPressed: () => action.onPressed(),
+                  text: action.label,
+                );
+              }),
+            ],
+          ),
+        ),
       ],
     );
   }
-
-  List<Widget> _buildAdditionalActions(BuildContext context) {
-    return config.additionalActions!.map((action) {
-      return TextButton(
-        onPressed: () {
-          // StatusAnalytics.logStatusAction('additional_action', config);
-          action.onPressed();
-        },
-        style: TextButton.styleFrom(
-          foregroundColor: action.textColor,
-          backgroundColor: action.backgroundColor,
-        ),
-        child: Text(action.label),
-      );
-    }).toList();
-  }
 }
 
-class Condition extends StatelessWidget {
-  const Condition({
+class CustomContentWidget extends StatelessWidget {
+  const CustomContentWidget({
     required this.config,
     super.key,
   });
