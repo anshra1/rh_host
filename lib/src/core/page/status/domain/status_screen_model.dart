@@ -1,7 +1,5 @@
 part of '../../import.dart';
 
-enum StatusType { success, error, warning, info, loading }
-
 class StatusScreenModel extends Equatable {
   const StatusScreenModel({
     required this.type,

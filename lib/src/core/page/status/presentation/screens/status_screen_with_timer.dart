@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rh_host/src/core/page/import.dart';
-import 'package:rh_host/src/core/page/status/presentation/shared_status_screen_widget.dart';
+import 'package:rh_host/src/core/page/status/presentation/widgets/status_screen_content.dart';
 
 class StatusScreenWithTimer extends HookWidget {
   const StatusScreenWithTimer({required this.config, super.key});

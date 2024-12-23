@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:go_router/go_router.dart';
 import 'package:rh_host/src/core/page/import.dart';
-import 'package:rh_host/src/core/page/status/presentation/status_screen_simple.dart';
+import 'package:rh_host/src/core/page/status/presentation/screens/status_screen_simple.dart';
 
 class StatusNavigation {
   const StatusNavigation();
 
-  static Future<void> moveTo({
+  static Future<void> moveToSucessScreen({
     required BuildContext context,
     required StatusScreenModel status,
     bool replace = true,

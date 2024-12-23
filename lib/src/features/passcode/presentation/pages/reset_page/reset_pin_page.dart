@@ -51,7 +51,7 @@ class ResetPinPage extends StatelessWidget {
               ],
             );
 
-            StatusNavigation.moveTo(context: context, status: status);
+            StatusNavigation.moveToSucessScreen(context: context, status: status);
 
           default:
             LoadingController.instance.hide(context);
