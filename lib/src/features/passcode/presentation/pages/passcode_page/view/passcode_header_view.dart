@@ -4,35 +4,60 @@ class PasscodeHeader extends StatelessWidget {
   const PasscodeHeader({
     required this.passcode,
     required this.isError,
+    this.iconSize = 50,
+    this.spacing = 20,
     super.key,
   });
 
   final String passcode;
   final bool isError;
+  final double iconSize;
+  final double spacing;
 
   @override
   Widget build(BuildContext context) {
+    DebugLogger.instance.info('PasscodePage build $isError');
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: spacing.h,
       children: [
-        50.gap,
-        Icon(
-          isError ? Icons.error_outline : Icons.lock_outline,
-          size: 50,
-          color: isError ? LightColorsToken.error : LightColorsToken.primaryLight,
-        ),
-        20.gap,
-        Text(
-          isError ? Strings.invalidPinCode : Strings.pleaseEnterPasscode,
-          style: p18.bold.copyWith(
-            color: isError ? LightColorsToken.error : null,
-          ),
-        ),
-        20.gap,
-        PasscodeInput(
-          passcode: passcode,
-          //  isError: isError,
-        ),
+        // Top spacing that adapts to screen size
+        Gap(50.h),
+
+        // Icon with state-based styling
+        _buildStateIcon(context),
+
+        // Message text with state-based styling
+        _buildMessageText(context),
+
+        // Passcode input field
+        PasscodeInput(passcode: passcode),
       ],
+    );
+  }
+
+  Widget _buildStateIcon(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: MotionTokens.durationMD,
+      child: Icon(
+        key: ValueKey<bool>(isError),
+        Icons.lock_outline,
+        size: iconSize.w,
+        color: isError ? context.iconError : context.customColors.info,
+      ),
+    );
+  }
+
+  Widget _buildMessageText(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: MotionTokens.durationMD,
+      child: AppText(
+        isError ? Strings.passcodeFailed : Strings.pleaseEnterPasscode,
+        color: isError ? context.textError : context.textPrimary,
+        style: AppFonts.titleLarge.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 }

@@ -8,20 +8,18 @@ class Strings {
   static const String passcodeLastLoginupdatedAt = 'updated_at';
   static const String internetRequiredToSetPasscode =
       'Internet connection required to set passcode';
-  static const String connectionLostDuringOperation =
-      'Connection lost during operation';
+  static const String connectionLostDuringOperation = 'Connection lost during operation';
 
   // passcode
   static const String failedToSetNewPasscode = 'Failed to set new passcode';
   static const String invalidMasterPasscode = 'invalid master passcode';
 
-  static const String newAndConfirmPasscodeNoMatch =
-      'New and confirm not match';
+  static const String newAndConfirmPasscodeNoMatch = 'New and confirm not match';
   static const String passcodeNotSet = 'passcode is not set';
   static const String failedToVerifyPasscode = 'Failed to verify passcode';
   static const String pleaseEnterPasscode = 'Please enter your Passcode';
   static const String forgetPin = 'Forgot PIN?';
-  static const String invalidPinCode = 'Invalid Pin Code';
+  static const String passcodeFailed = 'Passcode failed to verify';
 
   // Error
   static const String unknownError = 'unknown Error';

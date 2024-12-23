@@ -100,14 +100,14 @@ class FailureManager {
                 Text(
                   '[${failure.code.name}]',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onError.withOpacity(0.7),
+                    color: theme.colorScheme.onError.withAlpha((0.7 * 255).toInt()),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   failure.category.name,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onError.withOpacity(0.7),
+                    color: theme.colorScheme.onError.withAlpha((0.7 * 255).toInt()),
                   ),
                 ),
               ],
@@ -126,7 +126,7 @@ class FailureManager {
               Text(
                 'This error cannot be recovered automatically',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onError.withOpacity(0.7),
+                  color: theme.colorScheme.onError.withAlpha((0.7 * 255).toInt()),
                   fontStyle: FontStyle.italic,
                 ),
               ),

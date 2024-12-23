@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:rh_host/src/core/design_system/base/app_colors.dart';
-import 'package:rh_host/src/core/design_system/base/app_font.dart';
 import 'package:rh_host/src/core/design_system/base/import.dart';
 import 'package:rh_host/src/core/design_system/base/motion.dart';
 import 'package:rh_host/src/core/design_system/base/size.dart';

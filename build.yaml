@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      flutter_gen:
+        options:
+          output: lib/src/core/gen/
+          line_length: 80
+    sources:
+      include:
+        - pubspec.yaml
+        - assets/**
+        - lib/**

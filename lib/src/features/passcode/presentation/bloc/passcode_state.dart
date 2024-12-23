@@ -53,9 +53,6 @@ class PasscodeVerifiedState extends PasscodeState {
   List<Object?> get props => [isValid];
 }
 
-class PasscodeVerificationFailedState extends PasscodeState {
-  const PasscodeVerificationFailedState();
-}
 
 class PasscodeErrorState extends PasscodeState {
   const PasscodeErrorState(this.failure);

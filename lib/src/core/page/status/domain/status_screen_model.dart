@@ -69,3 +69,4 @@ class StatusScreenModel extends Equatable {
     );
   }
 }
+

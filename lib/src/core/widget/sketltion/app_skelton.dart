@@ -28,7 +28,7 @@ class AppSkeleton extends StatelessWidget {
             height: height,
             width: width,
             decoration: BoxDecoration(
-              color: LightColorsToken.neutral200.withOpacity(0.7),
+              color: LightColorsToken.neutral200.withAlpha((0.7 * 255).toInt()),
               borderRadius: shape == AppSkeletonShape.circle
                   ? BorderRadius.circular(AppSize.radiusCircle)
                   : BorderRadius.circular(AppSize.radiusSM4),

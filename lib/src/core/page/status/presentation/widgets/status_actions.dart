@@ -41,7 +41,7 @@ class StatusActionsWidget extends StatelessWidget {
               Spacing.gap16MD,
               OutlineButton(
                 onPressed: () => context.pop(),
-                text: config.secondaryButtonText!,
+                text: config.secondaryButtonText ?? '',
               ),
             ],
           ),
@@ -52,13 +52,19 @@ class StatusActionsWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Spacing.gap16MD,
-              ...config.additionalActions!.map((action) {
-                return BaseButton(
-                  variant: ButtonVariant.secondary,
-                  onPressed: () => action.onPressed(),
-                  text: action.label,
-                );
-              }),
+              ConditionalContent(
+                show: config.additionalActions != null,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: (config.additionalActions ?? []).map((action) {
+                    return BaseButton(
+                      variant: ButtonVariant.secondary,
+                      onPressed: () => action.onPressed(),
+                      text: action.label,
+                    );
+                  }).toList(),
+                ),
+              ),
             ],
           ),
         ),
@@ -66,4 +72,3 @@ class StatusActionsWidget extends StatelessWidget {
     );
   }
 }
-

@@ -89,10 +89,10 @@ class PasscodePageState extends State<PasscodePage> {
       },
       buildWhen: (previous, current) => current is! PasscodeLoading,
       builder: (context, state) {
-        DebugLogger.instance.info('PasscodePage build $state');
+        
         return PasscodeView(
           passcode: _passcode,
-          isError: state is PasscodeVerificationFailedState,
+          isError: state is PasscodeVerifiedState,
           isLoading: state is PasscodeLoading,
           onDigitTap: _handlePasscodeInput,
           onDelete: _handlePasscodeDelete,

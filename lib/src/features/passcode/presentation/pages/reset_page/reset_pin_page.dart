@@ -36,19 +36,6 @@ class ResetPinPage extends StatelessWidget {
               message: 'Passcode reset successfully',
               buttonText: 'Continue',
               nextRoute: PasscodePage.routeName,
-              showCloseButton: false,
-              secondaryButtonText: 'Close',
-              customContent: const Text('Custom Content'),
-              additionalActions: [
-                StatusAction(
-                  label: 'New Action',
-                  textColor: Colors.red,
-                  backgroundColor: Colors.white,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
             );
 
             StatusNavigation.moveToSucessScreen(context: context, status: status);

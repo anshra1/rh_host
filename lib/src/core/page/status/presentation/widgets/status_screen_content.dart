@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:rh_host/src/core/design_system/asset/lotte_assets.dart';
 import 'package:rh_host/src/core/design_system/base/app_font.dart';
 import 'package:rh_host/src/core/design_system/base/import.dart';
+import 'package:rh_host/src/core/enum/status_type.dart';
 import 'package:rh_host/src/core/extension/context.dart';
 import 'package:rh_host/src/core/extension/text_style_extension.dart';
 import 'package:rh_host/src/core/page/import.dart';
 import 'package:rh_host/src/core/page/status/presentation/widgets/status_actions.dart';
 import 'package:rh_host/src/core/page/status/presentation/widgets/status_custom_content.dart';
-import 'package:rh_host/src/core/page/status/themes/status_icon_theme.dart';
+import 'package:rh_host/src/core/widget/asset_viewer/lottie_asset_viewer.dart';
 import 'package:rh_host/src/core/widget/scaffold/base_scaffold.dart';
 import 'package:rh_host/src/core/widget/text/text.dart';
 
@@ -52,15 +53,17 @@ class StatusScreenContent extends StatelessWidget {
   Widget _buildStatusIcon(StatusType type) {
     switch (type) {
       case StatusType.success:
-        return const LottieAsset(asset: LottieAssets.success);
+        return LottieAssetViewer(
+          asset: LottieAsset.success(),
+        );
       case StatusType.error:
-        return const LottieAsset(asset: LottieAssets.error);
+        return LottieAssetViewer(asset: LottieAsset.error());
       case StatusType.warning:
-        return const LottieAsset(asset: LottieAssets.warning);
+        return LottieAssetViewer(asset: LottieAsset.warning());
       case StatusType.loading:
-        return const LottieAsset(asset: LottieAssets.loading);
+        return LottieAssetViewer(asset: LottieAsset.loading());
       case StatusType.info:
-        return const LottieAsset(asset: LottieAssets.info);
+        return LottieAssetViewer(asset: LottieAsset.info());
     }
   }
 }

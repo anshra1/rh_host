@@ -141,7 +141,7 @@ void main() {
       act: (cubit) => cubit.verifyPasscode(tPasscode),
       expect: () => const [
         PasscodeLoading(),
-        PasscodeVerificationFailedState(),
+        PasscodeVerifiedState(isValid: true),
       ],
       verify: (_) {
         verify(() => mockVerifyPasscode(tVerifyParams)).called(1);

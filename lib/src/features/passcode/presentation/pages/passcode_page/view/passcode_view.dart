@@ -20,6 +20,7 @@ class PasscodeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DebugLogger.instance.info('PasscodePage build $isError');
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

@@ -58,11 +58,11 @@ class PasscodeKeypad extends StatelessWidget {
 
   Widget _buildKey(
     String label,
-    ValueChanged<String> onTap, {
+    ValueChanged<String> onDigitTap, {
     Color? color,
   }) {
     return InkWell(
-      onTap: () => onTap(label),
+      onTap: () => onDigitTap(label),
       child: Ink(
         decoration: BoxDecoration(
           color: color ?? LightColorsToken.neutral400,
