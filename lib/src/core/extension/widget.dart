@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
 extension WidgetExtensions on Widget {
- 
+  // clipReact
+  Widget withRadius(BorderRadius radius) => ClipRRect(
+        borderRadius: radius,
+        child: this,
+      );
+
+  Widget withCircularRadius(double radius) => ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        child: this,
+      );
 
   //
   Widget center() => Center(child: this);

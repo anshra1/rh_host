@@ -50,7 +50,7 @@ class PrimaryAppBarWidget extends StatelessWidget implements PreferredSizeWidget
               icon: Icon(
                 leadingIcon ?? Icons.arrow_back_ios,
                 size: 20,
-                color: context.iconPrimary,
+                color: context.colorIconPrimary,
               ),
               onPressed: onLeadingPressed ?? () => Navigator.pop(context),
             )

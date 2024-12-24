@@ -20,17 +20,15 @@ class PasscodeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DebugLogger.instance.info('PasscodePage build $isError');
-    return Scaffold(
-      backgroundColor: Colors.white,
+    DebugLogger.instance.info('$passcode passcode');
+    return BaseScaffold(
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            PasscodeHeader(
-              passcode: passcode,
-              isError: isError,
-            ),
+            PasscodeHeader(passcode: passcode, isError: isError).padBottom(Spacing.lg24),
+            PasscodeInput(passcode: passcode),
+            const Spacer(),
             PasscodeKeypad(
               onDigitTap: onDigitTap,
               onDelete: onDelete,

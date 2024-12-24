@@ -27,6 +27,9 @@ extension TextStyleExtension on TextStyle {
   TextStyle get secondryTextColor => copyWith(color: LightColorsToken.textSecondary);
   TextStyle get primaryTextColor => copyWith(color: LightColorsToken.textPrimary);
 
+  // custom Color
+  TextStyle colour(Color color) => copyWith(color: color);
+
 //   TextStyle get yellow => copyWith(color: AppColor.f);
 //   TextStyle get lightyellow => copyWith(color: AppColor.lightyellow);
 //   TextStyle get brown => copyWith(color: AppColor.brown);

@@ -1,5 +1,7 @@
 part of '../../../import.dart';
 
+extension StateActionExtension on Function {}
+
 class PasscodePage extends StatefulWidget {
   const PasscodePage({super.key});
 
@@ -16,26 +18,26 @@ class PasscodePageState extends State<PasscodePage> {
   void initState() {
     super.initState();
     context.read<PasscodeCubit>().shouldShowPasscode();
-    DebugLogger.instance.info('PasscodePage initState');
   }
 
   void _handlePasscodeInput(String value) {
     if (_passcode.length < 4) {
-      setState(() => _passcode += value);
+      setState(() => _passcode = _passcode.append(value));
 
       if (_passcode.length == 4) {
-        context.read<PasscodeCubit>().verifyPasscode(int.parse(_passcode));
+        context.read<PasscodeCubit>().verifyPasscode(_passcode.toInt());
       }
     }
+   
   }
 
   void _handlePasscodeDelete() {
     if (_passcode.isNotEmpty) {
-      setState(() => _passcode = _passcode.substring(0, _passcode.length - 1));
+      setState(() => _passcode = _passcode.deleteLastChar());
     }
   }
 
-  void _clearPasscode() => setState(() => _passcode = '');
+  void _clearPasscode() => setState(() => _passcode = _passcode.clear());
 
   void _handleForgetPin() => context.pushNamed(ResetPinPage.routeName);
 
@@ -89,7 +91,6 @@ class PasscodePageState extends State<PasscodePage> {
       },
       buildWhen: (previous, current) => current is! PasscodeLoading,
       builder: (context, state) {
-        
         return PasscodeView(
           passcode: _passcode,
           isError: state is PasscodeVerifiedState,

@@ -32,12 +32,12 @@ class StatusScreenContent extends StatelessWidget {
                 AppText(
                   style: AppFonts.headlineLarge.medium,
                   config.title,
-                  color: context.textPrimary,
+                  color: context.colorTextPrimary,
                 ),
                 Spacing.gap4XS,
                 AppText.bodyLarge(
                   config.message,
-                  color: context.textSecondary,
+                  color: context.colorTextSecondary,
                 ),
                 CustomContentWidget(config: config),
               ],

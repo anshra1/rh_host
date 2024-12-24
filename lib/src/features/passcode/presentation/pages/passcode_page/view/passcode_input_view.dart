@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rh_host/src/core/design_system/base/import.dart';
+import 'package:rh_host/src/core/design_system/base/edge_inset.dart';
+import 'package:rh_host/src/core/extension/context.dart';
+import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 
 class PasscodeInput extends StatelessWidget {
   const PasscodeInput({
@@ -11,19 +13,20 @@ class PasscodeInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         4,
         (index) => Container(
-          margin: const EdgeInsets.all(8),
+          margin: AppEdgeInsets.all8,
           width: 15,
           height: 15,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: index < _passcode.length
-                ? LightColorsToken.primaryLight
-                : LightColorsToken.backgroundSecondary,
+                ? context.colorTextLink
+                : context.colorIconDisabled,
           ),
         ),
       ),

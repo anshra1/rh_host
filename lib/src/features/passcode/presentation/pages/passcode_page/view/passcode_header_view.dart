@@ -16,22 +16,20 @@ class PasscodeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DebugLogger.instance.info('PasscodePage build $isError');
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: spacing.h,
       children: [
         // Top spacing that adapts to screen size
-        Gap(50.h),
+        SizedBox(height: 50.h),
 
         // Icon with state-based styling
         _buildStateIcon(context),
 
         // Message text with state-based styling
-        _buildMessageText(context),
-
-        // Passcode input field
-        PasscodeInput(passcode: passcode),
+        _buildMessageText(context, colorScheme),
       ],
     );
   }
@@ -43,18 +41,22 @@ class PasscodeHeader extends StatelessWidget {
         key: ValueKey<bool>(isError),
         Icons.lock_outline,
         size: iconSize.w,
-        color: isError ? context.iconError : context.customColors.info,
+        color: isError ? context.colorIconError : context.colorStatusBar,
       ),
     );
   }
 
-  Widget _buildMessageText(BuildContext context) {
-    return AnimatedSwitcher(
+  Widget _buildMessageText(BuildContext context, ColorScheme colorScheme) {
+    return AnimatedDefaultTextStyle(
       duration: MotionTokens.durationMD,
-      child: AppText(
+      style: AppFonts.titleLarge.copyWith(
+        color: isError ? context.colorIconError : context.colorIconPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      child: Text(
         isError ? Strings.passcodeFailed : Strings.pleaseEnterPasscode,
-        color: isError ? context.textError : context.textPrimary,
-        style: AppFonts.titleLarge.copyWith(
+        style: context.textStyle.titleLarge!.copyWith(
+          color: isError ? context.colorTextError : context.colorTextPrimary,
           fontWeight: FontWeight.w600,
         ),
       ),
