@@ -22,7 +22,8 @@ extension ContextExtension on BuildContext {
   CustomColors get customColors => Theme.of(this).extension<CustomColors>()!;
 
   // primary color
-  Color get primaryColor => theme.colorScheme.onPrimary;
+  Color get colorPrimary => theme.colorScheme.primary;
+  Color get colorPrimaryBackground => theme.colorScheme.onPrimary;
 
   // Text Colors
   Color get colorTextPrimary => theme.colorScheme.onSurface;

@@ -8,6 +8,8 @@ import 'package:rh_host/src/core/design_system/theme/type_theme/dark_theme.dart'
 import 'package:rh_host/src/core/design_system/theme/type_theme/light_theme.dart';
 import 'package:rh_host/src/core/design_system/theme/type_theme/seed_theme.dart';
 import 'package:rh_host/src/core/extension/bool.dart';
+import 'package:rh_host/src/core/extension/context.dart';
+import 'package:rh_host/src/core/page/fallback_page/error_boundary.dart';
 import 'package:rh_host/src/core/providers/connectivity_provider.dart';
 import 'package:rh_host/src/core/services/analytics_service.dart';
 import 'package:rh_host/src/core/services/config/keyboard.dart';
@@ -91,22 +93,17 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textScale = context.mediaQuery.textScaler
+        .scale(1)
+        .clamp(AppConfig.minTextScale, AppConfig.maxTextScale);
+
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
         platformBrightness: Theme.of(context).brightness,
-        textScaler: TextScaler.linear(
-          // ignore: deprecated_member_use
-          _constrainTextScale(MediaQuery.of(context).textScaleFactor),
-        ),
+        textScaler: TextScaler.linear(textScale),
       ),
-      child: _ErrorBoundary(
-        child: child ?? const SizedBox.shrink(),
-      ),
+      child: ErrorBoundary(child: child ?? const SizedBox.shrink()),
     );
-  }
-
-  double _constrainTextScale(double scale) {
-    return scale.clamp(AppConfig.minTextScale, AppConfig.maxTextScale);
   }
 }
 

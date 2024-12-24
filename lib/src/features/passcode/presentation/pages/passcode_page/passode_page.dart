@@ -14,12 +14,6 @@ class PasscodePage extends StatefulWidget {
 class PasscodePageState extends State<PasscodePage> {
   String _passcode = '';
 
-  @override
-  void initState() {
-    super.initState();
-    context.read<PasscodeCubit>().shouldShowPasscode();
-  }
-
   void _handlePasscodeInput(String value) {
     if (_passcode.length < 4) {
       setState(() => _passcode = _passcode.append(value));
@@ -28,7 +22,6 @@ class PasscodePageState extends State<PasscodePage> {
         context.read<PasscodeCubit>().verifyPasscode(_passcode.toInt());
       }
     }
-   
   }
 
   void _handlePasscodeDelete() {
@@ -39,7 +32,7 @@ class PasscodePageState extends State<PasscodePage> {
 
   void _clearPasscode() => setState(() => _passcode = _passcode.clear());
 
-  void _handleForgetPin() => context.pushNamed(ResetPinPage.routeName);
+  void _handleForgetPin() => context.pushNamed(ErrorBoundaryTestPage.routeName);
 
   @override
   Widget build(BuildContext context) {

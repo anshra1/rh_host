@@ -18,6 +18,16 @@ class AppRouter {
     initialLocation: PasscodePage.routeName,
     routes: [
       GoRoute(
+        path: ErrorBoundaryTestPage.routeName,
+        name: ErrorBoundaryTestPage.routeName,
+        pageBuilder: (_, state) {
+          return _buildTransition(
+            child: const ErrorBoundaryTestPage(),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
         path: PasscodePage.routeName,
         name: PasscodePage.routeName,
         pageBuilder: (_, state) {
@@ -48,8 +58,7 @@ class AppRouter {
         name: StatusScreenSimple.routeName,
         pageBuilder: (_, state) {
           return _buildTransition(
-            child:
-                StatusScreenSimple(config: state.extra! as StatusScreenModel),
+            child: StatusScreenSimple(config: state.extra! as StatusScreenModel),
             state: state,
           );
         },
@@ -60,7 +69,8 @@ class AppRouter {
         pageBuilder: (_, state) {
           return _buildTransition(
             child: StatusScreenWithTimer(
-                config: state.extra! as StatusScreenModel,),
+              config: state.extra! as StatusScreenModel,
+            ),
             state: state,
           );
         },

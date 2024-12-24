@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rh_host/src/core/design_system/base/edge_inset.dart';
 import 'package:rh_host/src/core/extension/context.dart';
-import 'package:rh_host/src/core/system/logger/debug_logger.dart';
 
 class PasscodeInput extends StatelessWidget {
   const PasscodeInput({

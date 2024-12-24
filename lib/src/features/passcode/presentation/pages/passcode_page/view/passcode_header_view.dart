@@ -18,19 +18,21 @@ class PasscodeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      spacing: spacing.h,
-      children: [
-        // Top spacing that adapts to screen size
-        SizedBox(height: 50.h),
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: spacing.h,
+        children: [
+          // Top spacing that adapts to screen size
+          SizedBox(height: 50.h),
 
-        // Icon with state-based styling
-        _buildStateIcon(context),
+          // Icon with state-based styling
+          _buildStateIcon(context),
 
-        // Message text with state-based styling
-        _buildMessageText(context, colorScheme),
-      ],
+          // Message text with state-based styling
+          _buildMessageText(context, colorScheme),
+        ],
+      ),
     );
   }
 

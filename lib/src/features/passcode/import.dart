@@ -8,9 +8,12 @@ import 'package:rh_host/src/core/design_system/base/app_font.dart';
 import 'package:rh_host/src/core/design_system/base/import.dart';
 import 'package:rh_host/src/core/design_system/base/motion.dart';
 import 'package:rh_host/src/core/enum/alert_type.dart';
+import 'package:rh_host/src/core/enum/button_enum.dart';
 import 'package:rh_host/src/core/extension/context.dart';
 import 'package:rh_host/src/core/extension/padding.dart';
 import 'package:rh_host/src/core/extension/string.dart';
+import 'package:rh_host/src/core/extension/text_style_extension.dart';
+import 'package:rh_host/src/core/page/fallback_page/error_test_page.dart';
 import 'package:rh_host/src/core/page/status/navigation/status_route.dart';
 import 'package:rh_host/src/core/page/status/utils/status_factory.dart';
 import 'package:rh_host/src/core/system/alert_system/alert.dart';
@@ -32,6 +35,6 @@ import 'package:rh_host/src/features/passcode/presentation/pages/passcode_page/v
 
 part 'presentation/pages/passcode_page/passode_page.dart';
 part 'presentation/pages/passcode_page/view/passcode_header_view.dart';
-part 'presentation/pages/passcode_page/view/passcode_view.dart';
+part 'presentation/pages/passcode_page/view/passcode_page_view.dart';
 part 'presentation/pages/reset_page/reset_pin_page.dart';
 part 'presentation/pages/reset_page/views/reset_page_view.dart';
